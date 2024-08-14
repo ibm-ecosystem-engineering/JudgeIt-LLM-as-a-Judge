@@ -26,169 +26,88 @@ def compute_rouge(reference_list, candidate_list):
 
 
 prompt_rewriting = """[INST]
-Given the following conversation history please reword the final utterance from the user into an single utterance that doesn't need the history to understand the user's intent. If the final utterance is a clear and standalone question, just RETURN THE FINAL UTTERANCE. Output in proper json format.
+Given the following conversation history please reword the final question from the user into a single question that doesn't need the history to understand the user's intent and the company the user is referring to. The company can either be given as a company name or a nine-digit D-U-N-S (DUNS) Number. If the current question is a clear and standalone question, just RETURN THE CURRENT QUESTION. Ignore terms like "Inc" or "Corp".
+
 [/INST]
+previous_question: Tell me more about Apple
+previous_answer: Apple Inc., headquartered at 1 Apple Park Way, Cupertino, CA 95014-0642, United States, is a publicly traded company with the ticker symbol NASDAQ:AAPL. It operates in the Communications Equipment Manufacturing industry under D&B Hoovers Industry Classification. The company was established in 1977 and has a primary industry code of US SIC V4 3663, which stands for Mfg radio/tv communication equipment. Apple Inc. also operates in several other industries, including Electronic Computer Manufacturing, Computer Terminal and Other Computer Peripheral Equipment Manufacturing, Audio and Video Equipment Manufacturing, and Software Publishers. As of the most recent data, Apple Inc. has approximately 161,000 employees globally and 1,310 employees at its individual locations. The company's primary address is located within the Santa Clara county in California, and it falls under the congressional district 17.
+current_question: What is their Paydex score?
+Reworded Input: {"reasoning": "The current question is about the same company but with different intent therefore copy current question and substitute in the previous company", "reworded_input":"What is Apple's Paydex score?"}
 
-Final utterance:
-What about Microsoft?
-Previous utterance:
-What is their Paydex score?
-Output:
-{"reasoning": "The last utterance is related to the previous one but about a different a company", "class":"non-standalone", "reworded_version": "What is Microsoft's Paydex score?"}
+previous_question: What is the ESG score for Amazon?
+previous_answer: The ESG score for Amazon.com, Inc. is 2 out of 5, as of June 4, 2024. This score is based on their environmental, social, and governance risk factors, with 1 being low risk and 5 being high risk.
+current_question: Is 2 a good score?
+Reworded Input: {"reasoning": "The current question is a follow up to the previous question and previous answer therefore combine them", "reworded_input":"Is 2 a good ESG score for Amazon?"}
 
-Final utterance:
-Are there any Public Filings tied to this supplier?
-Previous utterance:
-Can you provide insights into the financial stability and health of TD SYNNEX?
-Output:
-{"reasoning": "The last utterance is about the same company but with different intent", "class":"non-standalone", "reworded_version": "Are there any Public Filings tied to TD SYNNEX?"}
+previous_question: Tell me about Pfizer
+previous_answer: Pfizer Inc. is a company based in New York, New York, United States with the postal code 10001-2192. It was established in 1942. The company operates in the pharmaceutical industry with the primary US SIC V4 code 2834, which stands for Mfg pharmaceutical preparations. Pfizer has 83,000 employees in total, with 2,500 of them working at the headquarters. The company's website address is www.pfizer.com and their telephone number is 8008793477. Pfizer is publicly traded with the ticker symbol NYSE:PFE on the NYSE stock exchange. They also trade on various other international exchanges. The company's primary industry is pharmaceutical preparations manufacturing. Pfizer operates in North America and is registered with several identification numbers, including a Commercial and Government Entity Code of 86491, Federal Taxpayer Identification Number (US) 13-5315170, Business Registration Number (US) 383418, and US General Services Administration Unique Entity Identifier MHBQULRMEEJ5.
+current_question: Tell me more about IBM
+Reworded Input: {"reasoning": "The current question is a clear and standalone question therefore just return it", "reworded_input":"Tell me more about IBM"}
 
-Final utterance:
-Is 2 a good score
-Previous utterance:
-What is the ESG score
-Output:
-{"reasoning": "The last utterance is a follow up question to the previous one", "class":"non-standalone", "reworded_version": "Is 2 a good ESG score?"}
+previous_question: what is the cyber risk rating for snowflake?
+previous_answer: The cyber risk score for Snowflake Inc. is 66. This score reflects the company's performance related to the topic of cyber risk, where 100 is the best performance and 0 is the worst performance. The score date for this information is May 7, 2024.
+current_question: how about for databricks?
+Reworded Input: {"reasoning": "The current question has the same intent as the previous question but with a different company therefore copy the previous question and substitute in the new company", "reworded_input":"what is the cyber risk rating for databricks?"}
 
-Final utterance:
-Which filing period does that data relate to?
-Previous utterance:
-Can you show Walmart's detailed balance sheet?
-Output:
-{"reasoning": "The last utterance is a follow up question to the previous one", "class":"non-standalone", "reworded_version": "Which filing period does the balance sheet for Walmart relate to?"}
+previous_question: What is the ESG score for 047897855?
+previous_answer: The ESG score for Intel is 2. This score is calculated based on various factors including environmental, social, and governance rankings. The lower the score, the better the ESG performance.
+current_question: How does it compare to NVIDIA's
+Reworded Input: {"reasoning": "The current question is a follow up to the previous question therefore combine them", "reworded_input":"How does 047897855 ESG score compare to NVIDIA's"}
 
-Final utterance:
-What about for UPS?
-Previous utterance:
-What is the geographical coverage for DHL?
-Output:
-{"reasoning": "The last utterance is related to the previous one but about a different a company", "reworded_version": "What is the geographical coverage for UPS?"}
+previous_question: Who are Meta's competitors?
+previous_answer: 1. Snap Inc. with 5,289 employees, sales revenue of $4,606,115,000, and issued share capital amount of $97,623.56. 2. Google LLC with 47,756 employees, sales revenue of $38,686,109,260, and no information on issued share capital amount. 3. Twitter, Inc. with 1,500 employees, sales revenue of $5,077,482,000, and issued share capital amount of $57,487.90. These are the competitors of Meta Platforms, Inc. according to the provided data.
+current_question: Compare it with its competitors in table
+Reworded Input: {"reasoning": "The current question is a follow up to the previous question and previous answer therefore combine them", "reworded_input":"Compare Meta with Snap, Google and Twitter in table"}
 
-Final utterance:
-How does it compare to NVIDIA's
-Previous utterance:
-What is the ESG score for Intel?
-Output:
-{"reasoning": "The last utterance is related to the previous one about comparison", "class":"non-standalone", "reworded_version": "How does Intel's ESG score compare to NVIDIA's?"}
+previous_question: what is the revenue for 003141970 in 2021?
+previous_answer: For the D-U-N-S® number 003141970, which corresponds to FedEx Corporation, the financial statement for the period from May 31, 2021 to May 31, 2022 does not provide sales revenue information. Therefore, I am unable to provide the revenue for 003141970 in 2021 based on the given data.
+current_question: what about 05-109-9661 in 2023
+Reworded Input: {"reasoning": "The current question has the same intent as the previous question but with a different company therefore copy the previous question and substitute in the new company", "reworded_input":"what is the revenue for 05-109-9661 in 2023"}
 
-Final utterance:
-How about for 00-699-7142?
-Previous utterance:
-ESG report for Home Depot
-Output:
-{"reasoning": "The last utterance is related to the previous one but about a different a company", "class":"non-standalone", "reworded_version": "ESG report for 00-699-7142?"}
+previous_question: what's Kroger social score
+previous_answer: Kroger's Social Score, as per the ESG Ranking, is 83 for the topic Social-related Certifications. This score indicates the company's performance in this area, with 100 being the best performance and 0 being the worst performance
+current_question: What's their performance
+Reworded Input: {"reasoning": "The current question is about the same company but with different intent therefore copy current question and substitute in the previous company", "reworded_input":" What's Kroger performance?"}
 
-Final utterance:
-How has Delta Airlines been performing financially for past 5 years?
-Previous utterance:
-Does company has any known suppliers under sanctions?
-Output:
-{"reasoning": "The last utterance is a clear and standalone question therefore just return it", "class":"standalone", "reworded_version": "How has Delta Airlines been performing financially for past 5 years?"}
+previous_question: what about Cardinal Health
+previous_answer: For Cardinal Health, Inc., the Supplier Stability Index Score is 6, which indicates a moderate risk level. The Supplier Evaluation Risk Score is 4, which also indicates a moderate risk level. These scores are based on various factors including payment history, industry risk, and financial health. The data was last updated on May 24, 2024, for the Supplier Stability Index Score and on June 4, 2024, for the Supplier Evaluation Risk Score.
+current_question: Compare both of them
+Reworded Input: {"reasoning": "The current question is a follow up to the previous question and previous answer therefore combine them", "reworded_input":" Compare Cardinal Health and another company"}
 
-Final utterance:
-Is 1 TRADE FWDNG INC a diverse supplier?
-Previous utterance:
-What is Cyber risk score? How do calculate it?
-Output:
-{"reasoning": "The last utterance is a clear and standalone question therefore just return it", "class":"standalone", "reworded_version": "Is 1 TRADE FWDNG INC a diverse supplier?"}
+previous_question: who is 055169452 ceo?
+previous_answer: The CEO of Bank of America Corporation, which has the D-U-N-S® number 055169452, is Brian T Moynihan.
+current_question: is it good?
+Reworded Input: {"reasoning": "The current question is about the same company but with different intent therefore copy current question and substitute in the previous company", "reworded_input":"is 055169452 good?"}
 
-Final utterance:
-Tell me about  001326495
-Previous utterance:
-List out all UBO's tied to Pfizer inc
-Output:
-{"reasoning": "The last utterance is a clear and standalone question therefore just return it", "class":"standalone", "reworded_version": "Tell me about  001326495"}
+previous_question: How many offices does 144356508 have in the US?
+previous_answer: QUALCOMM Incorporated with D-U-N-S® number 144356508 has 32 branches in the United States.
+current_question: how long has it been operating?
+Reworded Input: {"reasoning": "The current question is about the same company but with different intent therefore copy current question and substitute in the previous company", "reworded_input":"how long has 144356508 been operating?"}
 
-Final utterance:
-Are there any OSHA violations reported?
-Previous utterance:
-How long has McDonalds been operating
-Output:
-{"reasoning": "The last utterance is about the same company but with different intent", "class":"non-standalone", "reworded_version": "Are there any OSHA violations reported for McDonalds?"}
+previous_question: List the subsidiaries for Nike
+previous_answer: 1.Nike IHM, Inc. (D-U-N-S®: 006322655) 2.Converse Inc. (D-U-N-S®: 018105341) 3.TRIAX INSURANCE, INC. (D-U-N-S®: 024187388) 4.NIKE INTERNATIONAL, LTD. (D-U-N-S®: 054324207) 5.Nike Impact Inc. (D-U-N-S®: 068687608) 6.Nike Spiridon, Inc. (D-U-N-S®: 079260104) 7.Traceme Inc. (D-U-N-S®: 080599481) 8.Nike Magista, Inc. (D-U-N-S®: 081167278) 9.Celect, Inc. (D-U-N-S®: 082381056) 10.York64 LLC (D-U-N-S®: 117111424) 11.NIKE Amplify LLC (D-U-N-S®: 117278844) 12.NIKE Roshe, Inc. (D-U-N-S®: 117278847) 13.NIKE Terra LLC (D-U-N-S®: 117278848) 14.RTFKT Inc. (D-U-N-S®: 117666401) 15.Nike Vision, Timing And Techlab, LP (D-U-N-S®: 148224418) 16.Exeter Brands Group LLC (D-U-N-S®: 198434313) 17.Nike Air Force LP (D-U-N-S®: 204154210) 18.Nike Canada Corp (D-U-N-S®: 204255707) 19.CONVERSE FRANCE S.A.S (D-U-N-S®: 267186543) 20.CONVERSE IBERIA INC SUCURSAL EN ESPAÑA (D-U-N-S®: 513180778)
+current_question: Display the full family tree for adidas
+Reworded Input: {"reasoning": "The current question is a clear and standalone question therefore just return it", "reworded_input":"Display the full family tree for adidas"}
 
-Final utterance:
-from Jacksonville
-Previous utterance:
-What is the HQ address for D&B?
-Output:
-{"reasoning": "The last utterance is a follow up question to the previous one", "class":"non-standalone", "reworded_version": "What is the HQ address for D&B from Jacksonville?"}
+previous_question: what's the ssi score for JPMorgan Chase
+previous_answer: The Supplier Stability Index (SSI) score for JPMorgan Chase & Co. is 1. This score is recorded on May 24, 2024. The SSI score predicts the likelihood that an organization will experience significant financial or operational instability over the next 3 months. A score of 1 indicates a robust prediction of stability. The SSI score is based on several factors, including the organization's financials, trade data, industry risk, country risk, and primary industry risk in the US. According to the data, JPMorgan Chase & Co. ranks within the lower third of businesses in the global supply base, the same country, and the same primary industry in the US for risk of ceasing operations or filing for bankruptcy. The number of enquiries also suggests potential higher risk. However, the organization belongs to an industry with above-average risk of ceasing operations or becoming inactive.
+current_question: is it safe to do business with?
+Reworded Input: {"reasoning": "The current question is about the same company but with different intent therefore copy current question and substitute in the previous company", "reworded_input":" is JPMorgan Chase safe to do business with?"}
 
-Final utterance:
-Location of Coca-Cola
-Previous utterance:
-Name CocaCola's Competitors
-Output:
-{"reasoning": "The last utterance is a clear and standalone question therefore just return it", "class":"standalone", "reworded_version": "Location of Coca-Cola"}
+previous_question: Display the full ubo for them
+previous_answer: I'm sorry, I've run into an error processing your request. Please try the same question again.
+current_question: do you have the company's SSI and SER score?
+Reworded Input: {"reasoning": "There is no supplier mentioned therefore just return it", "reworded_input":"do you have the company's SSI and SER score?"}
 
-Final utterance:
-Flag the major risks with CVS Health in Rhode Island?
-Previous utterance:
-Who are the top UBOs for them?
-Output:
-{"reasoning": "The last utterance is a clear and standalone question therefore just return it", "class":"standalone", "reworded_version": "Flag the major risks with CVS Health in Rhode Island?"}
+previous_question: {{previous_question}}
+previous_answer: {{previous_answer}}
+current_question: {{current_question}}
+Reworded Input:"""
 
-Final utterance:
-What information about the IBM financial situation you can provide?
-Previous utterance:
-what else can you tell me about IBM ?
-Output:
-{"reasoning": "The last utterance is a clear and standalone question therefore just return it", "class":"standalone", "reworded_version": "What information about the IBM financial situation you can provide?"}
+prompt_with_agent_turn = """Given the following conversation, please reword the final utterance from the user into a single utterance that does not need the history to understand the user's intent. Output in proper json format indicating the "class" (standalone or non-standalone) and the "reworded version" of the last utterance. Use this format: {"class": "type of last utterance", "reworded version": "the last utterance rewritten into a standalone question, IF NEEDED"}. 
 
-Final utterance:
-Does company has any known suppliers under sanctions?
-Previous utterance:
-what is the SSI for Bristol-Myers Squibb Company
-Output:
-{"reasoning": "The last utterance is about the same company but with different intent", "class":"non-standalone", "reworded_version": "Does Bristol-Myers Squibb Company has any known suppliers under sanctions?"}
+In your rewording of the last utterance, do not do any unnecessary rephrasing or introduction of new terms or concepts that were not mentioned in the prior part of the conversation. Be minimal, by staying as close as possible to the shape and meaning of the last user utterance. If the last user utterance is already clear and standalone, the reworded version should be exactly THE SAME as the last user utterance, and the class should be 'standalone'. 
 
-Final utterance:
-{{current_question}}
-Previous utterance:
-{{previous_question}}
-Output:
-"""
-
-prompt_with_agent_turn = """Given the following conversation, please reword the final utterance from the user into an single utterance that doesn't need the history to understand the user's intent. If the final utterance is a clear and standalone question, just RETURN THE FINAL UTTERANCE. Output in proper json format indicating the class (standalone or nonstandalone) and the reworded version of the last utterance.
-
-Here are some examples:
-
-#Example 1
-User: How may some sections of a document in Discovery be deleted and replaced with new content?
-Agent response: To delete and replace some sections of a document in Discovery, you can update the segmented document using the Update document method. First, you need to upload the updated document using the POST method of the /environments/{environment_id}/collections/{collection_id}/documents/{document\\_id} API, specifying the contents of the parent\\_id field of one of the current segments as the {document\\_id} path variable. When updating, all segments are overwritten, unless the updated version of the document has fewer total sections than the original. In this case, the older segments will remain in the index and might be individually deleted using the API. Keep in mind that if any of the segments of the document you intend to update are ranked for relevancy training, you must first delete all the segments of that document and then ingest the updated document as a new document. This results in a new document\\_id for each segment and any trained segments must be retrained.
-User: How do I know how many segments were created in that process?
-ASSISTANT: {"reasoning": "The last user utterance is not standalone, and refers to a process explained in the previous agent response", "class": "non-standalone", "reworded version": "How do I know how many segments were created while updating a segmented document in Discovery?"}
-
-#Example 2
-User: How may some sections of a document in Discovery be deleted and replaced with new content?"
-Agent response: To delete and replace some sections of a document in Discovery, you can update the segmented document using the Update document method. First, you need to upload the updated document using the POST method of the /environments/{environment_id}/collections/{collection_id}/documents/{document\\_id} API, specifying the contents of the parent\\_id field of one of the current segments as the {document\\_id} path variable. When updating, all segments are overwritten, unless the updated version of the document has fewer total sections than the original. In this case, the older segments will remain in the index and might be individually deleted using the API. Keep in mind that if any of the segments of the document you intend to update are ranked for relevancy training, you must first delete all the segments of that document and then ingest the updated document as a new document. This results in a new document\\_id for each segment and any trained segments must be retrained.
-User: How do I know how many segments were created while updating a segmented document in Discovery?
-ASSISTANT: {"reasoning": "The last user utterance is a clear and standalone question therefore just return it", "class": "standalone", "reworded version": How do I know how many segments were created while updating a segmented document in Discovery?"}
-
-#Example 3
-User: What is IBM Cloudant Query?
-Agent response: IBM Cloudant Query is an API for querying slices of data based on the values of a database's document attributes. It is a flexible API that must be used carefully to ensure that database performance can be maintained as the data size grows over time. It is accessed through the POST /{db}/_find API endpoint where the JSON specification of the query is passed in the HTTP POST body.
-User: What distinguishes this API from other methods used in these systems?
-ASSISTANT: {"reasoning": "The last user utterance is not standalone and it needs context from the previous agent response to be fully understood", "class": "non-standalone", "reworded version": "What distinguishes IBM Cloudant Query from other methods used in database systems?"}
-
-#Example 4
-User: What is IBM Cloudant Query?
-Agent response: IBM Cloudant Query is an API for querying slices of data based on the values of a database's document attributes. It is a flexible API that must be used carefully to ensure that database performance can be maintained as the data size grows over time. It is accessed through the POST /{db}/_find API endpoint where the JSON specification of the query is passed in the HTTP POST body.
-User: What distinguishes IBM Cloudant Query from other methods used in database systems?
-ASSISTANT: {"reasoning": "The last user utterance is a clear and standalone question therefore just return it", "class": "standalone", "reworded version": "What distinguishes IBM Cloudant Query from other methods used in database systems?"}
-
-#Example 5
-User: Can you guide me through the process of creating a simple dialog with an example using Watson Assistant?
-Agent response: Certainly! Here's a step-by-step guide to creating a simple dialog with an example in Watson Assistant:\n\n1. **Create a new dialog skill**: From the Watson Assistant main page, click on "Create a skill" and give it a name, such as "My First Dialog Skill".\n\n2. **Add intents**: Intents represent what the user wants to do. For this example, let's add two intents: "greet" and "goodbye". To add intents, go to the "Intents" tab in your skill, click "Create new intent", and follow the prompts. For the "greet" intent, add examples like "hello", "hi", and "hey". For the "goodbye" intent, add examples like "bye", "goodbye", and "see you later".\n\n3. **Add a dialog**: Go to the "Dialog" tab in your skill. Here, you'll define the conversation flow. \n\n4. **Create a welcome node**: This node will be triggered when the user starts a conversation. Click "Create new dialog node", set the condition to "welcome", and add a response.
-User: and for a creating a complex one?
-ASSISTANT: {"reasoning": "The last user utterance is related to the previous user question but asking for a different type", "class": "non-standalone", "reworded version": "Can you guide me through the process of creating a complex dialog with an example using Watson Assistant?"}
-
-#Example 6
-User: Can you guide me through the process of creating a simple dialog with an example using Watson Assistant?
-Agent response: Certainly! Here's a step-by-step guide to creating a simple dialog with an example in Watson Assistant:\n\n1. **Create a new dialog skill**: From the Watson Assistant main page, click on "Create a skill" and give it a name, such as "My First Dialog Skill".\n\n2. **Add intents**: Intents represent what the user wants to do. For this example, let's add two intents: "greet" and "goodbye". To add intents, go to the "Intents" tab in your skill, click "Create new intent", and follow the prompts. For the "greet" intent, add examples like "hello", "hi", and "hey". For the "goodbye" intent, add examples like "bye", "goodbye", and "see you later".\n\n3. **Add a dialog**: Go to the "Dialog" tab in your skill. Here, you'll define the conversation flow. \n\n4. **Create a welcome node**: This node will be triggered when the user starts a conversation. Click "Create new dialog node", set the condition to "welcome", and add a response.
-User: Can you guide me through the process of creating a complex dialog with an example using Watson Assistant?
-ASSISTANT: {"reasoning": "The last user utterance is a clear and standalone question therefore just return it", "class": "standalone", "reworded version": "Can you guide me through the process of creating a complex dialog with an example using Watson Assistant?"}
-
-Now, answer the following:
 {{conversation}}
 ASSISTANT:"""
 
