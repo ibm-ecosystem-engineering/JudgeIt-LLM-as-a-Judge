@@ -24,7 +24,7 @@ def compute_rouge(reference_list, candidate_list):
     avg_rouge_score = {metric: score / len(reference_list) for metric, score in total_rouge_score.items()}
     return avg_rouge_score
 
-
+# replace shots with generic info
 prompt_rewriting = """[INST]
 Given the following conversation history please reword the final question from the user into a single question that doesn't need the history to understand the user's intent and the company the user is referring to. The company can either be given as a company name or a nine-digit D-U-N-S (DUNS) Number. If the current question is a clear and standalone question, just RETURN THE CURRENT QUESTION. Ignore terms like "Inc" or "Corp".
 
