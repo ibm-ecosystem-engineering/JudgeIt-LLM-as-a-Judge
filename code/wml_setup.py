@@ -4,9 +4,9 @@ from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenP
 from ibm_watsonx_ai.foundation_models import Model
 
 #config Watsonx.ai environment
-api_key = ''    
+api_key = 'bPbLY37jxlaDA2c27-F30t-ZbelSruIsaV4gSF6yjcVS'    
 ibm_cloud_url = 'https://us-south.ml.cloud.ibm.com'
-project_id = ''
+project_id = 'c9910ef1-d31b-4074-b25c-e240305547b6'
 
 def send_to_watsonxai(prompts,
                     model_id="MIXTRAL",

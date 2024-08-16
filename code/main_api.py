@@ -1,7 +1,7 @@
-from answer_similarity_llm import build_prompt_response_sim_answer
-from query_rating_llm import build_prompt_response_rating_question
+from code.answer_similarity import build_prompt_response_sim_answer
+from code.answer_rating_llm import build_prompt_response_rating_question
 from wml_setup import send_to_watsonxai
-from query_rewrite_and_classification_llm import query_rewrite_and_classification ,query_rewrite_and_classification_batch
+from code.query_rewrite_llm_judge import query_rewrite_and_classification ,query_rewrite_and_classification_batch
 import pandas as pd
 import json
 import re
