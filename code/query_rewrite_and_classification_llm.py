@@ -4,6 +4,12 @@ from nltk.translate.bleu_score import sentence_bleu
 from rouge import Rouge
 from sklearn.metrics import accuracy_score
 from wml_setup import send_to_watsonxai_multi_turn
+import configparser
+from langchain_ibm import WatsonxLLM
+from langchain_core.prompts import PromptTemplate
+
+config = configparser.ConfigParser()
+config.read('./../config.ini')
 
 # replace shots with generic info
 prompt_rewriting = """[INST]
@@ -162,14 +168,57 @@ Output:
 {{"Grade": "0"}}
 
 Input:
-Previous Query: {prompt_parameter_1}
-Previous Answer: {prompt_parameter_2}
-New Query: {prompt_parameter_3}
-Golden Rewritten Query: {prompt_parameter_4}
-Rewritten New Query: {prompt_parameter_5}
+Previous Query: {previous_question}
+Previous Answer: {previous_answer}
+New Query: {current_question}
+Golden Rewritten Query: {golden_rewritten_query}
+Rewritten New Query: {rewritten_query}
 
 Output:
 """
+
+def llm_judge(previous_question, previous_answer, current_question, golden_rewritten_query, rewritten_query):
+    # watsonx.ai credentials for llm judge
+
+    # instantiate wml connection
+    wml_credentials = {
+        "url": "https://us-south.ml.cloud.ibm.com",
+        "apikey": config['WML_CRED']['api_key']
+    }
+
+    project_id = config['WML_CRED']['project_id']
+
+    llm_model_id = "meta-llama/llama-3-70b-instruct"
+    # llm parameters
+    generate_parameters_1 = {
+        "decoding_method": "greedy",
+        "min_new_tokens": 1,
+        "max_new_tokens": 10,
+        "repetition_penalty": 1,
+        "stop_sequences": ['}']
+    }
+
+    # instatiate llm
+    llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
+                            url=wml_credentials['url'],
+                            project_id=project_id,
+                            model_id=llm_model_id,
+                            params=generate_parameters_1)
+    
+    input_variables = [previous_question, previous_answer, current_question, golden_rewritten_query, rewritten_query]
+    prompt = PromptTemplate(input_variables=input_variables, template=LLM_JUDGE_PROMPT)
+    llm_chain = prompt | llm_model
+    # create invoke parameter which is a dictionary of your prompt parameters
+    prompt_data = {'previous_question': input_variables[0],
+                   'previous_answer': input_variables[1],
+                   'current_question': input_variables[2],
+                   'golden_rewritten_query': input_variables[3],
+                   'rewritten_query': input_variables[4]}
+    prompt_results = llm_chain.invoke(prompt_data)
+    return prompt_results
+    
+
+
 
 
 def query_rewrite_and_classification_batch(data,model,output_folder,previous_question_col_name,previous_answer_col_name,current_question_col_name,gold_label_col_name,gold_rewrite_col_name):
@@ -260,28 +309,28 @@ def query_rewrite_and_classification_batch(data,model,output_folder,previous_que
 
     accuracy_classification = accuracy_score(all_gold_classes_ch,all_predicted_classes_ch)
 
-    avg_rouge_l = compute_rouge(all_gold_questions, all_predicted_questions)
-    avg_bleu =compute_bleu(all_gold_questions, all_predicted_questions)
+    # avg_rouge_l = compute_rouge(all_gold_questions, all_predicted_questions)
+    # avg_bleu =compute_bleu(all_gold_questions, all_predicted_questions)
 
-    print('accuracy_classification: ', accuracy_classification)
-    print('avg_rouge_l: ', avg_rouge_l)
-    print('avg_bleu: ', avg_bleu)
+    # print('accuracy_classification: ', accuracy_classification)
+    # print('avg_rouge_l: ', avg_rouge_l)
+    # print('avg_bleu: ', avg_bleu)
 
-    output_json = {}
-    output_json['predictions'] = output
+    # output_json = {}
+    # output_json['predictions'] = output
 
-    with open(f'{output_folder}Query_expansion_data_without_human_label_removeduplicate_{model.split("/")[-1]}.json', 'w') as file:
-        json.dump(output_json, file, indent=4)
-    output_json['metrics'] = {
-        'accuracy_classification': accuracy_classification,
-        'avg_rouge_l': avg_rouge_l,
-        'avg_bleu': avg_bleu,
-        'num_failed_outputs': num_failed_outputs,
-        'total_num_examples': len(all_predicted_classes)
-    }
+    # with open(f'{output_folder}Query_expansion_data_without_human_label_removeduplicate_{model.split("/")[-1]}.json', 'w') as file:
+    #     json.dump(output_json, file, indent=4)
+    # output_json['metrics'] = {
+    #     'accuracy_classification': accuracy_classification,
+    #     'avg_rouge_l': avg_rouge_l,
+    #     'avg_bleu': avg_bleu,
+    #     'num_failed_outputs': num_failed_outputs,
+    #     'total_num_examples': len(all_predicted_classes)
+    # }
 
-    with open(f'{output_folder}Query_expansion_data_withoutICL_w_agent_removeduplicate_{model.split("/")[-1]}.json', 'w') as file:
-        json.dump(output_json, file, indent=4)
+    # with open(f'{output_folder}Query_expansion_data_withoutICL_w_agent_removeduplicate_{model.split("/")[-1]}.json', 'w') as file:
+    #     json.dump(output_json, file, indent=4)
 
 
 def query_rewrite_and_classification(model,previous_question,previous_answer,current_question,gold_label,gold_rewrite):
@@ -361,20 +410,20 @@ def query_rewrite_and_classification(model,previous_question,previous_answer,cur
 
     accuracy_classification = accuracy_score(all_gold_classes_ch,all_predicted_classes_ch)
 
-    avg_rouge_l = compute_rouge(all_gold_questions, all_predicted_questions)
-    avg_bleu =compute_bleu(all_gold_questions, all_predicted_questions)
+    # avg_rouge_l = compute_rouge(all_gold_questions, all_predicted_questions)
+    # avg_bleu =compute_bleu(all_gold_questions, all_predicted_questions)
 
-    print('accuracy_classification: ', accuracy_classification)
-    print('avg_rouge_l: ', avg_rouge_l)
-    print('avg_bleu: ', avg_bleu)
+    # print('accuracy_classification: ', accuracy_classification)
+    # print('avg_rouge_l: ', avg_rouge_l)
+    # print('avg_bleu: ', avg_bleu)
 
-    output_json = {}
-    output_json['predictions'] = output
-    output_json['metrics'] = {
-        'accuracy_classification': accuracy_classification,
-        'avg_rouge_l': avg_rouge_l,
-        'avg_bleu': avg_bleu,
-        'num_failed_outputs': num_failed_outputs,
-        'total_num_examples': len(all_predicted_classes)
-    }
-    return output_json
+    # output_json = {}
+    # output_json['predictions'] = output
+    # output_json['metrics'] = {
+    #     'accuracy_classification': accuracy_classification,
+    #     'avg_rouge_l': avg_rouge_l,
+    #     'avg_bleu': avg_bleu,
+    #     'num_failed_outputs': num_failed_outputs,
+    #     'total_num_examples': len(all_predicted_classes)
+    # }
+    # return output_json
