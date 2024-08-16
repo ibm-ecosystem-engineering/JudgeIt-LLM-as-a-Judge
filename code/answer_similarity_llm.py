@@ -1,6 +1,5 @@
-def build_prompt_response_sim_answer(gold_answer,generated_answer, model_id="MIXTRAL"):
-
-    LLAMA3_PROMPT= """Follow these structured steps to accurately assess the similarity between a Golden Text and a Generated Text:
+def build_prompt_response_sim_answer(gold_answer,generated_answer, model_id="LLAMA3"):
+    PROMPT_TEMPLATE= """Follow these structured steps to accurately assess the similarity between a Golden Text and a Generated Text:
     1. **Role and Task**: Assume the role of an impartial assistant and evaluator. Your task is to assess the similarity between a Golden Text and a Generated Text using the provided information.
     2. **Initial Setup**: Begin by carefully reviewing the Golden Text to understand the key information, entities, and intents it contains. The Golden Text is considered fully correct and comprehensive. Then, examine the Generated Text that needs evaluation.
     3. **Evaluation Criteria**: Evaluate the Generated Text based on the following criteria:
@@ -24,11 +23,9 @@ def build_prompt_response_sim_answer(gold_answer,generated_answer, model_id="MIX
     Output:
     """
 
-    formatted_prompt = LLAMA3_PROMPT.format(golden_text=gold_answer, generated_text=generated_answer)
-
     if  model_id == "MIXTRAL":
-        formatted_prompt = MIXTRAL_PROMPT.format(system_prompt=SYSTEM_PROMPT,user_prompt=user_prompt)
+        formatted_prompt = PROMPT_TEMPLATE.format(golden_text=gold_answer, generated_text=generated_answer)
     elif model_id == "LLAMA3":
-        formatted_prompt = LLAMA3_PROMPT.format(golden_text=gold_answer, generated_text=generated_answer)
+        formatted_prompt = PROMPT_TEMPLATE.format(golden_text=gold_answer, generated_text=generated_answer)
 
     return formatted_prompt
