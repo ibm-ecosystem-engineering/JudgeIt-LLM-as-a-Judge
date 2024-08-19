@@ -57,9 +57,9 @@ def batch_llm_answer_rating_caller(input_file):
 def processing(judge_type):
     if judge_type == 'multi_turn_eval':
         batch_llm_multi_turn_eval_caller(input_file)
-    elif judge_type == 'answer_similarity':
+    elif judge_type == 'rag_eval_answer_similarity':
         batch_llm_answer_similarity_caller(input_file)
-    elif judge_type == 'answer_rating':
+    elif judge_type == 'rag_eval_answer_rating':
         batch_llm_answer_rating_caller(input_file)
     
 
