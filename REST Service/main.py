@@ -11,9 +11,7 @@ from app.src.config.TimeoutMiddleware import TimeoutMiddleware
 
 load_dotenv()
 platform = os.environ.get("PLATFORM")
-server_url = "https://llm-judge-service.1gdhh6ucgo98.us-south.codeengine.appdomain.cloud"
-if(platform == "DEV"):
-    server_url = "http://localhost:3001"
+server_url = os.environ.get("SERVER_URL", default="http://localhost:3001")
 
 app = FastAPI(
     title="LLM JUDGE API",

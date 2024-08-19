@@ -5,7 +5,6 @@ class QueryRewriteInput(BaseModel):
     previous_question: str
     previous_answer: str
     current_question: str
-    current_question: str
-    gold_label: str
-    gold_rewrite: str
-    model: str = "LLAMA3"
+    golden_rewritten_question: str
+    rewritten_question: str
+    model: str = "meta-llama/llama-3-70b-instruct"

@@ -1,3 +1,5 @@
+# LLM Judge backend
+
 ## Create environment
 
 ```sh
@@ -16,7 +18,10 @@ pip3 install -r requirements.txt
 
 ## Run the server
 
-```
+```sh
 python3 main.py
 ```
-# superknowa-backend
+
+## Architecture diagram
+
+<img title="Architecture diagram" alt="Alt text" src="LLM-Judge-Architecture-Backend.png">
