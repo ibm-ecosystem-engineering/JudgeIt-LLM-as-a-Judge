@@ -7,7 +7,7 @@ config = configparser.ConfigParser()
 config.read('./../config.ini')
 
 ## Grading a generated text compared to a golden text
-RATING_PROMPT= """Follow these structured steps to accurately assess the similarity between a Golden Text and a Generated Text:
+SIMILARITY_PROMPT= """Follow these structured steps to accurately assess the similarity between a Golden Text and a Generated Text:
 1. **Role and Task**: Assume the role of an impartial assistant and evaluator. Your task is to assess the similarity between a Golden Text and a Generated Text using the provided information.
 2. **Initial Setup**: Begin by carefully reviewing the Golden Text to understand the key information, entities, and intents it contains. The Golden Text is considered fully correct and comprehensive. Then, examine the Generated Text that needs evaluation.
 3. **Evaluation Criteria**: Evaluate the Generated Text based on the following criteria:
@@ -61,19 +61,21 @@ def batch_llm_answer_similarity(model_id, input_data):
                             params=generate_parameters_1)
 
     input_data['Grade'] = None
+    input_data['Explanation'] = None
 
     for index, row in input_data.iterrows():
         input_variables = ['prompt_parameter_1', 'prompt_parameter_2']
-        prompt = PromptTemplate(input_variables=input_variables, template=RATING_PROMPT)
+        prompt = PromptTemplate(input_variables=input_variables, template=SIMILARITY_PROMPT)
         llm_chain = prompt | llm_model
         # create invoke parameter which is a dictionary of your prompt parameters
         prompt_data = {'prompt_parameter_1': row['golden_text'],
                     'prompt_parameter_2': row['generated_text']}
         try:
-            prompt_results = json.loads(llm_chain.invoke(prompt_data))['Grade']
+            prompt_results = llm_chain.invoke(prompt_data)
         except:
             prompt_results = 'Error generating grade'
         
-        input_data.at[index,'Grade'] = prompt_results
+        input_data.at[index,'Grade'] = json.loads(prompt_results)['Grade']
+        input_data.at[index,'Explanation'] = json.loads(prompt_results)['Explanation']
 
     return input_data
