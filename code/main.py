@@ -1,6 +1,6 @@
 from answer_similarity import batch_llm_answer_similarity
 from answer_rating import batch_llm_answer_rating
-from llm_judge import batch_llm_judge
+from multi_turn_eval import batch_llm_multi_turn_eval
 
 import pandas as pd
 import json
@@ -36,31 +36,31 @@ def write_data(data_df):
     print("file save")
 
 
-def batch_llm_judge_caller(input_file):
+def batch_llm_multi_turn_eval_caller(input_file):
     input_data = read_data(input_file)
-    output_data = batch_llm_judge(model_id, input_data)
+    output_data = batch_llm_multi_turn_eval(model_id, input_data)
     write_data(output_data)
     return output_data
 
-def batch_answer_similarity_caller(input_file):
+def batch_llm_answer_similarity_caller(input_file):
     input_data = read_data(input_file)
-    output_data = batch_llm_answer_similarity(input_data)
+    output_data = batch_llm_answer_similarity(model_id, input_data)
     write_data(output_data)
     return output_data
 
-def batch_answer_rating_caller(input_file):
+def batch_llm_answer_rating_caller(input_file):
     input_data = read_data(input_file)
-    output_data = batch_llm_answer_rating(input_data)
+    output_data = batch_llm_answer_rating(model_id, input_data)
     write_data(output_data)
     return output_data
 
 def processing(judge_type):
-    if judge_type == 'llm_judge':
-        batch_llm_judge_caller(input_file)
-    elif judge_type == 'answer_similarity':
-        batch_answer_similarity_caller(input_file)
-    elif judge_type == 'answer_rating':
-        batch_answer_rating_caller(input_file)
+    if judge_type == 'multi_turn_eval':
+        batch_llm_multi_turn_eval_caller(input_file)
+    elif judge_type == 'rag_eval_answer_similarity':
+        batch_llm_answer_similarity_caller(input_file)
+    elif judge_type == 'rag_eval_answer_rating':
+        batch_llm_answer_rating_caller(input_file)
     
 
 
