@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  repository: <your-docker-image>
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  fastapi:
+    type: ClusterIP
+    port: 3001
+  redis:
+    type: ClusterIP
+    port: 6379
+  flower:
+    type: ClusterIP
+    port: 5555
+
+env:
+  WATSONX_URL: "https://us-south.ml.cloud.ibm.com"
+  WX_PROJECT_ID: ""
+  IBM_CLOUD_API_KEY: ""
+  CELERY_BROKER_URL: "redis://redis:6379/0"
+  CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+
+resources: {}

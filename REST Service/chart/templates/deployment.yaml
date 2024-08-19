@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-app
+  labels:
+    app: fastapi-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: fastapi-app
+  template:
+    metadata:
+      labels:
+        app: fastapi-app
+    spec:
+      containers:
+        - name: fastapi-app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.fastapi.port }}
+          env:
+            - name: WATSONX_URL
+              value: "{{ .Values.env.WATSONX_URL }}"
+            - name: WX_PROJECT_ID
+              value: "{{ .Values.env.WX_PROJECT_ID }}"
+            - name: IBM_CLOUD_API_KEY
+              value: "{{ .Values.env.IBM_CLOUD_API_KEY }}"
+            - name: CELERY_BROKER_URL
+              value: "{{ .Values.env.CELERY_BROKER_URL }}"
+            - name: CELERY_RESULT_BACKEND
+              value: "{{ .Values.env.CELERY_RESULT_BACKEND }}"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2.5-alpine
+          ports:
+            - containerPort: {{ .Values.service.redis.port }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  labels:
+    app: celery-worker
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+        - name: celery-worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["celery", "-A", "app.celery.celery_worker.celery", "worker", "--loglevel=info"]
+          env:
+            - name: WATSONX_URL
+              value: "{{ .Values.env.WATSONX_URL }}"
+            - name: WX_PROJECT_ID
+              value: "{{ .Values.env.WX_PROJECT_ID }}"
+            - name: IBM_CLOUD_API_KEY
+              value: "{{ .Values.env.IBM_CLOUD_API_KEY }}"
+            - name: CELERY_BROKER_URL
+              value: "{{ .Values.env.CELERY_BROKER_URL }}"
+            - name: CELERY_RESULT_BACKEND
+              value: "{{ .Values.env.CELERY_RESULT_BACKEND }}"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flower
+  labels:
+    app: flower
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: flower
+  template:
+    metadata:
+      labels:
+        app: flower
+    spec:
+      containers:
+        - name: flower
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["celery", "--broker=redis://redis:6379/0", "flower", "--port=5555"]
+          ports:
+            - containerPort: {{ .Values.service.flower.port }}
+          env:
+            - name: CELERY_BROKER_URL
+              value: "{{ .Values.env.CELERY_BROKER_URL }}"
+            - name: CELERY_RESULT_BACKEND
+              value: "{{ .Values.env.CELERY_RESULT_BACKEND }}"
