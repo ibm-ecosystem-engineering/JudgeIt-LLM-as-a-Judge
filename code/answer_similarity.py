@@ -31,7 +31,7 @@ Generated Text: {prompt_parameter_2}
 Output:
 """
 
-def batch_llm_answer_similarity(input_data):
+def batch_llm_answer_similarity(model_id, input_data):
     # watsonx.ai credentials for llm judge
 
     # instantiate wml connection
@@ -42,7 +42,7 @@ def batch_llm_answer_similarity(input_data):
 
     project_id = config['WML_CRED']['project_id']
 
-    llm_model_id = config['Default']['model_id']
+    llm_model_id = model_id
 
     # llm parameters
     generate_parameters_1 = {

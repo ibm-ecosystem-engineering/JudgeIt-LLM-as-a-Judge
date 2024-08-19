@@ -6,7 +6,7 @@ from langchain_core.prompts import PromptTemplate
 config = configparser.ConfigParser()
 config.read('./../config.ini')
 
-LLM_JUDGE_PROMPT = """Follow these below structured steps to accurately assess query transformations and ensure alignment with provided criteria.
+MULTI_TURN_JUDGE_PROMPT = """Follow these below structured steps to accurately assess query transformations and ensure alignment with provided criteria.
 1. **Role and Task**: Assume the role of an impartial assistant and judge. Your task is to evaluate query transformations using provided information. You will receive a Previous Query, Previous Answer, New Query, Golden Rewritten Query, and a Rewritten New Query for evaluation.
 2. **Initial Setup**: Begin by reviewing the Previous Query and its corresponding Previous Answer to understand the context. Then, introduce the New Query that requires transformation.
 3. **Golden Rewritten Query**: Examine the Golden Rewritten Query, which serves as the correct reference for adding context to the New Query based on the entities from the Previous Query and Previous Answer, if necessary. Ensure that the Golden Rewritten Query is fully correct and comprehensive.
@@ -85,7 +85,7 @@ Rewritten New Query: {prompt_parameter_5}
 Output:
 """
 
-def batch_llm_judge(model_id, input_data):
+def batch_llm_multi_turn_eval(model_id, input_data):
     # watsonx.ai credentials for llm judge
 
     # instantiate wml connection
@@ -118,7 +118,7 @@ def batch_llm_judge(model_id, input_data):
 
     for index, row in input_data.iterrows():
         input_variables = ['prompt_parameter_1', 'prompt_parameter_2', 'prompt_parameter_3', 'prompt_parameter_4', 'prompt_parameter_5']
-        prompt = PromptTemplate(input_variables=input_variables, template=LLM_JUDGE_PROMPT)
+        prompt = PromptTemplate(input_variables=input_variables, template=MULTI_TURN_JUDGE_PROMPT)
         llm_chain = prompt | llm_model
         # create invoke parameter which is a dictionary of your prompt parameters
         prompt_data = {'prompt_parameter_1': row['previous_question'],
@@ -134,47 +134,3 @@ def batch_llm_judge(model_id, input_data):
         input_data.at[index,'Grade'] = prompt_results
 
     return input_data
-
-# def llm_judge(model_id, previous_question, previous_answer, current_question, golden_rewritten_query, rewritten_query):
-#     # watsonx.ai credentials for llm judge
-
-#     # instantiate wml connection
-#     wml_credentials = {
-#         "url": "https://us-south.ml.cloud.ibm.com",
-#         "apikey": config['WML_CRED']['api_key']
-#     }
-
-#     project_id = config['WML_CRED']['project_id']
-
-#     llm_model_id = config['Default']['model_id']
-
-#     # llm parameters
-#     generate_parameters_1 = {
-#         "decoding_method": "greedy",
-#         "min_new_tokens": 1,
-#         "max_new_tokens": 10,
-#         "repetition_penalty": 1,
-#         "stop_sequences": ['}']
-#     }
-
-#     # instatiate llm
-#     llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
-#                             url=wml_credentials['url'],
-#                             project_id=project_id,
-#                             model_id=llm_model_id,
-#                             params=generate_parameters_1)
-    
-#     input_variables = [previous_question, previous_answer, current_question, golden_rewritten_query, rewritten_query]
-#     prompt = PromptTemplate(input_variables=input_variables, template=LLM_JUDGE_PROMPT)
-#     llm_chain = prompt | llm_model
-#     # create invoke parameter which is a dictionary of your prompt parameters
-#     prompt_data = {'previous_question': input_variables[0],
-#                    'previous_answer': input_variables[1],
-#                    'current_question': input_variables[2],
-#                    'golden_rewritten_query': input_variables[3],
-#                    'rewritten_query': input_variables[4]}
-#     try:
-#         prompt_results = json.loads(llm_chain.invoke(prompt_data))['Grade']
-#     except:
-#         prompt_results = 'Error generating grade'
-#     return prompt_results
