@@ -73,7 +73,7 @@ Results will be generated and stored in the specified output directory. These re
 - **Multi-Pipeline Support**: Evaluate different types of LLM pipelines including RAG, multi-turn queries, and text-to-SQL conversions.
 - **Customizable**: Configure the evaluation process with your datasets, LLM models, and specific parameters.
 
-![Features](/images/Features.png)
+![Features](/images/features.png)
 
 
 ## Dependencies
