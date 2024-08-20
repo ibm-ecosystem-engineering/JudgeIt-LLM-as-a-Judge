@@ -1,4 +1,6 @@
-# LLM Judge backend
+# Rest Service
+
+This directory hosts the RESTful service code that interacts with the JudgeIt framework. It provides endpoints for initiating evaluations, fetching results, and configuring the evaluation parameters.
 
 ## Create environment
 
@@ -24,4 +26,4 @@ python3 main.py
 
 ## Architecture diagram
 
-<img title="Architecture diagram" alt="Alt text" src="LLM-Judge-Architecture-Backend.png">
+![Architecture diagram](/images/LLM-Judge-Architecture-Backend.png)
