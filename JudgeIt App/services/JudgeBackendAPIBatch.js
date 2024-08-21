@@ -5,6 +5,7 @@ import {
   API_TYPE_SIMILARITY,
   LLM_JUDGE_BASE_URL,
   API_TYPE_KEY,
+  LLM_JUDGE_API_KEY_SECRET
 } from "./Config";
 
 /* BATCH API ENDPOINTS */
@@ -13,6 +14,14 @@ const API_SIMLARITY_BATCH_URL =
   LLM_JUDGE_BASE_URL + "/api/v1/judge/similarity/batch";
 const API_MULTITURN_BATCH_URL =
   LLM_JUDGE_BASE_URL + "/api/v1/judge/multiturn/batch";
+
+const config = {
+    headers: {
+      'accept': 'application/json',
+      'LLM_JUDGE_API_KEY': LLM_JUDGE_API_KEY_SECRET,
+      'Content-Type': 'multipart/form-data'
+    }
+  };
 
 /** Single request call*/
 export async function judge_api_batch_call(payload) {
@@ -37,12 +46,7 @@ async function rating_batch_api_call(formData) {
   const response = await axios.post(
     API_RATING_BATCH_URL + "?model_name=" + formData.get("model"),
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        accept: "application/json",
-      },
-    }
+    config
   );
   return response;
 }
@@ -51,12 +55,7 @@ async function similarity_batch_api_call(formData) {
   const response = await axios.post(
     API_SIMLARITY_BATCH_URL + "?model_name=" + formData.get("model"),
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        accept: "application/json",
-      },
-    }
+    config
   );
   return response;
 }
@@ -65,12 +64,7 @@ async function multiturn_batch_api_call(formData) {
   const response = await axios.post(
     API_MULTITURN_BATCH_URL,
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        accept: "application/json",
-      },
-    }
+    config
   );
   return response;
 }
