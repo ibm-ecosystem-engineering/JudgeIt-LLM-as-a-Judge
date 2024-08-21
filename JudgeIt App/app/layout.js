@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import LeftNavBar from "@/components/globals/LeftNavigation";
 import { Grid, Box } from "@mui/material";
+import SessionProviderWrapper from "@/utils/sessionProviderWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,6 +13,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <SessionProviderWrapper>
     <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true}>
         <Grid sx={{ flexGrow: 1 }} container spacing={0}>
@@ -25,5 +27,6 @@ export default function RootLayout({ children }) {
         </Grid>
       </body>
     </html>
+    </SessionProviderWrapper>
   );
 }
