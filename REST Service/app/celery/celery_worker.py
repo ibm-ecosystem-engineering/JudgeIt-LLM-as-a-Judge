@@ -43,14 +43,22 @@ def rating_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-instruct
             prompt, prompt_data = build_query_rating_prompt(row)
             llm_chain = prompt | llm_model
 
-            prompt_results=None
+            prompt_results={
+                "Grade": None,
+                "Explanation": None
+            }
 
             try:
-                prompt_results = json.loads(llm_chain.invoke(prompt_data))['Grade']
-            except:
-                prompt_results = 'Error generating grade'
+                prompt_results = json.loads(llm_chain.invoke(prompt_data))
+            except Exception as e:
+                print(f"error in generating ratings, {str(e)}")
         
-            data_df.loc[index,"Grade"] = prompt_results
+            data_df.loc[index,"Grade"] = prompt_results["Grade"]
+
+            if 'Explanation' in prompt_results:
+                data_df.loc[index,"Explanation"] = prompt_results["Explanation"]
+            else:
+                data_df.loc[index,"Explanation"] = None
 
         #self.update_state(state='SUCCESS', meta={'current': tatal_record, 'total': tatal_record})
         return data_df.to_json()
@@ -87,14 +95,23 @@ def similarity_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-inst
             prompt, prompt_data = build_query_similarity_prompt(row)
             llm_chain = prompt | llm_model
 
-            prompt_results = None
+            prompt_results={
+                "Grade": None,
+                "Explanation": None
+            }
 
             try:
-                prompt_results = json.loads(llm_chain.invoke(prompt_data))['Grade']
-            except:
-                prompt_results = 'Error generating grade'
+                prompt_results = json.loads(llm_chain.invoke(prompt_data))
+            except Exception as e:
+                print(f"error in generating ratings, {str(e)}")
             
-            data_df.at[index,'Grade'] = prompt_results
+            data_df.loc[index,"Grade"] = prompt_results["Grade"]
+
+            if 'Explanation' in prompt_results:
+                data_df.loc[index,"Explanation"] = prompt_results["Explanation"]
+            else:
+                data_df.loc[index,"Explanation"] = None
+                
         return data_df.to_json()
     except Exception as e:
         self.update_state(state='ERROR', meta={'current': None, 'total': tatal_record})
