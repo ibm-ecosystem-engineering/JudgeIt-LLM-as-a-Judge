@@ -1,11 +1,13 @@
 import asyncio
 import io
 from dotenv import load_dotenv
-from fastapi import APIRouter, File, HTTPException, Query, Request, UploadFile, WebSocket, WebSocketDisconnect, requests as request
+from fastapi import APIRouter, File, HTTPException, Query, Request, Security, UploadFile, WebSocket, WebSocketDisconnect, requests as request
+from fastapi.security import APIKeyHeader
 from app.celery.celery_worker import multi_turn_batch_task, rating_batch_task, similarity_batch_task
 from app.src.models.QueryRewriteInput import QueryRewriteInput
 from app.src.services.LLMJudgeService import LLMJudgeService
 from app.src.models.LLMInput import LLMInput
+from starlette.status import HTTP_403_FORBIDDEN, HTTP_500_INTERNAL_SERVER_ERROR
 import os
 from fastapi.responses import JSONResponse, StreamingResponse
 from app.src.services.WatsonXService import WatsonXService
@@ -24,9 +26,22 @@ judge_api_route = APIRouter(
 IBM_CLOUD_API_KEY = os.environ.get("IBM_CLOUD_API_KEY")
 WX_PROJECT_ID = os.environ.get("WX_PROJECT_ID")
 
+# RAG APP Security
+API_KEY_NAME = "LLM_JUDGE_API_KEY"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+# Basic security for accessing the App
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if api_key_header == os.environ.get("LLM_JUDGE_API_KEY"):
+        return api_key_header
+    else:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN, detail="Could not validate RAG APP credentials. Please check your ENV."
+        )
+
 ## This routes returns the text to SQL from a given context and a sql query
 @judge_api_route.post(path='/rating', description="### default model name is meta-llama/llama-3-70b-instruct")
-def rating(llm_input :LLMInput):
+def rating(llm_input :LLMInput, api_key: str = Security(get_api_key)):
     if llm_input.golden_text is None:
         raise HTTPException(status_code=422, detail="Golden text is not found")
     
@@ -70,7 +85,8 @@ rating_batch_file_format = """
 @judge_api_route.post(path='/rating/batch', description=rating_batch_file_format)
 async def rating_batch(
     model_name: str = Query("meta-llama/llama-3-70b-instruct", description="### Default model name is meta-llama/llama-3-70b-instruct"), 
-    file: UploadFile = File(...)):
+    file: UploadFile = File(...),
+    api_key: str = Security(get_api_key)):
     
     file_content = await file.read()
     ##print(file_content)
@@ -91,7 +107,7 @@ async def rating_batch(
     return JSONResponse({'task_id': task.id})
 
 @judge_api_route.post('/similarity')
-def similarity(llm_input :LLMInput):
+def similarity(llm_input :LLMInput, api_key: str = Security(get_api_key)):
 
     if llm_input.golden_text is None:
         raise HTTPException(status_code=422, detail="Golden text is not found")
@@ -135,7 +151,8 @@ similarity_batch_file_format = """
 @judge_api_route.post(path='/similarity/batch', description=similarity_batch_file_format)
 async def similarity_batch(
     model_name: str = Query("meta-llama/llama-3-70b-instruct", description="## Default model name is meta-llama/llama-3-70b-instruct"), 
-    file: UploadFile = File(...)):
+    file: UploadFile = File(...),
+    api_key: str = Security(get_api_key)):
 
     file_content = await file.read()
     ##print(file_content)
@@ -158,7 +175,7 @@ async def similarity_batch(
 
 ## This routes returns the text to SQL from a given context and a sql query
 @judge_api_route.post('/multiturn')
-def query_multi_turn_solo(llm_input :QueryRewriteInput):
+def query_multi_turn_solo(llm_input :QueryRewriteInput, api_key: str = Security(get_api_key)):
     
     if llm_input.previous_question is None:
         raise HTTPException(status_code=422, detail="previous_question is not found")
@@ -206,7 +223,7 @@ multi_trun_batch_file_format = """
 
 ## This is the execl/csv data format. Please make sure, files have these column name with correct case.
 
-| previous_question    | previous_answer  | current_question   | golden_rewritten_question   | rewritten question    |
+| previous_question    | previous_answer  | current_question   | golden_rewritten_question   | rewritten_question    |
 | -------------------- | ---------------- | ------------------ | --------------------------- | --------------------- |
 | previous question 1  | Previous Answer1 | current question 1 | golden rewritten question 1 | rewritten question 1  |
 
@@ -214,7 +231,7 @@ multi_trun_batch_file_format = """
 
 ## This routes returns the text to SQL from a given context and a sql query
 @judge_api_route.post('/multiturn/batch', description=multi_trun_batch_file_format)
-async def query_multi_turn_batch(file: UploadFile = File(...)):
+async def query_multi_turn_batch(file: UploadFile = File(...), api_key: str = Security(get_api_key)):
     
     file_content = await file.read()
     ##print(file_content)
@@ -235,7 +252,7 @@ async def query_multi_turn_batch(file: UploadFile = File(...)):
     return JSONResponse({'task_id': task.id})
 
 @judge_api_route.get(path="/status/{task_id}", description="Checks current status of the task using http request response")
-async def get_status(task_id: str, request: Request):
+async def get_status(task_id: str, request: Request, api_key: str = Security(get_api_key)):
     result = AsyncResult(task_id)
     if result.state == 'PENDING' and not result.result:
         return {"status": "ERROR", "msg": "Task not found."}
@@ -306,14 +323,14 @@ async def websocket_endpoint(websocket: WebSocket, request: Request, task_id: st
         print(f"Client disconnected from task {task_id}")
 
 @judge_api_route.get(path="/download/{task_id}", description="Download the completed task")
-async def download_file(task_id: str):
+async def download_file(task_id: str, api_key: str = Security(get_api_key)):
     result = AsyncResult(task_id)
     if result.state == 'SUCCESS':
         data = pd.read_json(result.result)
         df = pd.DataFrame(data)
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False, sheet_name='multi-turn')
+            df.to_excel(writer, index=False, sheet_name='evaluation-result')
         output.seek(0)
         return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=data.xlsx"})
     
