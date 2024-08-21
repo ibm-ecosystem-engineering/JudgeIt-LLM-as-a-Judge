@@ -24,12 +24,11 @@ import {
   API_TYPE_SIMILARITY,
   API_TYPE_KEY,
   LLM_MODELS,
-} from "@/services/Config";
-import { judge_api_batch_call } from "@/services/JudgeBackendAPIBatch";
-import {
   LLM_JUDGE_BATCH_EVENT_URL,
   LLM_JUDGE_DOWNLOAD_EVALUATION_URL,
+  LLM_JUDGE_API_KEY_SECRET,
 } from "@/services/Config";
+import { judge_api_batch_call } from "@/services/JudgeBackendAPIBatch";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
 import { useSession } from "next-auth/react";
 
@@ -41,6 +40,10 @@ const FileUploadForm = () => {
   const [task_id, setTask_id] = useState(null);
   const { data: session, status } = useSession();
 
+  const required_column_rating_similarity = "golden_text, generated_text";
+  const required_column_multi_turn =
+    "previous_question, previous_answer, current_question, golden_rewritten_question, rewritten_question";
+
   const download_evaluation_result = async () => {
     try {
       setErrorStatus(null);
@@ -50,6 +53,7 @@ const FileUploadForm = () => {
           method: "GET",
           headers: {
             Accept: "application/json",
+            LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
           },
         }
       );
@@ -236,6 +240,7 @@ const FileUploadForm = () => {
                   )}
                 </FormControl>
               </Box>
+
               <Box>
                 <FormControl
                   component="fieldset"
@@ -272,6 +277,15 @@ const FileUploadForm = () => {
                   )}
                 </FormControl>
               </Box>
+              <Box lineHeight={"40px"} color={"#3B4151"}>
+                <span style={{ color: "red" }}>**</span>Required columns in
+                csv/xlsx file{" "}
+                <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
+                  {formik.values.apiType == API_TYPE_MULTITURN
+                    ? required_column_multi_turn
+                    : required_column_rating_similarity}
+                </span>
+              </Box>
               <Box
                 {...getRootProps()}
                 sx={{
@@ -285,7 +299,7 @@ const FileUploadForm = () => {
                 <input {...getInputProps()} />
                 <CloudUploadIcon sx={{ fontSize: 40, color: "#aaa" }} />
                 <Typography variant="body1">
-                  Drag 'n' drop a file here, or click to select one
+                  Drag 'n' drop a csv/xlsx file here, or click to select one
                 </Typography>
               </Box>
               {file && (

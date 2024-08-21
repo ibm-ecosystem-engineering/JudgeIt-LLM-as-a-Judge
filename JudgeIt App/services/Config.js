@@ -7,6 +7,8 @@ export const API_TYPE_RATING = "rating";
 export const API_TYPE_SIMILARITY = "similarity";
 export const API_TYPE_MULTITURN = "multiturn";
 
+export const LLM_JUDGE_API_KEY_SECRET=process.env.NEXT_PUBLIC_LLM_JUDGE_API_KEY;
+
 export const LLM_MODELS = [
     /*
     {
