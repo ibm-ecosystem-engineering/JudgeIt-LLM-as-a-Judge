@@ -31,6 +31,7 @@ import {
   LLM_JUDGE_DOWNLOAD_EVALUATION_URL,
 } from "@/services/Config";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
+import { useSession } from "next-auth/react";
 
 const FileUploadForm = () => {
   const [file, setFile] = useState(null);
@@ -38,6 +39,7 @@ const FileUploadForm = () => {
   const [progress, setProgress] = useState(null);
   const [progressVal, setProgressVal] = useState(0);
   const [task_id, setTask_id] = useState(null);
+  const { data: session, status } = useSession();
 
   const download_evaluation_result = async () => {
     try {
@@ -176,129 +178,135 @@ const FileUploadForm = () => {
   });
 
   return (
-    <div style={{ marginRight: "20px" }}>
-      <PageTitle title={"LLM Judge Batch Request"} />
-      {progress && (
-        <Box marginBottom={"10px"} sx={{ justifyContent: "center" }}>
-          <LinearProgressWithLabel value={progressVal} width={"90%"} />
-        </Box>
-      )}
-      {progress && progress === "SUCCESS" && (
-        <Box>
-          <Button
-            onClick={download_evaluation_result}
-            variant="outlined"
-            startIcon={<CloudDownloadOutlinedIcon />}
-            sx={{ marginBottom: "20px" }}
-          >
-            Download evaluation result
-          </Button>
-        </Box>
-      )}
-      {errorStatus && (
-        <Alert
-          variant="outlined"
-          severity="error"
-          sx={{ width: "75%", marginBottom: "20px" }}
-        >
-          {errorStatus}
-        </Alert>
-      )}
-      <form onSubmit={formik.handleSubmit}>
-        <Paper elevation={2} sx={{ padding: "20px", width: "90%" }}>
-          <Box>
-            <FormControl
-              style={{ width: "300px" }}
-              error={formik.touched.model && Boolean(formik.errors.model)}
-            >
-              <InputLabel id="model-label">Model</InputLabel>
-              <Select
-                labelId="model-label"
-                id="model"
-                name="model"
-                value={formik.values.model}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                label="Model"
-              >
-                {LLM_MODELS.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              {formik.touched.model && formik.errors.model && (
-                <FormHelperText>{formik.errors.model}</FormHelperText>
-              )}
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl
-              component="fieldset"
-              error={formik.touched.apiType && Boolean(formik.errors.apiType)}
-            >
-              <RadioGroup
-                row
-                aria-label="option"
-                name="apiType"
-                value={formik.values.apiType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <FormControlLabel
-                  value={API_TYPE_RATING}
-                  control={<Radio />}
-                  label="Rating"
-                />
-                <FormControlLabel
-                  value={API_TYPE_SIMILARITY}
-                  control={<Radio />}
-                  label="Similarity"
-                />
-                <FormControlLabel
-                  value={API_TYPE_MULTITURN}
-                  control={<Radio />}
-                  label="Multi-turn"
-                />
-              </RadioGroup>
-              {formik.touched.apiType && formik.errors.apiType && (
-                <FormHelperText>{formik.errors.apiType}</FormHelperText>
-              )}
-            </FormControl>
-          </Box>
-          <Box
-            {...getRootProps()}
-            sx={{
-              border: "2px dashed #ccc",
-              p: 2,
-              textAlign: "center",
-              my: 2,
-              width: "90%",
-            }}
-          >
-            <input {...getInputProps()} />
-            <CloudUploadIcon sx={{ fontSize: 40, color: "#aaa" }} />
-            <Typography variant="body1">
-              Drag 'n' drop a file here, or click to select one
-            </Typography>
-          </Box>
-          {file && (
-            <Typography variant="body2" marginBottom={"20px"}>
-              Selected file: {file.name}
-            </Typography>
+    <>
+      {session && (
+        <div style={{ marginRight: "20px" }}>
+          <PageTitle title={"LLM Judge Batch Request"} />
+          {progress && (
+            <Box marginBottom={"10px"} sx={{ justifyContent: "center" }}>
+              <LinearProgressWithLabel value={progressVal} width={"90%"} />
+            </Box>
           )}
+          {progress && progress === "SUCCESS" && (
+            <Box>
+              <Button
+                onClick={download_evaluation_result}
+                variant="outlined"
+                startIcon={<CloudDownloadOutlinedIcon />}
+                sx={{ marginBottom: "20px" }}
+              >
+                Download evaluation result
+              </Button>
+            </Box>
+          )}
+          {errorStatus && (
+            <Alert
+              variant="outlined"
+              severity="error"
+              sx={{ width: "75%", marginBottom: "20px" }}
+            >
+              {errorStatus}
+            </Alert>
+          )}
+          <form onSubmit={formik.handleSubmit}>
+            <Paper elevation={2} sx={{ padding: "20px", width: "90%" }}>
+              <Box>
+                <FormControl
+                  style={{ width: "300px" }}
+                  error={formik.touched.model && Boolean(formik.errors.model)}
+                >
+                  <InputLabel id="model-label">Model</InputLabel>
+                  <Select
+                    labelId="model-label"
+                    id="model"
+                    name="model"
+                    value={formik.values.model}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    label="Model"
+                  >
+                    {LLM_MODELS.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {formik.touched.model && formik.errors.model && (
+                    <FormHelperText>{formik.errors.model}</FormHelperText>
+                  )}
+                </FormControl>
+              </Box>
+              <Box>
+                <FormControl
+                  component="fieldset"
+                  error={
+                    formik.touched.apiType && Boolean(formik.errors.apiType)
+                  }
+                >
+                  <RadioGroup
+                    row
+                    aria-label="option"
+                    name="apiType"
+                    value={formik.values.apiType}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <FormControlLabel
+                      value={API_TYPE_RATING}
+                      control={<Radio />}
+                      label="Rating"
+                    />
+                    <FormControlLabel
+                      value={API_TYPE_SIMILARITY}
+                      control={<Radio />}
+                      label="Similarity"
+                    />
+                    <FormControlLabel
+                      value={API_TYPE_MULTITURN}
+                      control={<Radio />}
+                      label="Multi-turn"
+                    />
+                  </RadioGroup>
+                  {formik.touched.apiType && formik.errors.apiType && (
+                    <FormHelperText>{formik.errors.apiType}</FormHelperText>
+                  )}
+                </FormControl>
+              </Box>
+              <Box
+                {...getRootProps()}
+                sx={{
+                  border: "2px dashed #ccc",
+                  p: 2,
+                  textAlign: "center",
+                  my: 2,
+                  width: "90%",
+                }}
+              >
+                <input {...getInputProps()} />
+                <CloudUploadIcon sx={{ fontSize: 40, color: "#aaa" }} />
+                <Typography variant="body1">
+                  Drag 'n' drop a file here, or click to select one
+                </Typography>
+              </Box>
+              {file && (
+                <Typography variant="body2" marginBottom={"20px"}>
+                  Selected file: {file.name}
+                </Typography>
+              )}
 
-          <Button
-            disabled={progress === "PROGRESS" || progress === "PENDING"}
-            variant="outlined"
-            style={{ width: "200px" }}
-            type="submit"
-          >
-            Submit
-          </Button>
-        </Paper>
-      </form>
-    </div>
+              <Button
+                disabled={progress === "PROGRESS" || progress === "PENDING"}
+                variant="outlined"
+                style={{ width: "200px" }}
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Paper>
+          </form>
+        </div>
+      )}
+    </>
   );
 };
 
