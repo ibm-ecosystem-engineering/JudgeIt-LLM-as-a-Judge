@@ -11,8 +11,7 @@ export default function SignInWithIBMId() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   return (
     <Grid>
-      <Grid item xs={2}></Grid>
-      <Grid item xs={10}>
+      <Grid item xs={12}>
         <div
           style={{
             display: "flex",

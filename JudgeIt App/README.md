@@ -24,7 +24,13 @@ NEXTAUTH_SECRET=
 
 ## Getting Started
 
-First, run the development server:
+### Install the dependencies
+
+```sh
+npm install
+```
+
+### Run the development server
 
 ```bash
 npm run dev
