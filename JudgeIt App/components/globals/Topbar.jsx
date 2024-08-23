@@ -64,6 +64,11 @@ const Topbar = () => {
               width={"33%"}
               flexDirection={"row"}
             >
+              <Box display={"flex"} marginRight={'10px'}>
+                <Typography style={{ fontSize: "12px", color: '#3B3B3B', lineHeight: '70px' }}>
+                  Logged in as {session.user.email}
+                </Typography>
+              </Box>
               <Box display={"flex"} justifyItems={"center"}>
                 <Box
                   lineHeight={"50px"}
