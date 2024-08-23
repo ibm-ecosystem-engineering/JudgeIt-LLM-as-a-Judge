@@ -184,7 +184,7 @@ const FileUploadForm = () => {
   return (
     <>
       {session && (
-        <div style={{ marginRight: "20px" }}>
+        <div style={{ marginRight: "20px", marginLeft: "200px", marginTop: "50px" }}>
           <PageTitle title={"LLM Judge Batch Request"} />
           {progress && (
             <Box marginBottom={"10px"} sx={{ justifyContent: "center" }}>

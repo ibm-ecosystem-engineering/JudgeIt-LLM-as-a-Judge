@@ -38,12 +38,8 @@ export async function judge_api_solo_call(payload) {
 }
 
 async function rating_api_call(payload) {
-  try {
     const response = await axios.post(API_RATING_URL, payload, config);
     return response;
-  } catch (error) {
-    throw error;
-  }
 }
 
 async function similarity_api_call(payload) {
