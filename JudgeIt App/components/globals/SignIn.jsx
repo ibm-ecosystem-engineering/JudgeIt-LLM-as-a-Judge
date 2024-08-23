@@ -5,10 +5,12 @@ import { useSearchParams } from "next/navigation";
 import IBMIcon from "./icons/IBMIcon";
 import { LineWeight } from "@mui/icons-material";
 import { Grid } from "@mui/material";
+import React, { Suspense } from "react";
 
-export default function SignInWithIBMId() {
+function SignInWithIBMIdContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   return (
     <Grid>
       <Grid item xs={12}>
@@ -36,5 +38,13 @@ export default function SignInWithIBMId() {
         </div>
       </Grid>
     </Grid>
+  );
+}
+
+export default function SignInWithIBMId() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInWithIBMIdContent />
+    </Suspense>
   );
 }
