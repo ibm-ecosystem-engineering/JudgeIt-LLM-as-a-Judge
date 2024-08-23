@@ -12,6 +12,7 @@ import {
   Radio,
   LinearProgress,
   Paper,
+  Alert,
 } from "@mui/material";
 import * as Yup from "yup";
 import PageTitle from "@/components/globals/PageTitle";
@@ -89,17 +90,20 @@ const SoloRequestPage = () => {
   const [current_api_call, setCurrent_api_call] = useState("");
   const [api_call_inprogress, setApi_call_inprogress] = useState(false);
   const [result, setResult] = useState(null);
+  const [api_error, setApi_error] = useState(null);
 
   return (
     <>
       {session && (
-        <div style={{ marginRight: "20px" }}>
-          <PageTitle title={"LLM Judge"} />
-          {api_call_inprogress && (
-            <LinearProgress
-              color="inherit"
-              sx={{ marginBottom: "10px", width: "90%" }}
-            />
+        <div style={{ marginRight: "20px", marginLeft: "200px", marginTop: "50px" }}>
+          <PageTitle title={"LLM Judge Single Request"} />
+          {api_error && (
+            <Alert
+              severity="error"
+              sx={{ width: "85%", marginLeft: "20px", marginBottom: "10px" }}
+            >
+              {api_error}
+            </Alert>
           )}
           {result && <SoloResult api_type={current_api_call} data={result} />}
           <Paper elevation={2} sx={{ width: "90%" }}>
@@ -120,13 +124,15 @@ const SoloRequestPage = () => {
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
                   try {
+                    setApi_error(null);
                     setCurrent_api_call(values.apiType);
                     setApi_call_inprogress(true);
                     const response = await judge_api_solo_call(values);
                     setResult(response.data);
                     setApi_call_inprogress(false);
                   } catch (error) {
-                    console.error(error);
+                    setApi_error("Error in making API call. Please try again later.");
+                    setApi_call_inprogress(false);
                   }
                 }}
               >
@@ -244,6 +250,12 @@ const SoloRequestPage = () => {
               </Formik>
             </Box>
           </Paper>
+          {api_call_inprogress && (
+            <LinearProgress
+              color="inherit"
+              sx={{ marginTop: "30px", width: "90%" }}
+            />
+          )}
         </div>
       )}
     </>
