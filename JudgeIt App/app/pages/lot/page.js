@@ -184,13 +184,14 @@ const FileUploadForm = () => {
   return (
     <>
       {session && (
-        <div style={{ marginRight: "20px" }}>
+        <div
+          style={{
+            marginRight: "20px",
+            marginLeft: "200px",
+            marginTop: "50px",
+          }}
+        >
           <PageTitle title={"LLM Judge Batch Request"} />
-          {progress && (
-            <Box marginBottom={"10px"} sx={{ justifyContent: "center" }}>
-              <LinearProgressWithLabel value={progressVal} width={"90%"} />
-            </Box>
-          )}
           {progress && progress === "SUCCESS" && (
             <Box>
               <Button
@@ -317,6 +318,15 @@ const FileUploadForm = () => {
                 Submit
               </Button>
             </Paper>
+            {progress &&
+              (progress === "PENDING" || progress === "PROGRESS") && (
+                <Box
+                  marginBottom={"10px"}
+                  sx={{ justifyContent: "center", marginTop: "30px" }}
+                >
+                  <LinearProgressWithLabel value={progressVal} width={"90%"} />
+                </Box>
+              )}
           </form>
         </div>
       )}

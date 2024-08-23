@@ -10,7 +10,10 @@ export const authOptions = {
         id: 'IBMid',
         name: 'IBMid',
       }),
-    ]
+    ],
+    pages: {
+      signIn: "/signin"
+    }
   }
   
 const handler =  NextAuth(authOptions);
