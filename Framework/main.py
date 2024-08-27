@@ -6,6 +6,8 @@ import pandas as pd
 import json
 import configparser
 
+import chardet 
+
 config = configparser.ConfigParser()
 config.read('./../config.ini')
 
@@ -19,12 +21,14 @@ judge_type = config['Default']['judge_type']
 input_file = home_dir + input_file_name
 
 def read_data(input_file):
-    ## Read the data for btach processing 
+    ## Read the data for batch processing
     data_df = pd.DataFrame()
     if '.xlsx' in input_file:
         data_df = pd.read_excel(input_file)
     elif '.csv' in input_file:
-        data_df =pd.read_csv(input_file)
+        with open(input_file, 'rb') as f:
+            result = chardet.detect(f.read())
+        data_df = pd.read_csv(input_file, encoding=result['encoding'])
     return data_df
 
 def write_data(data_df):
