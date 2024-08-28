@@ -32,6 +32,10 @@ import { judge_api_batch_call } from "@/services/JudgeBackendAPIBatch";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
 import { useSession } from "next-auth/react";
 
+import * as XLSX from "xlsx";
+import BarChart from "@/components/globals/BarChart";
+import { create } from "@mui/material/styles/createTransitions";
+
 const FileUploadForm = () => {
   const [file, setFile] = useState(null);
   const [errorStatus, setErrorStatus] = useState(null);
@@ -39,10 +43,58 @@ const FileUploadForm = () => {
   const [progressVal, setProgressVal] = useState(0);
   const [task_id, setTask_id] = useState(null);
   const { data: session, status } = useSession();
+  const [gradeData, setGradeData] = useState(null);
 
   const required_column_rating_similarity = "golden_text, generated_text";
   const required_column_multi_turn =
     "previous_question, previous_answer, current_question, golden_rewritten_question, rewritten_question";
+
+  const create_bar_chart = async (chart_task_id) => {
+    try {
+      setErrorStatus(null);
+      const response = await fetch(
+        LLM_JUDGE_DOWNLOAD_EVALUATION_URL + chart_task_id,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        setErrorStatus("Network response was not ok");
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+
+      // Parse the Excel file
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        // Extract and process the 'Grade' column
+        const grades = jsonData
+          .map((row) => row.Grade)
+          .filter((grade) => grade !== undefined);
+        const gradeDistribution = grades.reduce((acc, grade) => {
+          acc[grade] = (acc[grade] || 0) + 1;
+          return acc;
+        }, {});
+
+        setGradeData(gradeDistribution);
+      };
+      reader.readAsArrayBuffer(blob);
+    } catch (error) {
+      setErrorStatus("Failed to set grade values");
+    }
+  };
 
   const download_evaluation_result = async () => {
     try {
@@ -123,6 +175,7 @@ const FileUploadForm = () => {
 
           if (parsedData.status === "SUCCESS") {
             setProgressVal(100);
+            create_bar_chart(returned_task_id);
           } else if (
             parsedData.status === "PROGRESS" ||
             parsedData.status === "PENDING"
@@ -327,6 +380,11 @@ const FileUploadForm = () => {
                   <LinearProgressWithLabel value={progressVal} width={"90%"} />
                 </Box>
               )}
+            {gradeData && (
+              <Box sx={{ width: "90%" }}>
+                <BarChart gradeData={gradeData} />
+              </Box>
+            )}
           </form>
         </div>
       )}
