@@ -4,7 +4,7 @@ from langchain_ibm import WatsonxLLM
 from langchain_core.prompts import PromptTemplate
 
 config = configparser.ConfigParser()
-config.read('./../config.ini')
+config.read('./config.ini')
 
 ## Grading a generated text compared to a golden text
 SIMILARITY_PROMPT= """Follow these structured steps to accurately assess the similarity between a Golden Text and a Generated Text:
@@ -71,11 +71,15 @@ def batch_llm_answer_similarity(model_id, input_data):
         prompt_data = {'prompt_parameter_1': row['golden_text'],
                     'prompt_parameter_2': row['generated_text']}
         try:
-            prompt_results = llm_chain.invoke(prompt_data)
+            prompt_results = json.loads(llm_chain.invoke(prompt_data))
         except:
-            prompt_results = 'Error generating grade'
+            prompt_results = 'Error generating results'
         
-        input_data.at[index,'Grade'] = json.loads(prompt_results)['Grade']
-        input_data.at[index,'Explanation'] = json.loads(prompt_results)['Explanation']
+        if prompt_results == 'Error generating results':
+                input_data.at[index,'Grade'] = 'Error'
+                input_data.at[index,'Explanation'] = 'Error'
+        else:
+            input_data.at[index,'Grade'] = int(prompt_results['Grade'])
+            input_data.at[index,'Explanation'] = prompt_results['Explanation']
 
     return input_data

@@ -4,7 +4,7 @@ from langchain_ibm import WatsonxLLM
 from langchain_core.prompts import PromptTemplate
 
 config = configparser.ConfigParser()
-config.read('./../config.ini')
+config.read('./config.ini')
 
 MULTI_TURN_JUDGE_PROMPT = """Follow these below structured steps to accurately assess query transformations and ensure alignment with provided criteria.
 1. **Role and Task**: Assume the role of an impartial assistant and judge. Your task is to evaluate query transformations using provided information. You will receive a Previous Query, Previous Answer, New Query, Golden Rewritten Query, and a Rewritten New Query for evaluation.
@@ -127,10 +127,13 @@ def batch_llm_multi_turn_eval(model_id, input_data):
                     'prompt_parameter_4': row['golden_rewritten_question'],
                     'prompt_parameter_5': row['rewritten_question']}
         try:
-            prompt_results = json.loads(llm_chain.invoke(prompt_data))['Grade']
+            prompt_results = json.loads(llm_chain.invoke(prompt_data))
         except:
-            prompt_results = 'Error generating grade'
+            prompt_results = 'Error generating results'
         
-        input_data.at[index,'Grade'] = prompt_results
+        if prompt_results == 'Error generating results':
+                input_data.at[index,'Grade'] = 'Error'
+        else:
+            input_data.at[index,'Grade'] = int(prompt_results['Grade'])
 
     return input_data
