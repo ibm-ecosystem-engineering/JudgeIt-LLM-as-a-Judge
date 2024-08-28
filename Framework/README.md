@@ -5,9 +5,9 @@
 
 One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of evaluation currently available:
 
-1. RAG Evaluation (Similarity)
-2. RAG Evaluation (Rating)
-3. Multi-turn evaluation
+1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text
+2. **RAG Evaluation (Rating)**: evaluate generated text against golden text
+3. **Multi-turn evaluation**: evaluate rewritten queries given a mult-turn conversation
 
 The JudgeIt framework takes input data in the form of excel or csv files for any of these evaluations.
 

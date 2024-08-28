@@ -4,7 +4,7 @@ This directory contains the code for a React-based application that provides a u
 
 ## Prerequisite
 
-- LLM Judge Backend Service is up and running. Can be found [here](/REST%20Service)
+- LLM Judge Backend Service is up and running. Can be found [here](/REST-Service)
 - [Node.js](https://nodejs.org/en) v18 or higher
 - [IBM AppID](https://www.ibm.com/products/app-id) for application authentication
 
