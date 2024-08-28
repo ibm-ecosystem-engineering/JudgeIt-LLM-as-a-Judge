@@ -1,10 +1,28 @@
-# REST Service
+<!-- ABOUT THE PROJECT -->
 
-This directory contains the RESTful service code that interfaces with the JudgeIt framework. It offers endpoints for initiating evaluations, retrieving results, and configuring evaluation parameters.
+<!-- omit in toc -->
+# JudgeIt REST Service
 
-## Architecture diagram
+One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the RESTful service code that interfaces with the JudgeIt framework. It offers endpoints for initiating evaluations, retrieving results, and configuring evaluation parameters.
 
 ![Architecture diagram](/images/LLM-Judge-Architecture-Backend.png)
+
+<!-- omit in toc -->
+## Table of Contents
+
+- [Components](#components)
+  - [REST Server](#rest-server)
+  - [Redis Broker](#redis-broker)
+  - [Celery Worker](#celery-worker)
+  - [Flower Server](#flower-server)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Test](#test)
+- [Configuring your Input File](#configuring-your-input-file)
+- [Understanding the Results](#understanding-the-results)
+
+<!-- Components -->
 
 ## Components
 
@@ -35,85 +53,112 @@ Consume tasks from the Redis queue and execute them asynchronously, then return 
 
 It monitors the Celery cluster in real-time, offering a web-based interface to track task execution, worker performance, and queue status.
 
-## Execution
+<!-- GETTING STARTED -->
 
-### Requirements
+## Getting Started
 
-- Docker and docker-compose are installed
-- [IBM Cloud API Key](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui)
-- [Watsonx Project id](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)
+### Prerequisites
 
-### Steps to execute the program
+The following prerequisites are required to run the tester:
 
-Update the Docker Compose environment variables. There are two environment variables that need to be updated.
+1. Docker and docker-compose are installed
+2. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
 
-- IBM_CLOUD_API_KEY
-- WX_PROJECT_ID
+### Installation
 
-```yaml
-services:
-  fastapi_app:
-    container_name: fastapi_app
-    build: .
-    ports:
-      - 3001:3001
-    environment:
-      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - IBM_CLOUD_API_KEY=
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - LLM_JUDGE_API_KEY=LLM-JUDGE-SECRET-PASS
-    restart: always
-  redis:
-    container_name: redis
-    image: redis:7.2.5-alpine
-    restart: always
-  celery_worker:
-    container_name: celery_worker
-    build: .
-    #volumes:
-    #  - ./app:/app
-    command: celery -A app.celery.celery_worker.celery worker --loglevel=info
-    environment:
-      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - IBM_CLOUD_API_KEY=
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - fastapi_app
-      - redis
-    restart: always
-  flower:
-    container_name: flower
-    build: .
-    command: celery --broker=redis://redis:6379/0 flower --port=5555
-    ports:
-      - 5556:5555
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - fastapi_app
-      - redis
-      - celery_worker
-    restart: always
-```
+1. Change directory into the JudgeIt REST-Service
 
-#### Build
+   ```bash
+   cd JudgeIt-LLM-as-a-Judge/REST-Service
+   ```
 
-```sh
-docker-compose build
-```
+2. Update the Docker Compose environment variables. There are two environment variables that need to be updated:
+   1. IBM_CLOUD_API_KEY
+   2. WX_PROJECT_ID
 
-#### Run
+   ```yaml
+    services:
+        fastapi_app:
+        container_name: fastapi_app
+        build: .
+        ports:
+            - 3001:3001
+        environment:
+            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
+            - WX_PROJECT_ID=
+            - IBM_CLOUD_API_KEY=
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+            - LLM_JUDGE_API_KEY=LLM-JUDGE-SECRET-PASS
+        restart: always
+        redis:
+        container_name: redis
+        image: redis:7.2.5-alpine
+        restart: always
+        celery_worker:
+        container_name: celery_worker
+        build: .
+        #volumes:
+        #  - ./app:/app
+        command: celery -A app.celery.celery_worker.celery worker --loglevel=info
+        environment:
+            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
+            - WX_PROJECT_ID=
+            - IBM_CLOUD_API_KEY=
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        depends_on:
+            - fastapi_app
+            - redis
+        restart: always
+        flower:
+        container_name: flower
+        build: .
+        command: celery --broker=redis://redis:6379/0 flower --port=5555
+        ports:
+            - 5556:5555
+        environment:
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        depends_on:
+            - fastapi_app
+            - redis
+            - celery_worker
+        restart: always
+   ```
 
-```sh
-docker-compose up -d
-```
+3. Build
 
-#### Test
+   ```sh
+   docker-compose build
+   ```
+
+4. Run
+
+   ```sh
+   docker-compose up -d
+   ```
+
+## Test
 
 - REST Endpoint: <http://localhost:3001>
 - Flower server: <http://localhost:5556>
+
+## Configuring your Input File
+
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: JudgeIt-LLM-as-a-Judge/data/input
+
+1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+3. Multi-turn Evaluation: provide an excel/csv file with the following columns: `previous_question`, `previous_answer`, `current_question`, `golden_rewritten_question`, and `rewritten_question`
+
+Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
+
+## Understanding the Results
+
+The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
+
+1. For RAG Evaluation (Similarity), the LLM Judge will output a `Grade` and `Explanation`. A grade of 0 means the texts are dissimilar, while a grade of 1 means the texts are similar.
+2. For RAG Evaluation (Rating), the LLM Judge will output a `Grade` and `Explanation`. A grade of 1 means the texts are dissimilar, a grade of 2 means the texts are partially similar, and a text of 3 means the texts are significantly similar.
+3. For Multi-turn Evaluation, the LLM Judge will output a `Grade`. A grade of 0 means the golden rewritten question and rewritten question are dissimilar, while a grade of 1 means the questions are similar.
