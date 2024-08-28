@@ -42,7 +42,7 @@ The LLM Judges in this repository have been tested against human evaluation to v
    1. Framework: Use Python modules and the cli to run evaluations locally
       1. [Framework Instructions](./Framework/README.md)
    2. Service-Oriented Architecture: first spin up a REST API backend, then spin up a NextJS frontend to run evaluations via a UI
-      1. [REST Service Instructions](./Rest-Service/README.md)
+      1. [REST Service Instructions](./REST-Service/README.md)
       2. [JudgeIt App Instructions](./JudgeIt-App/README.md)
 
 ## Contributors
