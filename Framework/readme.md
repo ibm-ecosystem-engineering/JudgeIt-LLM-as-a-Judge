@@ -1,16 +1,16 @@
 <!-- ABOUT THE PROJECT -->
 
+<!-- omit in toc -->
 # JudgeIt Framework
 
+<!-- omit in toc -->
 ## Table of Contents
 
-- [JudgeIt Framework](#judgeit-framework)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-  - [Configuring your Input File](#configuring-your-input-file)
-  - [Understanding the Results](#understanding-the-results)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Configuring your Input File](#configuring-your-input-file)
+- [Understanding the Results](#understanding-the-results)
 
 One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of evaluation currently available:
 
