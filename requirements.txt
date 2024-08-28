@@ -31,4 +31,5 @@ threadpoolctl==3.5.0
 tqdm==4.66.4
 tzdata==2024.1
 urllib3==2.1.0
+XlsxWriter==3.2.0
 zipp==3.19.2

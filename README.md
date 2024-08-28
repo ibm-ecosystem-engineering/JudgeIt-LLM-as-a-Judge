@@ -1,23 +1,26 @@
-# JudgeIt - Auto Evaluation Framework for LLM/Generative AI Pipelines
+# JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines
 
-## Introduction
-
-JudgeIt is an automated evaluation framework designed for various LLM/Generative AI pipelines such as RAG evaluation, Multi-turn query rewrite evaluation, Text to SQL evaluation, etc. It utilizes LLMs as a judge to augment or replace human-in-the-loop evaluations, significantly accelerating the assessment of multiple experiments and LLM pipelines. Compared to human evaluation, our LLM-judge is very accurate:
+JudgeIt is an automated evaluation framework designed for various Generative AI pipelines such as RAG evaluation, multi-turn query rewrite evaluation, text-to-SQL evaluation, etc. It utilizes an LLM Judge to accurately and efficiently evaluate experiments and LLM pipelines. The LLM Judges used in this framework have been evaluated
 ![Judge-accuracy](/images/Judge-accuracy.png)
-
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Features](#features)
-4. [Dependencies](#dependencies)
-5. [Configuration](#configuration)
-6. [Documentation](#documentation)
-7. [Examples](#examples)
-8. [Troubleshooting](#troubleshooting)
-9. [Contributors](#contributors)
-10. [License](#license)
+- [JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines](#judgeit---an-auto-evaluation-framework-for-generative-ai-pipelines)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+    - [Installing Dependencies](#installing-dependencies)
+  - [Usage](#usage)
+    - [Step 1: Configure Your Environment](#step-1-configure-your-environment)
+    - [Step 2: Running Evaluations](#step-2-running-evaluations)
+    - [Step 3: Review Results](#step-3-review-results)
+  - [Features](#features)
+  - [Dependencies](#dependencies)
+  - [Configuration](#configuration)
+  - [Documentation](#documentation)
+  - [Examples](#examples)
+  - [Troubleshooting](#troubleshooting)
+  - [Contributors](#contributors)
+  - [License](#license)
 
 ## Installation
 
@@ -75,7 +78,6 @@ Results will be generated and stored in the specified output directory. These re
 
 ![Features](/images/features.png)
 
-
 ## Dependencies
 
 JudgeIt relies on several Python packages, all of which are specified in the `requirements.txt` file. Notable dependencies include:
@@ -114,7 +116,6 @@ If you encounter issues while using JudgeIt, consider the following:
 
 ## Contributors
 
-
 - Kunal Sawarkar, Chief Data Scientist
 - Shivam Solanki, Senior Advisory Data Scientist
 - Anand Das, Technology Engineer
@@ -122,8 +123,6 @@ If you encounter issues while using JudgeIt, consider the following:
 - Abhilasha Mangal, Senior Data Scientist
 - Kevin Huang, Sr. ML-Ops Engineer
 
-
 ## License
 
 This project is licensed under the Apache-2.0 License. See the `LICENSE` file for more details.
-

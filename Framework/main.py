@@ -9,7 +9,7 @@ import configparser
 import chardet 
 
 config = configparser.ConfigParser()
-config.read('./../config.ini')
+config.read('./config.ini')
 
 ## Setup the filename and values
 home_dir = config['Default']['home_dir']
@@ -19,6 +19,7 @@ model_id = config['Default']['model_id']
 judge_type = config['Default']['judge_type']
 
 input_file = home_dir + input_file_name
+output_file = home_dir + output_file_name
 
 def read_data(input_file):
     ## Read the data for batch processing
@@ -33,10 +34,19 @@ def read_data(input_file):
 
 def write_data(data_df):
     ## save the output
-    if '.xlsx' in output_file_name:
-        data_df.to_excel(output_file_name)
-    elif '.csv' in output_file_name:
-        data_df.to_csv(output_file_name)
+    if '.xlsx' in output_file:
+        # write the dataframe to an excel file
+        writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
+        data_df.to_excel(writer, index=False, sheet_name='Sheet1')
+        workbook = writer.book
+        worksheet = writer.sheets['Sheet1']
+        cell_format = workbook.add_format({'text_wrap': True, 'valign': 'top', 'align': 'left'})
+        for i, column in enumerate(data_df.columns):
+            worksheet.set_column(i, i, 40, cell_format)
+        worksheet.set_column(3, 3, 70, cell_format)
+        writer.close()
+    elif '.csv' in output_file:
+        data_df.to_csv(output_file)
     print("file save")
 
 
