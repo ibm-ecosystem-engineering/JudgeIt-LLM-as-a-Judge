@@ -1,36 +1,56 @@
+<!-- omit in toc -->
 # JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines
 
-JudgeIt is an automated evaluation framework designed for various Generative AI pipelines such as RAG evaluation, multi-turn query rewrite evaluation, text-to-SQL evaluation, etc. It utilizes an LLM Judge to accurately and efficiently evaluate experiments and LLM pipelines. The LLM Judges used in this framework have been evaluated
-![Judge-accuracy](/images/Judge-accuracy.png)
+JudgeIt is an automated evaluation framework designed for various Generative AI pipelines such as RAG Evaluation, Multi-Turn Query Rewrite evaluation, Text-to-SQL Evaluation, and more. It utilizes an LLM Judge to accurately and efficiently evaluate experiments and LLM pipelines. The LLM Judges used in this framework have been evaluated
 
+<!-- omit in toc -->
 ## Table of Contents
 
-- [JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines](#judgeit---an-auto-evaluation-framework-for-generative-ai-pipelines)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-    - [Installing Dependencies](#installing-dependencies)
-  - [Usage](#usage)
-    - [Step 1: Configure Your Environment](#step-1-configure-your-environment)
-    - [Step 2: Running Evaluations](#step-2-running-evaluations)
-    - [Step 3: Review Results](#step-3-review-results)
-  - [Features](#features)
-  - [Dependencies](#dependencies)
-  - [Configuration](#configuration)
-  - [Documentation](#documentation)
-  - [Examples](#examples)
-  - [Troubleshooting](#troubleshooting)
-  - [Contributors](#contributors)
-  - [License](#license)
+- [Reliability Metrics](#reliability-metrics)
+- [Installation](#installation)
+  - [Method 1: Framework](#method-1-framework)
+  - [Method 2: Service-Oriented Architecture](#method-2-service-oriented-architecture)
+  - [Installing Dependencies](#installing-dependencies)
+- [Usage](#usage)
+  - [Step 1: Configure Your Environment](#step-1-configure-your-environment)
+  - [Step 2: Running Evaluations](#step-2-running-evaluations)
+  - [Step 3: Review Results](#step-3-review-results)
+- [Features](#features)
+- [Dependencies](#dependencies)
+- [Configuration](#configuration)
+- [Documentation](#documentation)
+- [Examples](#examples)
+- [Troubleshooting](#troubleshooting)
+- [Contributors](#contributors)
+- [License](#license)
+
+## Reliability Metrics
+
+The LLM Judges in this repository have been tested against human evaluation to validate their reliability.
+
+1. Multi-turn Query Rewrite Evaluation
+![Multi-turn Evaluation Reliability](/images/multi-turn-evaluation-reliability.png)
+2. RAG Evaluation
+![RAG Evaluation Reliability](/images/rag-evaluation-reliability.png)
 
 ## Installation
 
-To get started with JudgeIt, clone the repository and install the necessary dependencies.
+There are two primary methods to spin up the JudgeIt service.
 
-```bash
-git clone <repository-url>
-cd JudgeIt
-pip install -r requirements.txt
-```
+### Method 1: Framework
+
+Use Python modules and the cli to run evaluations locally.
+
+To spin up JudgeIt using the Framework method, go to the [Framework Instructions](./Framework/README.md)
+
+### Method 2: Service-Oriented Architecture
+
+Use a REST API backend and NextJS frontend to run evaluations via a UI.
+
+To spin up JudgeIt using the Service-Oriented Architecture method, go to:
+
+1. [REST Service Instructions](./Rest-Service/README.md)
+2. [JudgeIt App Instructions](./JudgeIt-App/README.md)
 
 ### Installing Dependencies
 
