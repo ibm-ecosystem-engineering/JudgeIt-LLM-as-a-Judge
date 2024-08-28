@@ -3,15 +3,6 @@
 <!-- omit in toc -->
 # JudgeIt Framework
 
-<!-- omit in toc -->
-## Table of Contents
-
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Configuring your Input File](#configuring-your-input-file)
-- [Understanding the Results](#understanding-the-results)
-
 One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of evaluation currently available:
 
 1. RAG Evaluation (Similarity)
@@ -21,6 +12,15 @@ One method of using JudgeIt is through the JudgeIt Python framework. The framewo
 The JudgeIt framework takes input data in the form of excel or csv files for any of these evaluations.
 
 ![LLM-Judges](/images/flow-diagram.png)
+
+<!-- omit in toc -->
+## Table of Contents
+
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Configuring your Input File](#configuring-your-input-file)
+- [Understanding the Results](#understanding-the-results)
 
 <!-- GETTING STARTED -->
 
@@ -35,19 +35,13 @@ The following prerequisites are required to run the tester:
 
 ### Installation
 
-1. Clone the repo
-
-   ```bash
-   git clone <repository url>
-   ```
-
-2. Change directory into the JudgeIt Framework
+1. Change directory into the JudgeIt Framework
 
    ```bash
    cd JudgeIt-LLM-as-a-Judge/Framework
    ```
 
-3. Create a python virtual environment
+2. Create a python virtual environment
 
    ```bash
    python3 -m venv virtual-env
@@ -55,7 +49,7 @@ The following prerequisites are required to run the tester:
    pip3 install -r requirements.txt
    ```
 
-4. Configure your parameters in config.ini. Below is a sample config file
+3. Configure your parameters in config.ini. Below is a sample config file
 
    ```bash
    [Default]
@@ -85,13 +79,13 @@ The following prerequisites are required to run the tester:
    7. `api_key`: your IBM Cloud apikey: <https://cloud.ibm.com/iam/apikeys>
    8. `project_id`: you watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
 
-5. Run the following to evaluate
+4. Run the following to evaluate
 
    ```bash
    python main.py --config path_to_config_file
    ```
 
-6. Run the following command to exit the python virtual environment:
+5. Run the following command to exit the python virtual environment:
 
    ```bash
    deactivate
