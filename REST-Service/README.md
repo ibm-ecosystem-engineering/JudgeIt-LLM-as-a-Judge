@@ -19,6 +19,7 @@ One method of using JudgeIt is through a Service-Oriented Architecture (SOA). Th
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Test](#test)
+- [JudgeIt App](#judgeit-app)
 - [Configuring your Input File](#configuring-your-input-file)
 - [Understanding the Results](#understanding-the-results)
 
@@ -145,6 +146,10 @@ The following prerequisites are required to run the tester:
 
 - REST Endpoint: <http://localhost:3001>
 - Flower server: <http://localhost:5556>
+
+## JudgeIt App
+
+You can now move on to spinning up the [JudgeIt NextJS App](../JudgeIt-App/README.md)
 
 ## Configuring your Input File
 
