@@ -12,6 +12,7 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { signOut } from "next-auth/react";
 import GavelOutlinedIcon from "@mui/icons-material/GavelOutlined";
 import BatchPredictionOutlinedIcon from "@mui/icons-material/BatchPredictionOutlined";
+import IBMIcon from "./icons/IBMIcon";
 
 const DrawerMenu = ({
   open,
@@ -26,12 +27,26 @@ const DrawerMenu = ({
       onClick={handleDrawwerClose}
       onKeyDown={handleDrawwerClose}
     >
-      <Toolbar>
-        <AccountCircleOutlinedIcon style={{ height: "50px", width: "50px" }} />
-        <Typography fontSize={"25px"} ml={"5px"}>
-          JudgeIt App
-        </Typography>
-      </Toolbar>
+      <Box
+              display="flex"
+              justifyContent="start"
+              alignItems="center"
+              width="100%"
+              
+              sx={{ textDecoration: "none" }}
+            >
+              <IBMIcon></IBMIcon>
+                <Typography 
+                  style={{ 
+                    fontSize: "24px", 
+                    color: '#3B3B3B', 
+                    margin: '10px', 
+                    fontWeight: 'bold',
+                  }}
+                >
+                  JudgeIt
+                </Typography>
+            </Box>
       <Divider />
       <List>
         <ListItem disablePadding>
