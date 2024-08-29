@@ -1,6 +1,6 @@
 "use client";
-import { Box, Typography, AppBar } from "@mui/material";
-import BuildLab from "@/components/globals/BuildLab";
+import { Box, Typography,AppBar } from "@mui/material";
+import IBMIcon from "./icons/IBMIcon";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DrawerMenu from "@/components/globals/DrawerMenu";
 import { useState } from "react";
@@ -10,13 +10,13 @@ const Topbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: session, status } = useSession();
 
-  const handleDrawwerOpen = () => {
+  const handleDrawerOpen = () => {
     if (drawerOpen) setDrawerOpen(false);
     else setDrawerOpen(true);
     console.log("act");
   };
 
-  const handleDrawwerClose = (event) => {
+  const handleDrawerClose = (event) => {
     if (drawerOpen) setDrawerOpen(false);
   };
 
@@ -30,70 +30,46 @@ const Topbar = () => {
           }}
         >
           <Box
-            display={"flex"}
-            justifyContent={"space-between"}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            height="100%"
             p={0}
-            onClick={handleDrawwerClose}
+            onClick={handleDrawerClose}
           >
-            {/* IBM Build lab logo  */}
-            <Box display={"flex"} width={"33%"}>
-              <BuildLab />
-            </Box>
             <Box
-              display={"flex"}
-              flexDirection={"column"}
-              textAlign={"center"}
-              width={"34%"}
+              display="flex"
+              justifyContent="start"
+              alignItems="center"
+              height="100%"
+              width="100%"
             >
-              <Typography
-                fontWeight={"600"}
-                fontSize={"1.5rem"}
-                lineHeight={"2.5rem"}
-                color={"#3B3B3B"}
-              >
-                JudgeIt Application
-              </Typography>
-              <Typography variant="h7" color={"#3B3B3B"}>
-                Evaluate your LLM generated text
+              <IBMIcon />
+              <Typography style={{ fontSize: "24px", color: '#3B3B3B', margin: '10px', fontWeight: 'bold' }}>
+                Ecosystem Engineering
               </Typography>
             </Box>
-
             <Box
-              display={"flex"}
-              justifyContent={"end"}
-              width={"33%"}
-              flexDirection={"row"}
+              display="flex"
+              justifyContent="end"
+              alignItems="center"
+              width="100%"
             >
-              <Box display={"flex"} marginRight={'10px'}>
-                <Typography style={{ fontSize: "12px", color: '#3B3B3B', lineHeight: '70px' }}>
-                  Logged in as {session.user.email}
-                </Typography>
-              </Box>
-              <Box display={"flex"} justifyItems={"center"}>
-                <Box
-                  lineHeight={"50px"}
-                  display={"flex"}
-                  color={"#3B3B3B"}
-                  flexDirection={"column"}
-                  justifyContent={"center"}
-                  ml={"10px"}
-                  mr={"20px"}
-                >
-                  <MenuOutlinedIcon
-                    sx={{ cursor: "pointer" }}
-                    color="inherit"
-                    fontSize="large"
-                    onClick={handleDrawwerOpen}
-                  />
-                  <DrawerMenu
-                    open={drawerOpen}
-                    handleDrawwerClose={handleDrawwerClose}
-                    handleDrawwerOpen={handleDrawwerOpen}
-                  />
-                </Box>
-              </Box>
+              <Typography style={{ fontSize: "12px", color: '#3B3B3B', marginRight: '10px' }}>
+                Logged in as {session.user.email}
+              </Typography>
+              <MenuOutlinedIcon
+                sx={{ cursor: "pointer", color: "#3B3B3B", marginRight: "20px" }}
+                fontSize="large"
+                onClick={handleDrawerOpen}
+              />
+              <DrawerMenu
+                open={drawerOpen}
+                handleDrawerClose={handleDrawerClose}
+                handleDrawerOpen={handleDrawerOpen}
+              />
             </Box>
-          </Box>{" "}
+          </Box>
         </AppBar>
       )}
     </>

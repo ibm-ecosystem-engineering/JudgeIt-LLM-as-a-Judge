@@ -244,7 +244,6 @@ const FileUploadForm = () => {
             marginTop: "50px",
           }}
         >
-          <PageTitle title={"LLM Judge Batch Request"} />
           {progress && progress === "SUCCESS" && (
             <Box>
               <Button
