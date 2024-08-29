@@ -50,7 +50,7 @@ const DrawerMenu = ({
             <ListItemIcon>
               <GavelOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={"Single request"} />
+            <ListItemText primary={"Single Evaluation"} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -58,7 +58,7 @@ const DrawerMenu = ({
             <ListItemIcon>
               <BatchPredictionOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={"Batch"} />
+            <ListItemText primary={"Batch Evaluation"} />
           </ListItemButton>
         </ListItem>
       </List>

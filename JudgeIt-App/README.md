@@ -30,7 +30,7 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 
 The following prerequisites are required to run the tester:
 
-1. [LLM Judge Backend Service](/REST-Service) is up and running
+1. [JudgeIt Backend REST Service](/REST-Service/README.md) is up and running
 2. [Node.js](https://nodejs.org/en) v18 or higher
 3. [IBM AppID](https://www.ibm.com/products/app-id) for application authentication
 
