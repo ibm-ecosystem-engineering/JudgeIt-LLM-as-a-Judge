@@ -38,7 +38,15 @@ The LLM Judges in this repository have been tested against human evaluation to v
    git clone <repository url>
    ```
 
-2. Select a method to spin up the JudgeIt service:
+2. Create a python virtual environment
+
+   ```bash
+   python3 -m venv virtual-env
+   source virtual-env/bin/activate
+   pip3 install -r requirements.txt
+   ```
+
+3. Select a method to spin up the JudgeIt service:
    1. Framework: Use Python modules and the cli to run evaluations locally
       1. [Framework Instructions](./Framework/README.md)
    2. Service-Oriented Architecture: first spin up a REST API backend, then spin up a NextJS frontend to run evaluations via a UI
