@@ -13,7 +13,7 @@ importlib_metadata==8.0.0
 jmespath==1.0.1
 joblib==1.4.2
 lomond==0.3.3
-nltk==3.8.1
+nltk==3.9
 numpy==1.26.4
 packaging==24.1
 pandas==2.1.4
