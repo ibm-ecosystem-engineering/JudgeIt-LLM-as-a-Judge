@@ -61,9 +61,10 @@ It monitors the Celery cluster in real-time, offering a web-based interface to t
 
 The following prerequisites are required to run the tester:
 
-1. Docker and docker-compose are installed
-2. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+1. Docker desktop is installed: <https://docs.docker.com/desktop/>
+2. docker-compose is installed (for mac: <https://formulae.brew.sh/formula/docker-compose>)
 3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+4. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
 
 ### Installation
 
@@ -147,7 +148,7 @@ The following prerequisites are required to run the tester:
 
 ## Configuring your Input File
 
-Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: JudgeIt-LLM-as-a-Judge/data/input
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](../Framework/data/input)
 
 1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
 2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
