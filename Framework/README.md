@@ -43,15 +43,7 @@ The following prerequisites are required to run the tester:
    cd JudgeIt-LLM-as-a-Judge/Framework
    ```
 
-2. Create a python virtual environment
-
-   ```bash
-   python3 -m venv virtual-env
-   source virtual-env/bin/activate
-   pip3 install -r requirements.txt
-   ```
-
-3. Configure your parameters in config.ini. Below is a sample config file
+2. Configure your parameters in config.ini. Below is a sample config file
 
    ```bash
    [Default]
@@ -81,14 +73,14 @@ The following prerequisites are required to run the tester:
    7. `api_key`: your IBM Cloud apikey: <https://cloud.ibm.com/iam/apikeys>
    8. `project_id`: you watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
 
-4. Run the following to evaluate.
+3. Run the following to evaluate.
 
    ```bash
    python main.py
    ```
 
    The output of the evaluation will be printed in your terminal, and a copy of the results will be saved to /JudgeIt-LLM-as-a-Judge/Framework/data/output
-5. Run the following command to exit the python virtual environment:
+4. Run the following command to exit the python virtual environment:
 
    ```bash
    deactivate
