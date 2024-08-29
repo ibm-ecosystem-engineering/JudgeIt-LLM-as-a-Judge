@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarChart = ({ gradeData }) => {
+  const chartRef = useRef(null);
+  const [chartWidth, setChartWidth] = useState(0);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        setChartWidth(entry.contentRect.width);
+      }
+    });
+
+    if (chartRef.current) {
+      resizeObserver.observe(chartRef.current);
+    }
+
+    return () => {
+      if (chartRef.current) {
+        resizeObserver.unobserve(chartRef.current);
+      }
+    };
+  }, []);
+
   const data = {
     labels: Object.keys(gradeData),
     datasets: [
@@ -20,12 +41,13 @@ const BarChart = ({ gradeData }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
       },
       title: {
-        display: true,
+        display: false,
         text: 'Grade Distribution',
         font: {
           size: 16,
@@ -52,12 +74,16 @@ const BarChart = ({ gradeData }) => {
             weight: 'bold',
           },
         },
-        beginAtZero: true,  // Start the y-axis at 0
+        beginAtZero: true,
       },
     },
   };
 
-  return <Bar data={data} options={options} />;
+  return (
+    <div ref={chartRef} style={{ width: '100%', height: '400px' }}>
+      <Bar data={data} options={options} width={chartWidth} height={400} />
+    </div>
+  );
 };
 
 export default BarChart;

@@ -6,7 +6,7 @@ import { Button, TextField, Box, Typography, Link, Paper } from "@mui/material";
 import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
 import { useDropzone } from "react-dropzone";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
-import PageTitle from "@/components/globals/PageTitle";
+
 import {
   MenuItem,
   Select,
@@ -239,8 +239,8 @@ const FileUploadForm = () => {
       {session && (
         <div
           style={{
-            marginRight: "20px",
-            marginLeft: "200px",
+            marginRight: "15%",
+            marginLeft: "15%",
             marginTop: "50px",
           }}
         >
@@ -352,7 +352,7 @@ const FileUploadForm = () => {
                 <input {...getInputProps()} />
                 <CloudUploadIcon sx={{ fontSize: 40, color: "#aaa" }} />
                 <Typography variant="body1">
-                  Drag 'n' drop a csv/xlsx file here, or click to select one
+                  Drag & Drop a to Upload CSV/Excel File, or Click to Browse
                 </Typography>
               </Box>
               {file && (
@@ -380,7 +380,18 @@ const FileUploadForm = () => {
                 </Box>
               )}
             {gradeData && (
-              <Box sx={{ width: "90%" }}>
+              <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
+                <Typography
+                  style={{
+                    fontSize: "20px",
+                    color: "#3B3B3B",
+                    margin: "10px",
+                    fontWeight: "bold",
+                    textDecoration: "none",
+                  }}
+                >
+                  Grade Distribution
+                </Typography>
                 <BarChart gradeData={gradeData} />
               </Box>
             )}

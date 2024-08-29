@@ -1,5 +1,5 @@
 "use client";
-import { Box, Typography,AppBar } from "@mui/material";
+import { Box, Typography,AppBar, Link } from "@mui/material";
 import IBMIcon from "./icons/IBMIcon";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DrawerMenu from "@/components/globals/DrawerMenu";
@@ -43,11 +43,29 @@ const Topbar = () => {
               alignItems="center"
               height="100%"
               width="100%"
+              
+              sx={{ textDecoration: "none" }}
             >
-              <IBMIcon />
-              <Typography style={{ fontSize: "24px", color: '#3B3B3B', margin: '10px', fontWeight: 'bold' }}>
-                Ecosystem Engineering
-              </Typography>
+              <Link
+                href="/"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                }}
+              >
+                <IBMIcon />
+                <Typography 
+                  style={{ 
+                    fontSize: "24px", 
+                    color: '#3B3B3B', 
+                    margin: '10px', 
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Ecosystem Engineering - JudgeIt
+                </Typography>
+              </Link>
             </Box>
             <Box
               display="flex"

@@ -95,8 +95,13 @@ const SoloRequestPage = () => {
   return (
     <>
       {session && (
-        <div style={{ marginRight: "20px", marginLeft: "200px", marginTop: "50px" }}>
-          <PageTitle title={"LLM Judge Single Request"} />
+        <div
+          style={{
+            marginRight: "15%",
+            marginLeft: "15%",
+            marginTop: "50px",
+          }}
+        >
           {api_error && (
             <Alert
               severity="error"
@@ -131,7 +136,9 @@ const SoloRequestPage = () => {
                     setResult(response.data);
                     setApi_call_inprogress(false);
                   } catch (error) {
-                    setApi_error("Error in making API call. Please try again later.");
+                    setApi_error(
+                      "Error in making API call. Please try again later."
+                    );
                     setApi_call_inprogress(false);
                   }
                 }}
@@ -236,13 +243,12 @@ const SoloRequestPage = () => {
                       marginRight={"20px"}
                     >
                       <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
+                        variant="outlined"
                         style={{ width: "200px" }}
+                        type="submit"
                         disabled={api_call_inprogress}
                       >
-                        Send
+                        Submit
                       </Button>
                     </Box>
                   </Form>
@@ -252,7 +258,7 @@ const SoloRequestPage = () => {
           </Paper>
           {api_call_inprogress && (
             <LinearProgress
-              color="inherit"
+              color="primary"
               sx={{ marginTop: "30px", width: "90%" }}
             />
           )}
