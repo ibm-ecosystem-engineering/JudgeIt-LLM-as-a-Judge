@@ -158,7 +158,7 @@ def write_data(data_df,output_file_name):
         data_df.to_excel(output_file_name)
     elif '.csv' in output_file_name:
         data_df.to_csv(output_file_name)
-    print("file save")
+    print("File saved in /JudgeIt-LLM-as-a-Judge/Framework/data/output")
 
 def processing_batch(case,file_name,output_file_name,question_col_name,golden_answer_col_name,respone_col_name,output_rating_col_name,output_feedback_col_name,model):
       if case == 'rating':

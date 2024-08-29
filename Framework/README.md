@@ -3,7 +3,7 @@
 <!-- omit in toc -->
 # JudgeIt Framework
 
-One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of evaluation currently available:
+One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of LLM Judges:
 
 1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text
 2. **RAG Evaluation (Rating)**: evaluate generated text against golden text
@@ -31,7 +31,9 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 The following prerequisites are required to run the tester:
 
 1. Python3
-2. IBM Cloud api key (this must be for the same cloud account that hosts the watsonx.ai instance)
+2. IBM Cloud api key (this must be for the same cloud account that hosts your watsonx.ai instance)
+3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+   1. This project must be associated with a WML instance
 
 ### Installation
 
@@ -68,7 +70,7 @@ The following prerequisites are required to run the tester:
    1. `home_dir`: the path to the folder where you have downloaded the repository
    2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge
    3. `input_file_name`:
-      1. a sample input file for each evaluation type is located in JudgeIt-LLM-as-a-Judge/data/input
+      1. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/data/input](./data/input)
       2. see [Configuring Your Input File](#configuring-your-input-file) for more details
    4. `output_file_name`: specify the name of your output file
    5. `judge_type`: specify the LLM Judge type. Possible values:
@@ -79,12 +81,13 @@ The following prerequisites are required to run the tester:
    7. `api_key`: your IBM Cloud apikey: <https://cloud.ibm.com/iam/apikeys>
    8. `project_id`: you watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
 
-4. Run the following to evaluate
+4. Run the following to evaluate.
 
    ```bash
-   python main.py --config path_to_config_file
+   python main.py
    ```
 
+   The output of the evaluation will be printed in your terminal, and a copy of the results will be saved to /JudgeIt-LLM-as-a-Judge/Framework/data/output
 5. Run the following command to exit the python virtual environment:
 
    ```bash
@@ -93,7 +96,7 @@ The following prerequisites are required to run the tester:
 
 ## Configuring your Input File
 
-Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: JudgeIt-LLM-as-a-Judge/data/input
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/data/input](./data/input)
 
 1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
 2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare

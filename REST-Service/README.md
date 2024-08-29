@@ -73,9 +73,9 @@ The following prerequisites are required to run the tester:
    cd JudgeIt-LLM-as-a-Judge/REST-Service
    ```
 
-2. Update the Docker Compose environment variables. There are two environment variables that need to be updated:
-   1. IBM_CLOUD_API_KEY
-   2. WX_PROJECT_ID
+2. In the `docker-compose.yml` file, update the following variables:
+   1. IBM_CLOUD_API_KEY (your IBM Cloud api key)
+   2. WX_PROJECT_ID (your watsonx.ai project id)
 
    ```yaml
     services:

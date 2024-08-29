@@ -2,6 +2,7 @@ import json
 import configparser
 from langchain_ibm import WatsonxLLM
 from langchain_core.prompts import PromptTemplate
+import sys
 
 config = configparser.ConfigParser()
 config.read('./config.ini')
@@ -68,8 +69,18 @@ def batch_llm_answer_similarity(model_id, input_data):
         prompt = PromptTemplate(input_variables=input_variables, template=SIMILARITY_PROMPT)
         llm_chain = prompt | llm_model
         # create invoke parameter which is a dictionary of your prompt parameters
-        prompt_data = {'prompt_parameter_1': row['golden_text'],
-                    'prompt_parameter_2': row['generated_text']}
+        try:
+            prompt_data = {'prompt_parameter_1': row['golden_text'],
+                        'prompt_parameter_2': row['generated_text']}
+        except KeyError as e:
+            print(f"Error: Missing required column - {e}")
+            print("Input file requires the following columns:")
+            print("1) previous_question")
+            print("2) previous_answer")
+            print("3) current_question")
+            print("4) golden_rewritten_question")
+            print("5) rewritten_question")
+            sys.exit(1)
         try:
             prompt_results = json.loads(llm_chain.invoke(prompt_data))
         except:
@@ -81,5 +92,9 @@ def batch_llm_answer_similarity(model_id, input_data):
         else:
             input_data.at[index,'Grade'] = int(prompt_results['Grade'])
             input_data.at[index,'Explanation'] = prompt_results['Explanation']
+        input_string = f"Golden Text: {prompt_data['prompt_parameter_1']}\n\nGenerated Text: {prompt_data['prompt_parameter_2']}"
+        print(f'-------------testing input {index + 1}-------------\n')
+        print(f'1) Input:\n\n{input_string}\n\n')
+        print(f'2) Output:\n\n{prompt_results}\n\n')
 
     return input_data
