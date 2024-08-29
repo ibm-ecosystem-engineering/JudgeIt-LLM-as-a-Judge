@@ -62,7 +62,7 @@ The following prerequisites are required to run the tester:
    1. `home_dir`: the path to the folder where you have downloaded the repository
    2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge
    3. `input_file_name`:
-      1. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/data/input](./data/input)
+      1. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/Framework/data/input](./data/input)
       2. see [Configuring Your Input File](#configuring-your-input-file) for more details
    4. `output_file_name`: specify the name of your output file
    5. `judge_type`: specify the LLM Judge type. Possible values:
@@ -88,7 +88,7 @@ The following prerequisites are required to run the tester:
 
 ## Configuring your Input File
 
-Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/data/input](./data/input)
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](./data/input)
 
 1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
 2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
