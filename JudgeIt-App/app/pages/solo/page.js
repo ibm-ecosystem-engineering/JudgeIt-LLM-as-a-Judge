@@ -98,8 +98,8 @@ const SoloRequestPage = () => {
       {session && (
         <div
           style={{
-            marginRight: "15%",
-            marginLeft: "15%",
+            marginRight: "20%",
+            marginLeft: "20%",
             marginTop: "50px",
           }}
         >
@@ -285,17 +285,7 @@ const SoloRequestPage = () => {
                 margin: "10px",
               }}
             >
-              Each type of LLM Judge will accept an excel/csv file as an input
-              file. The{" "}
-              <a
-                href="https://github.com/ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge/tree/main/Framework/data/input"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub repository
-              </a>{" "}
-              for this app contains a sample input file for each type of LLM
-              Judge that you can copy, edit, and use to test.
+              Evaluate a single input using different LLM Judge types.
             </Typography>
             <ol className="list-decimal list-inside mb-4">
               <li className="mb-2">
@@ -394,18 +384,6 @@ const SoloRequestPage = () => {
                 </ul>
               </li>
             </ol>
-
-            <Typography
-              style={{
-                fontSize: "16px",
-                color: "#3B3B3B",
-                margin: "10px",
-              }}
-            >
-              <b>Note:</b> Your input files can contain additional columns than
-              the ones specified above. These columns will have no effect on the
-              LLM Judge and will be preserved in the output file.
-            </Typography>
           </Box>
         </div>
       )}
