@@ -29,13 +29,13 @@ const DrawerMenu = ({
     >
       <Box
               display="flex"
-              justifyContent="start"
+              justifyContent="center"
               alignItems="center"
               width="100%"
               
               sx={{ textDecoration: "none" }}
             >
-              <IBMIcon></IBMIcon>
+            
                 <Typography 
                   style={{ 
                     fontSize: "24px", 
@@ -44,7 +44,7 @@ const DrawerMenu = ({
                     fontWeight: 'bold',
                   }}
                 >
-                  JudgeIt
+                  JudgeIt App
                 </Typography>
             </Box>
       <Divider />
