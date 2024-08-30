@@ -30,7 +30,7 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 
 The following prerequisites are required to run the tester:
 
-1. LLM Judge Backend Service is up and running. Can be found [here](/REST-Service)
+1. [JudgeIt Backend REST Service](/REST-Service/README.md) is up and running
 2. [Node.js](https://nodejs.org/en) v18 or higher
 3. [IBM AppID](https://www.ibm.com/products/app-id) for application authentication
 
@@ -42,39 +42,31 @@ The following prerequisites are required to run the tester:
    cd JudgeIt-LLM-as-a-Judge/JudgeIt-App
    ```
 
-2. Create a python virtual environment
-
-   ```bash
-   python3 -m venv virtual-env
-   source virtual-env/bin/activate
-   pip3 install -r requirements.txt
-   ```
-
-3. Copy env file to .env
+2. Copy env file to .env
 
    ```bash
    cp env .env
    ```
 
-4. Configure your parameters in .env. Make sure `NEXT_PUBLIC_LLM_JUDGE_API_KEY` value matches with the value assigned in backend service.
+3. Configure your parameters in .env. Make sure `NEXT_PUBLIC_LLM_JUDGE_API_KEY` value matches with the value assigned in backend service.
 
-5. Install dependencies
+4. Install dependencies
 
    ```bash
    npm install
    ```
 
-6. Run the development server
+5. Run the development server
 
    ```bash
    npm run dev
    ```
 
-7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Configuring your Input File
 
-Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: JudgeIt-LLM-as-a-Judge/data/input
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](../Framework/data/input)
 
 1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
 2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare

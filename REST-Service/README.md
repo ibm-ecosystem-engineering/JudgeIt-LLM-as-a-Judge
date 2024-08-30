@@ -19,6 +19,7 @@ One method of using JudgeIt is through a Service-Oriented Architecture (SOA). Th
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Test](#test)
+- [JudgeIt App](#judgeit-app)
 - [Configuring your Input File](#configuring-your-input-file)
 - [Understanding the Results](#understanding-the-results)
 
@@ -61,9 +62,10 @@ It monitors the Celery cluster in real-time, offering a web-based interface to t
 
 The following prerequisites are required to run the tester:
 
-1. Docker and docker-compose are installed
-2. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+1. Docker desktop is installed: <https://docs.docker.com/desktop/>
+2. docker-compose is installed (for mac: <https://formulae.brew.sh/formula/docker-compose>)
 3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+4. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
 
 ### Installation
 
@@ -73,9 +75,9 @@ The following prerequisites are required to run the tester:
    cd JudgeIt-LLM-as-a-Judge/REST-Service
    ```
 
-2. Update the Docker Compose environment variables. There are two environment variables that need to be updated:
-   1. IBM_CLOUD_API_KEY
-   2. WX_PROJECT_ID
+2. In the `docker-compose.yml` file, update the following variables:
+   1. IBM_CLOUD_API_KEY (your IBM Cloud api key)
+   2. WX_PROJECT_ID (your watsonx.ai project id)
 
    ```yaml
     services:
@@ -145,9 +147,13 @@ The following prerequisites are required to run the tester:
 - REST Endpoint: <http://localhost:3001>
 - Flower server: <http://localhost:5556>
 
+## JudgeIt App
+
+You can now move on to spinning up the [JudgeIt NextJS App](../JudgeIt-App/README.md)
+
 ## Configuring your Input File
 
-Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: JudgeIt-LLM-as-a-Judge/data/input
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](../Framework/data/input)
 
 1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
 2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare

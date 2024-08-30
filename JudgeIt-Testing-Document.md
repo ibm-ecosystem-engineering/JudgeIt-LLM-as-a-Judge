@@ -1,82 +1,34 @@
-<!-- omit in toc -->
-# JudgeIt Testing Document
+# JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines
 
-<!-- omit in toc -->
-## Table of Contents
+JudgeIt is an automated evaluation framework designed for various Generative AI pipelines such as RAG Evaluation, Multi-Turn Query Rewrite evaluation, Text-to-SQL Evaluation, and more. It utilizes an LLM Judge to accurately and efficiently evaluate generated text against a provided golden text.
 
-- [Configuring your Input File](#configuring-your-input-file)
-- [Understanding the Results](#understanding-the-results)
-- [JudgeIt Framework](#judgeit-framework)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Service-Oriented Architecture](#service-oriented-architecture)
-  - [Backend Installation](#backend-installation)
-    - [Backend Requirements](#backend-requirements)
-    - [Build](#build)
-    - [Run](#run)
-    - [Test](#test)
-  - [Frontend Installation](#frontend-installation)
-    - [Frontend Requirements](#frontend-requirements)
-    - [Frontend Environment Variables](#frontend-environment-variables)
-    - [Run the development server](#run-the-development-server)
+## Features
 
-## Configuring your Input File
+- **Automated Evaluation**: JudgeIt automates batch evaluation processes, resulting in more efficient evaluation compared to human testers.
+- **Multi-Pipeline Support**: Evaluate different types of LLM pipelines including:
+  - **RAG**: evaluate generated text against golden text
+  - **Multi-turn query rewritings**: evaluate rewritten queries given a mult-turn conversation
+  - **Text-to-SQL conversions**: evaluate natural language to SQL generations
+- **Customization**: Configure the evaluation process with your datasets, LLM models, and specific parameters.
 
-Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: JudgeIt-LLM-as-a-Judge/data/input
+## Reliability Metrics
 
-1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
-2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
-3. Multi-turn Evaluation: provide an excel/csv file with the following columns: `previous_question`, `previous_answer`, `current_question`, `golden_rewritten_question`, and `rewritten_question`
+The LLM Judges in this repository have been tested against human evaluation to validate their reliability.
 
-Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
+1. Multi-turn Query Rewrite Evaluation
+![Multi-turn Evaluation Reliability](/images/multi-turn-evaluation-reliability.png)
+2. RAG Evaluation
+![RAG Evaluation Reliability](/images/rag-evaluation-reliability.png)
 
-## Understanding the Results
+## Installation
 
-The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
-
-1. For RAG Evaluation (Similarity), the LLM Judge will output a `Grade` and `Explanation`. A grade of 0 means the texts are dissimilar, while a grade of 1 means the texts are similar.
-2. For RAG Evaluation (Rating), the LLM Judge will output a `Grade` and `Explanation`. A grade of 1 means the texts are dissimilar, a grade of 2 means the texts are partially similar, and a text of 3 means the texts are significantly similar.
-3. For Multi-turn Evaluation, the LLM Judge will output a `Grade`. A grade of 0 means the golden rewritten question and rewritten question are dissimilar, while a grade of 1 means the questions are similar.
-
-## JudgeIt Framework
-
-One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of evaluation currently available:
-
-1. RAG Evaluation (Similarity)
-2. RAG Evaluation (Rating)
-3. Multi-turn evaluation
-
-The JudgeIt framework takes input data in the form of excel or csv files for any of these evaluations.
-
-![LLM-Judges](/images/flow-diagram.png)
-
-<!-- GETTING STARTED -->
-
-## Getting Started
-
-### Prerequisites
-
-The following prerequisites are required to run the tester:
-
-1. Python3
-2. IBM Cloud api key (this must be for the same cloud account that hosts the watsonx.ai instance)
-
-### Installation
-
-1. Clone the repo
+1. Clone the repository
 
    ```bash
    git clone <repository url>
    ```
 
-2. Change directory into the JudgeIt Framework
-
-   ```bash
-   cd JudgeIt-LLM-as-a-Judge/Framework
-   ```
-
-3. Create a python virtual environment
+2. Create a python virtual environment
 
    ```bash
    python3 -m venv virtual-env
@@ -84,7 +36,62 @@ The following prerequisites are required to run the tester:
    pip3 install -r requirements.txt
    ```
 
-4. Configure your parameters in config.ini. Below is a sample config file
+3. Select a method to spin up the JudgeIt service:
+   1. Framework: Use Python modules and the cli to run evaluations locally
+      1. [Framework Instructions](#judgeit-framework)
+   2. Service-Oriented Architecture: first spin up a REST API backend, then spin up a NextJS frontend to run evaluations via a UI
+      1. [REST Service Instructions](#judgeit-rest-service)
+      2. [JudgeIt App Instructions](#judgeit-application)
+
+## Contributors
+
+- Kunal Sawarkar, Chief Data Scientist
+- Shivam Solanki, Senior Advisory Data Scientist
+- Anand Das, Technology Engineer
+- Himadri Talukder - Senior Software Engineer
+- Abhilasha Mangal, Senior Data Scientist
+- Kevin Huang, Sr. ML-Ops Engineer
+
+## License
+
+This project is licensed under the Apache-2.0 License. See the `LICENSE` file for more details.
+
+<!-- ABOUT THE PROJECT -->
+
+## JudgeIt Framework
+
+One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of LLM Judges:
+
+1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text
+2. **RAG Evaluation (Rating)**: evaluate generated text against golden text
+3. **Multi-turn evaluation**: evaluate rewritten queries given a mult-turn conversation
+
+The JudgeIt framework takes input data in the form of excel or csv files for any of these evaluations.
+
+![LLM-Judges](/images/flow-diagram.png)
+
+<!-- GETTING STARTED -->
+
+### Getting Started
+
+#### Prerequisites
+
+The following prerequisites are required to run the tester:
+
+1. Python3
+2. IBM Cloud api key (this must be for the same cloud account that hosts your watsonx.ai instance)
+3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+   1. This project must be associated with a WML instance
+
+#### Installation
+
+1. Change directory into the JudgeIt Framework
+
+   ```bash
+   cd JudgeIt-LLM-as-a-Judge/Framework
+   ```
+
+2. Configure your parameters in config.ini. Below is a sample config file
 
    ```bash
    [Default]
@@ -103,7 +110,7 @@ The following prerequisites are required to run the tester:
    1. `home_dir`: the path to the folder where you have downloaded the repository
    2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge
    3. `input_file_name`:
-      1. a sample input file for each evaluation type is located in JudgeIt-LLM-as-a-Judge/data/input
+      1. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
       2. see [Configuring Your Input File](#configuring-your-input-file) for more details
    4. `output_file_name`: specify the name of your output file
    5. `judge_type`: specify the LLM Judge type. Possible values:
@@ -114,138 +121,261 @@ The following prerequisites are required to run the tester:
    7. `api_key`: your IBM Cloud apikey: <https://cloud.ibm.com/iam/apikeys>
    8. `project_id`: you watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
 
-5. Run the following to evaluate
+3. Run the following to evaluate.
 
    ```bash
-   python main.py --config path_to_config_file
+   python main.py
    ```
 
-6. Run the following command to exit the python virtual environment:
+   The output of the evaluation will be printed in your terminal, and a copy of the results will be saved to /JudgeIt-LLM-as-a-Judge/Framework/data/output
+4. Run the following command to exit the python virtual environment:
 
    ```bash
    deactivate
    ```
 
-## Service-Oriented Architecture
+### Configuring your Input File
 
-The second method of spinning up JudgeIt is as a service-oriented architecture.
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
 
-### Backend Installation
+1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+3. Multi-turn Evaluation: provide an excel/csv file with the following columns: `previous_question`, `previous_answer`, `current_question`, `golden_rewritten_question`, and `rewritten_question`
 
-#### Backend Requirements
+Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
 
- 1. WML credentials
- 2. Docker and docker-compose are installed
+### Understanding the Results
 
-Update the Docker Compose environment variables. There are two environment variables that need to be updated.
+The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
 
-1. IBM_CLOUD_API_KEY
-2. WX_PROJECT_ID
+1. For RAG Evaluation (Similarity), the LLM Judge will output a `Grade` and `Explanation`. A grade of 0 means the texts are dissimilar, while a grade of 1 means the texts are similar.
+2. For RAG Evaluation (Rating), the LLM Judge will output a `Grade` and `Explanation`. A grade of 1 means the texts are dissimilar, a grade of 2 means the texts are partially similar, and a text of 3 means the texts are significantly similar.
+3. For Multi-turn Evaluation, the LLM Judge will output a `Grade`. A grade of 0 means the golden rewritten question and rewritten question are dissimilar, while a grade of 1 means the questions are similar.
 
-```yaml
-services:
-  fastapi_app:
-    container_name: fastapi_app
-    build: .
-    ports:
-      - 3001:3001
-    environment:
-      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - IBM_CLOUD_API_KEY=
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - LLM_JUDGE_API_KEY=LLM-JUDGE-SECRET-PASS
-    restart: always
-  redis:
-    container_name: redis
-    image: redis:7.2.5-alpine
-    restart: always
-  celery_worker:
-    container_name: celery_worker
-    build: .
-    #volumes:
-    #  - ./app:/app
-    command: celery -A app.celery.celery_worker.celery worker --loglevel=info
-    environment:
-      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - IBM_CLOUD_API_KEY=
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - fastapi_app
-      - redis
-    restart: always
-  flower:
-    container_name: flower
-    build: .
-    command: celery --broker=redis://redis:6379/0 flower --port=5555
-    ports:
-      - 5556:5555
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - fastapi_app
-      - redis
-      - celery_worker
-    restart: always
-```
+<!-- ABOUT THE PROJECT -->
 
-#### Build
+## JudgeIt REST Service
 
-```sh
-docker-compose build
-```
+One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the RESTful service code that interfaces with the JudgeIt framework. It offers endpoints for initiating evaluations, retrieving results, and configuring evaluation parameters.
 
-#### Run
+![Architecture diagram](/images/LLM-Judge-Architecture-Backend.png)
 
-```sh
-docker-compose up -d
-```
+<!-- Components -->
 
-#### Test
+### Components
+
+There are four components in this service.
+
+- REST Server
+- Redis Broker
+- Celery Worker
+- Flower Server
+
+#### REST Server
+
+This FastAPI-based Python REST service offers various endpoints to evaluate LLM (Large Language Model) generations. It supports two types of requests: batch and single, with three evaluation types—rating, similarity, and multi-turn. Additionally, it provides a Swagger UI for easy interaction with the endpoints.
+
+![Swagger ui](/images/swagger-ui.png)
+
+We submit our long-running tasks to the Redis broker for asynchronous execution. After submitting a task, we monitor its progress using status endpoints (including server-sent events, WebSocket, and HTTP requests). Once the task is completed, we retrieve the result from the download endpoint.
+
+#### Redis Broker
+
+Redis is an in-memory data store that can be used as a message broker in Celery, providing a simple and efficient way to manage task queues, making it an ideal choice for our solution.It receives tasks from the FastAPI service and places them in the queue for processing.
+
+#### Celery Worker
+
+Consume tasks from the Redis queue and execute them asynchronously, then return the result to the Redis broker.
+
+#### Flower Server
+
+It monitors the Celery cluster in real-time, offering a web-based interface to track task execution, worker performance, and queue status.
+
+<!-- GETTING STARTED -->
+
+### Getting Started
+
+#### Prerequisites
+
+The following prerequisites are required to run the tester:
+
+1. Docker desktop is installed: <https://docs.docker.com/desktop/>
+2. docker-compose is installed (for mac: <https://formulae.brew.sh/formula/docker-compose>)
+3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+4. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+
+#### Installation
+
+1. Change directory into the JudgeIt REST-Service
+
+   ```bash
+   cd JudgeIt-LLM-as-a-Judge/REST-Service
+   ```
+
+2. In the `docker-compose.yml` file, update the following variables:
+   1. IBM_CLOUD_API_KEY (your IBM Cloud api key)
+   2. WX_PROJECT_ID (your watsonx.ai project id)
+
+   ```yaml
+    services:
+        fastapi_app:
+        container_name: fastapi_app
+        build: .
+        ports:
+            - 3001:3001
+        environment:
+            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
+            - WX_PROJECT_ID=
+            - IBM_CLOUD_API_KEY=
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+            - LLM_JUDGE_API_KEY=LLM-JUDGE-SECRET-PASS
+        restart: always
+        redis:
+        container_name: redis
+        image: redis:7.2.5-alpine
+        restart: always
+        celery_worker:
+        container_name: celery_worker
+        build: .
+        #volumes:
+        #  - ./app:/app
+        command: celery -A app.celery.celery_worker.celery worker --loglevel=info
+        environment:
+            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
+            - WX_PROJECT_ID=
+            - IBM_CLOUD_API_KEY=
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        depends_on:
+            - fastapi_app
+            - redis
+        restart: always
+        flower:
+        container_name: flower
+        build: .
+        command: celery --broker=redis://redis:6379/0 flower --port=5555
+        ports:
+            - 5556:5555
+        environment:
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        depends_on:
+            - fastapi_app
+            - redis
+            - celery_worker
+        restart: always
+   ```
+
+3. Build
+
+   ```sh
+   docker-compose build
+   ```
+
+4. Run
+
+   ```sh
+   docker-compose up -d
+   ```
+
+### Test
 
 - REST Endpoint: <http://localhost:3001>
 - Flower server: <http://localhost:5556>
 
-### Frontend Installation
+### JudgeIt App
 
-#### Frontend Requirements
+You can now move on to spinning up the [JudgeIt NextJS App](#judgeit-application)
 
-1. LLM Judge Backend Service is up and running. Can be found [here](/REST%20Service)
+### Configuring your Input File
+
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
+
+1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+3. Multi-turn Evaluation: provide an excel/csv file with the following columns: `previous_question`, `previous_answer`, `current_question`, `golden_rewritten_question`, and `rewritten_question`
+
+Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
+
+### Understanding the Results
+
+The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
+
+1. For RAG Evaluation (Similarity), the LLM Judge will output a `Grade` and `Explanation`. A grade of 0 means the texts are dissimilar, while a grade of 1 means the texts are similar.
+2. For RAG Evaluation (Rating), the LLM Judge will output a `Grade` and `Explanation`. A grade of 1 means the texts are dissimilar, a grade of 2 means the texts are partially similar, and a text of 3 means the texts are significantly similar.
+3. For Multi-turn Evaluation, the LLM Judge will output a `Grade`. A grade of 0 means the golden rewritten question and rewritten question are dissimilar, while a grade of 1 means the questions are similar.
+
+<!-- ABOUT THE PROJECT -->
+
+# JudgeIt Application
+
+One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the code for a React-based application that provides a user interface for interacting with the LLM Judge service. It is built on the Next.js framework and integrates with IBM App ID for authentication. There are three types of evaluation currently available:
+
+1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text
+2. **RAG Evaluation (Rating)**: evaluate generated text against golden text
+3. **Multi-turn evaluation**: evaluate rewritten queries given a mult-turn conversation
+
+The JudgeIt framework takes input data in the form of excel or csv files for any of these evaluations.
+
+![LLM-Judges](/images/flow-diagram.png)
+
+<!-- GETTING STARTED -->
+
+### Getting Started
+
+#### Prerequisites
+
+The following prerequisites are required to run the tester:
+
+1. [JudgeIt Backend REST Service](#judgeit-rest-service) is up and running
 2. [Node.js](https://nodejs.org/en) v18 or higher
 3. [IBM AppID](https://www.ibm.com/products/app-id) for application authentication
 
-#### Frontend Environment Variables
+#### Installation
 
-Create a `.env` file to run the application with the following variables: Make sure `NEXT_PUBLIC_LLM_JUDGE_API_KEY` value matches with the value assigned in backend service.
+1. Change directory into the JudgeIt App
 
-```sh
-NEXT_PUBLIC_JUDGE_BACKEND_URL=http://localhost:3001
-NEXT_PUBLIC_LLM_JUDGE_API_KEY="LLM-JUDGE-SECRET-PASS"
-OAUTH_ISSUER_URL=
-OAUTH_CLIENT_ID=
-OAUTH_CLIENT_SECRET=
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=
-```
+   ```bash
+   cd JudgeIt-LLM-as-a-Judge/JudgeIt-App
+   ```
 
-```sh
-npm install
-```
+2. Copy env file to .env
 
-#### Run the development server
+   ```bash
+   cp env .env
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+3. Configure your parameters in .env. Make sure `NEXT_PUBLIC_LLM_JUDGE_API_KEY` value matches with the value assigned in backend service.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+5. Run the development server
+
+   ```bash
+   npm run dev
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Configuring your Input File
+
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
+
+1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
+3. Multi-turn Evaluation: provide an excel/csv file with the following columns: `previous_question`, `previous_answer`, `current_question`, `golden_rewritten_question`, and `rewritten_question`
+
+Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
+
+### Understanding the Results
+
+The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
+
+1. For RAG Evaluation (Similarity), the LLM Judge will output a `Grade` and `Explanation`. A grade of 0 means the texts are dissimilar, while a grade of 1 means the texts are similar.
+2. For RAG Evaluation (Rating), the LLM Judge will output a `Grade` and `Explanation`. A grade of 1 means the texts are dissimilar, a grade of 2 means the texts are partially similar, and a text of 3 means the texts are significantly similar.
+3. For Multi-turn Evaluation, the LLM Judge will output a `Grade`. A grade of 0 means the golden rewritten question and rewritten question are dissimilar, while a grade of 1 means the questions are similar.
