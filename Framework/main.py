@@ -47,7 +47,7 @@ def write_data(data_df):
         writer.close()
     elif '.csv' in output_file:
         data_df.to_csv(output_file)
-    print("file save")
+    print("File saved in /JudgeIt-LLM-as-a-Judge/Framework/data/output")
 
 
 def batch_llm_multi_turn_eval_caller(input_file):
