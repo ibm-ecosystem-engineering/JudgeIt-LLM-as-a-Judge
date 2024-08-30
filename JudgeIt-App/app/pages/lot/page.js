@@ -239,8 +239,8 @@ const FileUploadForm = () => {
       {session && (
         <div
           style={{
-            marginRight: "15%",
-            marginLeft: "15%",
+            marginRight: "20%",
+            marginLeft: "20%",
             marginTop: "50px",
           }}
         >
@@ -296,6 +296,7 @@ const FileUploadForm = () => {
                     value={formik.values.apiType}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    style={{ marginTop: "15px", marginBottom: "15px" }}
                   >
                     <FormControlLabel
                       value={API_TYPE_RATING}
@@ -352,7 +353,7 @@ const FileUploadForm = () => {
               <Button
                 disabled={progress === "PROGRESS" || progress === "PENDING"}
                 variant="outlined"
-                style={{ width: "200px" }}
+                style={{ width: "200px", marginTop: "10px" }}
                 type="submit"
               >
                 Submit
