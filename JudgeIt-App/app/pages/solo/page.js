@@ -31,6 +31,7 @@ import {
 import { useState } from "react";
 import SoloResult from "@/components/judge/SoloResult";
 import { useSession } from "next-auth/react";
+import SingleInstructions from "@/components/globals/SingleInstructions";
 
 const validationSchema = Yup.object({
   apiType: Yup.string().required("API type is required"),
@@ -111,6 +112,16 @@ const SoloRequestPage = () => {
               {api_error}
             </Alert>
           )}
+          <Typography
+            style={{
+              fontSize: "48px",
+              color: "#3B3B3B",
+              fontWeight: "bold",
+              marginBottom: "10px",
+            }}
+          >
+            Single Evaluation
+          </Typography>
           <Paper elevation={2} sx={{ width: "90%" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <Formik
@@ -174,7 +185,6 @@ const SoloRequestPage = () => {
                       marginRight={"20px"}
                     >
                       <FormControl
-                        style={{ width: "300px" }}
                         error={touched.model && Boolean(errors.model)}
                       >
                         <InputLabel id="model-label">Model</InputLabel>
@@ -219,17 +229,17 @@ const SoloRequestPage = () => {
                           <FormControlLabel
                             value={API_TYPE_RATING}
                             control={<Radio />}
-                            label={"Rating"}
+                            label="RAG Evaluation - Rating"
                           />
                           <FormControlLabel
                             value={API_TYPE_SIMILARITY}
                             control={<Radio />}
-                            label="Similarity"
+                            label="RAG Evaluation - Similarity"
                           />
                           <FormControlLabel
                             value={API_TYPE_MULTITURN}
                             control={<Radio />}
-                            label="Multi-Turn"
+                            label="Multi-turn Query Rewrite Evaluation"
                           />
                         </RadioGroup>
                         {touched.apiType && errors.apiType && (
@@ -266,125 +276,7 @@ const SoloRequestPage = () => {
             {result && <SoloResult api_type={current_api_call} data={result} />}
           </Box>
 
-          <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
-            <Typography
-              style={{
-                fontSize: "36px",
-                color: "#3B3B3B",
-                margin: "10px",
-                fontWeight: "bold",
-              }}
-            >
-              LLM Judge Instructions
-            </Typography>
-
-            <Typography
-              style={{
-                fontSize: "16px",
-                color: "#3B3B3B",
-                margin: "10px",
-              }}
-            >
-              Evaluate a single input using different LLM Judge types.
-            </Typography>
-            <ol className="list-decimal list-inside mb-4">
-              <li className="mb-2">
-                <Typography
-                  style={{
-                    fontSize: "16px",
-                    color: "#3B3B3B",
-                    margin: "10px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  RAG Evaluation (Similarity):
-                </Typography>
-                <ul className="list-disc list-inside ml-4">
-                  <li>
-                    <b>Function: </b>Compare a golden text to a generated text
-                  </li>
-                  <li>
-                    <b>Input: </b>Provide the following:
-                  </li>
-
-                  <ul className="list-none ml-8">
-                    <li>golden text</li>
-                    <li>generated text</li>
-                  </ul>
-                  <li>
-                    <b>Output: </b>The LLM Judge will output a Grade and
-                    Explanation. A grade of 0 means the texts are dissimilar,
-                    while a grade of 1 means the texts are similar.
-                  </li>
-                </ul>
-              </li>
-
-              <li className="mb-2">
-                <Typography
-                  style={{
-                    fontSize: "16px",
-                    color: "#3B3B3B",
-                    margin: "10px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  RAG Evaluation (Rating):
-                </Typography>
-                <ul className="list-disc list-inside ml-4">
-                  <li>
-                    <b>Function: </b>Compare a golden text to a generated text
-                  </li>
-                  <li>
-                    <b>Input: </b>Provide the following:
-                  </li>
-                  <ul className="list-none ml-8">
-                    <li>golden text</li>
-                    <li>generated text</li>
-                  </ul>
-                  <li>
-                    <b>Output: </b>The LLM Judge will output a Grade and
-                    Explanation. A grade of 1 means the texts are dissimilar, a
-                    grade of 2 means the texts are partially similar, and a text
-                    of 3 means the texts are significantly similar
-                  </li>
-                </ul>
-              </li>
-
-              <li className="mb-2">
-                <Typography
-                  style={{
-                    fontSize: "16px",
-                    color: "#3B3B3B",
-                    margin: "10px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Multi-turn Evaluation:
-                </Typography>
-                <ul className="list-disc list-inside ml-4">
-                  <li>
-                    <b>Function: </b>Compare a golden rewritten query to a
-                    rewritten query based on a multi-turn conversation
-                  </li>
-                  <li>
-                    <b>Input: </b>Provide the following:
-                  </li>
-                  <ul className="list-none ml-8">
-                    <li>previous question</li>
-                    <li>previous answer</li>
-                    <li>current question</li>
-                    <li>golden rewritten question</li>
-                    <li>rewritten question</li>
-                  </ul>
-                  <li>
-                    <b>Output: </b>The LLM Judge will output a Grade and
-                    Explanation. A grade of 0 means the texts are dissimilar,
-                    while a grade of 1 means the texts are similar.
-                  </li>
-                </ul>
-              </li>
-            </ol>
-          </Box>
+          <SingleInstructions></SingleInstructions>
         </div>
       )}
     </>
