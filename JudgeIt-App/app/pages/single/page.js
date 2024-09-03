@@ -32,7 +32,6 @@ import {
 } from "@/services/Config";
 import { useState } from "react";
 import SoloResult from "@/components/judge/SoloResult";
-import { useSession } from "next-auth/react";
 import SingleInstructions from "@/components/globals/SingleInstructions";
 
 const validationSchema = Yup.object({
@@ -89,227 +88,202 @@ const validationSchema = Yup.object({
 });
 
 const SoloRequestPage = () => {
-  const { data: session, status } = useSession();
-
   const [current_api_call, setCurrent_api_call] = useState("");
   const [api_call_inprogress, setApi_call_inprogress] = useState(false);
   const [result, setResult] = useState(null);
   const [api_error, setApi_error] = useState(null);
 
-  if (status === "loading") {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </div>
-    );
-  }
-
   return (
     <>
-      {session && (
-        <Grid marginTop={"10px"} spacing={0} sx={{ flexGrow: 1 }} container>
-          <Grid item xs={12}>
-            <Typography
-              style={{
-                fontSize: "48px",
-                marginLeft: "25px",
-                color: "#3B3B3B",
-                fontWeight: "bold",
-                marginBottom: "15px",
-              }}
-            >
-              Single Evaluation
-            </Typography>
-          </Grid>
-          <Grid item xs={7}>
-            <div style={{ marginLeft: "30px" }}>
-              {api_error && (
-                <Alert
-                  severity="error"
-                  sx={{
-                    width: "85%",
-                    marginLeft: "20px",
-                    marginBottom: "10px",
+      <Grid marginTop={"10px"} spacing={0} sx={{ flexGrow: 1 }} container>
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              fontSize: "48px",
+              marginLeft: "25px",
+              color: "#3B3B3B",
+              fontWeight: "bold",
+              marginBottom: "15px",
+            }}
+          >
+            Single Evaluation
+          </Typography>
+        </Grid>
+        <Grid item xs={7}>
+          <div style={{ marginLeft: "30px" }}>
+            {api_error && (
+              <Alert
+                severity="error"
+                sx={{
+                  width: "85%",
+                  marginLeft: "20px",
+                  marginBottom: "10px",
+                }}
+              >
+                {api_error}
+              </Alert>
+            )}
+            <Paper elevation={2} sx={{ width: "95%" }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <Formik
+                  initialValues={{
+                    apiType: API_TYPE_RATING,
+                    /* question: "", */
+                    golden_text: "",
+                    generated_text: "",
+                    model: "meta-llama/llama-3-70b-instruct",
+                    previous_question: "",
+                    previous_answer: "",
+                    current_question: "",
+                    golden_rewritten_question: "",
+                    rewritten_question: "",
+                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={async (values) => {
+                    try {
+                      setApi_error(null);
+                      setCurrent_api_call(values.apiType);
+                      setApi_call_inprogress(true);
+                      const response = await judge_api_solo_call(values);
+                      setResult(response.data);
+                      setApi_call_inprogress(false);
+                    } catch (error) {
+                      setApi_error(
+                        "Error in making API call. Please try again later."
+                      );
+                      setApi_call_inprogress(false);
+                    }
                   }}
                 >
-                  {api_error}
-                </Alert>
-              )}
-              <Paper elevation={2} sx={{ width: "95%" }}>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <Formik
-                    initialValues={{
-                      apiType: API_TYPE_RATING,
-                      /* question: "", */
-                      golden_text: "",
-                      generated_text: "",
-                      model: "meta-llama/llama-3-70b-instruct",
-                      previous_question: "",
-                      previous_answer: "",
-                      current_question: "",
-                      golden_rewritten_question: "",
-                      rewritten_question: "",
-                    }}
-                    validationSchema={validationSchema}
-                    onSubmit={async (values) => {
-                      try {
-                        setApi_error(null);
-                        setCurrent_api_call(values.apiType);
-                        setApi_call_inprogress(true);
-                        const response = await judge_api_solo_call(values);
-                        setResult(response.data);
-                        setApi_call_inprogress(false);
-                      } catch (error) {
-                        setApi_error(
-                          "Error in making API call. Please try again later."
-                        );
-                        setApi_call_inprogress(false);
-                      }
-                    }}
-                  >
-                    {({
-                      values,
-                      handleChange,
-                      handleBlur,
-                      errors,
-                      touched,
-                    }) => (
-                      <Form>
-                        {values.apiType === API_TYPE_MULTITURN ? (
-                          <>
-                            <MultiTurnForm
-                              values={values}
-                              handleChange={handleChange}
-                              handleBlur={handleBlur}
-                              errors={errors}
-                              touched={touched}
+                  {({ values, handleChange, handleBlur, errors, touched }) => (
+                    <Form>
+                      {values.apiType === API_TYPE_MULTITURN ? (
+                        <>
+                          <MultiTurnForm
+                            values={values}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                            errors={errors}
+                            touched={touched}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {current_api_call === API_TYPE_RATING ||
+                            current_api_call === API_TYPE_SIMILARITY}
+                          <RatingSimilarityForm
+                            values={values}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                            errors={errors}
+                            touched={touched}
+                          />
+                        </>
+                      )}
+                      <Box
+                        marginBottom={"20px"}
+                        marginLeft={"20px"}
+                        marginRight={"20px"}
+                      >
+                        <FormControl
+                          error={touched.model && Boolean(errors.model)}
+                        >
+                          <InputLabel id="model-label">Model</InputLabel>
+                          <Select
+                            labelId="model-label"
+                            id="model"
+                            name="model"
+                            value={values.model}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            label="Model"
+                          >
+                            {LLM_MODELS.map((item, index) => (
+                              <MenuItem key={index} value={item.value}>
+                                {item.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          {touched.model && errors.model && (
+                            <FormHelperText>{errors.model}</FormHelperText>
+                          )}
+                        </FormControl>
+                      </Box>
+                      <Box
+                        marginBottom={"20px"}
+                        marginLeft={"20px"}
+                        marginRight={"20px"}
+                      >
+                        <FormControl
+                          component="fieldset"
+                          error={touched.apiType && Boolean(errors.apiType)}
+                          disabled={api_call_inprogress}
+                        >
+                          <RadioGroup
+                            row
+                            aria-label="option"
+                            name={API_TYPE_KEY}
+                            value={values.apiType}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          >
+                            <FormControlLabel
+                              value={API_TYPE_RATING}
+                              control={<Radio />}
+                              label="RAG Evaluation - Rating"
                             />
-                          </>
-                        ) : (
-                          <>
-                            {current_api_call === API_TYPE_RATING ||
-                              current_api_call === API_TYPE_SIMILARITY}
-                            <RatingSimilarityForm
-                              values={values}
-                              handleChange={handleChange}
-                              handleBlur={handleBlur}
-                              errors={errors}
-                              touched={touched}
+                            <FormControlLabel
+                              value={API_TYPE_SIMILARITY}
+                              control={<Radio />}
+                              label="RAG Evaluation - Similarity"
                             />
-                          </>
-                        )}
-                        <Box
-                          marginBottom={"20px"}
-                          marginLeft={"20px"}
-                          marginRight={"20px"}
+                            <FormControlLabel
+                              value={API_TYPE_MULTITURN}
+                              control={<Radio />}
+                              label="Multi-turn Query Rewrite Evaluation"
+                            />
+                          </RadioGroup>
+                          {touched.apiType && errors.apiType && (
+                            <FormHelperText>{errors.apiType}</FormHelperText>
+                          )}
+                        </FormControl>
+                      </Box>
+                      <Box
+                        marginBottom={"20px"}
+                        marginLeft={"20px"}
+                        marginRight={"20px"}
+                      >
+                        <Button
+                          variant="outlined"
+                          style={{ width: "200px" }}
+                          type="submit"
+                          disabled={api_call_inprogress}
                         >
-                          <FormControl
-                            error={touched.model && Boolean(errors.model)}
-                          >
-                            <InputLabel id="model-label">Model</InputLabel>
-                            <Select
-                              labelId="model-label"
-                              id="model"
-                              name="model"
-                              value={values.model}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              label="Model"
-                            >
-                              {LLM_MODELS.map((item, index) => (
-                                <MenuItem key={index} value={item.value}>
-                                  {item.label}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            {touched.model && errors.model && (
-                              <FormHelperText>{errors.model}</FormHelperText>
-                            )}
-                          </FormControl>
-                        </Box>
-                        <Box
-                          marginBottom={"20px"}
-                          marginLeft={"20px"}
-                          marginRight={"20px"}
-                        >
-                          <FormControl
-                            component="fieldset"
-                            error={touched.apiType && Boolean(errors.apiType)}
-                            disabled={api_call_inprogress}
-                          >
-                            <RadioGroup
-                              row
-                              aria-label="option"
-                              name={API_TYPE_KEY}
-                              value={values.apiType}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            >
-                              <FormControlLabel
-                                value={API_TYPE_RATING}
-                                control={<Radio />}
-                                label="RAG Evaluation - Rating"
-                              />
-                              <FormControlLabel
-                                value={API_TYPE_SIMILARITY}
-                                control={<Radio />}
-                                label="RAG Evaluation - Similarity"
-                              />
-                              <FormControlLabel
-                                value={API_TYPE_MULTITURN}
-                                control={<Radio />}
-                                label="Multi-turn Query Rewrite Evaluation"
-                              />
-                            </RadioGroup>
-                            {touched.apiType && errors.apiType && (
-                              <FormHelperText>{errors.apiType}</FormHelperText>
-                            )}
-                          </FormControl>
-                        </Box>
-                        <Box
-                          marginBottom={"20px"}
-                          marginLeft={"20px"}
-                          marginRight={"20px"}
-                        >
-                          <Button
-                            variant="outlined"
-                            style={{ width: "200px" }}
-                            type="submit"
-                            disabled={api_call_inprogress}
-                          >
-                            Submit
-                          </Button>
-                        </Box>
-                      </Form>
-                    )}
-                  </Formik>
-                </Box>
-              </Paper>
-              {api_call_inprogress && (
-                <LinearProgress
-                  color="primary"
-                  sx={{ marginTop: "30px", width: "95%" }}
-                />
-              )}
-              <Box sx={{ width: "100%", marginTop: 4, marginBottom: 2 }}>
-                {result && (
-                  <SoloResult api_type={current_api_call} data={result} />
-                )}
+                          Submit
+                        </Button>
+                      </Box>
+                    </Form>
+                  )}
+                </Formik>
               </Box>
-            </div>
-          </Grid>
-          <Grid item xs={5}>
-            <SingleInstructions />
-          </Grid>
+            </Paper>
+            {api_call_inprogress && (
+              <LinearProgress
+                color="primary"
+                sx={{ marginTop: "30px", width: "95%" }}
+              />
+            )}
+            <Box sx={{ width: "100%", marginTop: 4, marginBottom: 2 }}>
+              {result && (
+                <SoloResult api_type={current_api_call} data={result} />
+              )}
+            </Box>
+          </div>
         </Grid>
-      )}
+        <Grid item xs={5}>
+          <SingleInstructions />
+        </Grid>
+      </Grid>
     </>
   );
 };

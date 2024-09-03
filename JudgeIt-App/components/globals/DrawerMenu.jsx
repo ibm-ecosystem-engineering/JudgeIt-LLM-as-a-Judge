@@ -7,12 +7,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { signOut } from "next-auth/react";
 import GavelOutlinedIcon from "@mui/icons-material/GavelOutlined";
 import BatchPredictionOutlinedIcon from "@mui/icons-material/BatchPredictionOutlined";
-import IBMIcon from "./icons/IBMIcon";
 
 const DrawerMenu = ({
   open,
@@ -74,21 +71,6 @@ const DrawerMenu = ({
               <BatchPredictionOutlinedIcon />
             </ListItemIcon>
             <ListItemText primary={"Batch Evaluation"} />
-          </ListItemButton>
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={(event) => {
-              signOut();
-            }}
-          >
-            <ListItemIcon>
-              <LogoutOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Logout"} />
           </ListItemButton>
         </ListItem>
       </List>
