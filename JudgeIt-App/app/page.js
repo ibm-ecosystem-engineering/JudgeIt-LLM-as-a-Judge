@@ -59,10 +59,10 @@ export default function Home() {
           clicking one of the options below!
         </Typography>
         <div style={{ display: "flex", justifyContent: "center", gap: "30px" }}>
-          <Button variant="outlined" href="/pages/solo">
+          <Button variant="outlined" href="/pages/single">
             Single Evaluation
           </Button>
-          <Button variant="outlined" href="/pages/lot">
+          <Button variant="outlined" href="/pages/batch">
             Batch Evaluation
           </Button>
         </div>

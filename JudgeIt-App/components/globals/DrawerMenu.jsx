@@ -61,7 +61,7 @@ const DrawerMenu = ({
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton href="/pages/solo">
+          <ListItemButton href="/pages/single">
             <ListItemIcon>
               <GavelOutlinedIcon />
             </ListItemIcon>
@@ -69,7 +69,7 @@ const DrawerMenu = ({
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton href="/pages/lot">
+          <ListItemButton href="/pages/batch">
             <ListItemIcon>
               <BatchPredictionOutlinedIcon />
             </ListItemIcon>
