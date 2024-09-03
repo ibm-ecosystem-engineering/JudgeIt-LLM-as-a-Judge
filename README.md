@@ -17,7 +17,7 @@ JudgeIt is an automated evaluation framework designed for various Generative AI 
 - **Automated Evaluation**: JudgeIt automates batch evaluation processes, resulting in more efficient evaluation compared to human testers.
 - **Multi-Pipeline Support**: Evaluate different types of LLM pipelines including:
   - **RAG**: evaluate generated text against golden text
-  - **Multi-turn query rewritings**: evaluate rewritten queries given a mult-turn conversation
+  - **Multi-turn query rewritings**: evaluate rewritten queries given a multi-turn conversation
   - **Text-to-SQL conversions**: evaluate natural language to SQL generations
 - **Customization**: Configure the evaluation process with your datasets, LLM models, and specific parameters.
 
@@ -58,7 +58,7 @@ The LLM Judges in this repository have been tested against human evaluation to v
 - Kunal Sawarkar, Chief Data Scientist
 - Shivam Solanki, Senior Advisory Data Scientist
 - Anand Das, Technology Engineer
-- Himadri Talukder - Senior Software Engineer
+- Himadri Talukder, Senior Software Engineer
 - Abhilasha Mangal, Senior Data Scientist
 - Kevin Huang, Sr. ML-Ops Engineer
 
