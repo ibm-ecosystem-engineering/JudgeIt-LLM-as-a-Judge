@@ -1,13 +1,25 @@
 "use client";
-import PageTitle from "@/components/globals/PageTitle";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { Button, Typography, CircularProgress } from "@mui/material";
 import SignIn from "@/components/globals/SignIn";
-import { Button, Box, Typography } from "@mui/material";
-import SingleInstructions from "@/components/globals/SingleInstructions";
-import BatchInstructions from "@/components/globals/BatchInstructions";
 
 export default function Home() {
   const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -43,8 +55,8 @@ export default function Home() {
           various Generative AI pipelines such as RAG, Multi-Turn Query
           Rewriting, Text-to-SQL, and more. This service utilizes an LLM Judge
           to accurately and efficiently evaluate generated text against provided
-          golden text. Try evaluating a single input or an excel/csv containing
-          multiple inputs by clicking one of the options below!
+          golden text. Try evaluating a single input or a batch of inputs by
+          clicking one of the options below!
         </Typography>
         <div style={{ display: "flex", justifyContent: "center", gap: "30px" }}>
           <Button variant="outlined" href="/pages/solo">
@@ -62,7 +74,7 @@ export default function Home() {
           marginTop: "10px",
         }}
       >
-        {!session && <SignIn />}{" "}
+        {!session && <SignIn />}
       </div>
     </>
   );

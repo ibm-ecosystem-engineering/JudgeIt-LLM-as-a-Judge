@@ -14,6 +14,7 @@ import {
   Paper,
   Alert,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import * as Yup from "yup";
 import PageTitle from "@/components/globals/PageTitle";
@@ -93,6 +94,21 @@ const SoloRequestPage = () => {
   const [api_call_inprogress, setApi_call_inprogress] = useState(false);
   const [result, setResult] = useState(null);
   const [api_error, setApi_error] = useState(null);
+
+  if (status === "loading") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <>

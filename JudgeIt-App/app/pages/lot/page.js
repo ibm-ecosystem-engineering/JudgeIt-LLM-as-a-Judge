@@ -25,6 +25,7 @@ import {
   FormControlLabel,
   Radio,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import {
   API_TYPE_MULTITURN,
@@ -243,6 +244,20 @@ const FileUploadForm = () => {
     },
   });
 
+  if (status === "loading") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
     <>
       {session && (
