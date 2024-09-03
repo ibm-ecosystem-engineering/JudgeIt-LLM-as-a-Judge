@@ -1,25 +1,7 @@
 "use client";
-import { useSession } from "next-auth/react";
-import { Button, Typography, CircularProgress } from "@mui/material";
-import SignIn from "@/components/globals/SignIn";
+import { Button, Typography } from "@mui/material";
 
 export default function Home() {
-  const { data: session, status } = useSession();
-
-  if (status === "loading") {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -74,7 +56,6 @@ export default function Home() {
           marginTop: "10px",
         }}
       >
-        {!session && <SignIn />}
       </div>
     </>
   );
