@@ -2,7 +2,15 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, TextField, Box, Typography, Link, Paper } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Box,
+  Typography,
+  Link,
+  Paper,
+  Grid,
+} from "@mui/material";
 import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
 import { useDropzone } from "react-dropzone";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
@@ -17,6 +25,7 @@ import {
   FormControlLabel,
   Radio,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import {
   API_TYPE_MULTITURN,
@@ -35,6 +44,7 @@ import { useSession } from "next-auth/react";
 import * as XLSX from "xlsx";
 import BarChart from "@/components/globals/BarChart";
 import { create } from "@mui/material/styles/createTransitions";
+import BatchInstructions from "@/components/globals/BatchInstructions";
 
 const FileUploadForm = () => {
   const [file, setFile] = useState(null);
@@ -234,6 +244,20 @@ const FileUploadForm = () => {
     },
   });
 
+  if (status === "loading") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
     <>
       {session && (
@@ -253,11 +277,20 @@ const FileUploadForm = () => {
               {errorStatus}
             </Alert>
           )}
+          <Typography
+            style={{
+              fontSize: "48px",
+              color: "#3B3B3B",
+              fontWeight: "bold",
+              marginBottom: "10px",
+            }}
+          >
+            Batch Evaluation
+          </Typography>
           <form onSubmit={formik.handleSubmit}>
             <Paper elevation={2} sx={{ padding: "20px", width: "90%" }}>
               <Box>
                 <FormControl
-                  style={{ width: "300px" }}
                   error={formik.touched.model && Boolean(formik.errors.model)}
                 >
                   <InputLabel id="model-label">Model</InputLabel>
@@ -301,17 +334,17 @@ const FileUploadForm = () => {
                     <FormControlLabel
                       value={API_TYPE_RATING}
                       control={<Radio />}
-                      label="Rating"
+                      label="RAG Evaluation - Rating"
                     />
                     <FormControlLabel
                       value={API_TYPE_SIMILARITY}
                       control={<Radio />}
-                      label="Similarity"
+                      label="RAG Evaluation - Similarity"
                     />
                     <FormControlLabel
                       value={API_TYPE_MULTITURN}
                       control={<Radio />}
-                      label="Multi-turn"
+                      label="Multi-turn Query Rewrite Evaluation"
                     />
                   </RadioGroup>
                   {formik.touched.apiType && formik.errors.apiType && (
@@ -396,150 +429,7 @@ const FileUploadForm = () => {
                 <BarChart gradeData={gradeData} />
               </Box>
             )}
-            <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
-              <Typography
-                style={{
-                  fontSize: "36px",
-                  color: "#3B3B3B",
-                  margin: "10px",
-                  fontWeight: "bold",
-                }}
-              >
-                LLM Judge Instructions
-              </Typography>
-
-              <Typography
-                style={{
-                  fontSize: "16px",
-                  color: "#3B3B3B",
-                  margin: "10px",
-                }}
-              >
-                Each type of LLM Judge will accept an excel/csv file as an input
-                file. The{" "}
-                <a
-                  href="https://github.com/ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge/tree/main/Framework/data/input"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub repository
-                </a>{" "}
-                for this app contains a sample input file for each type of LLM
-                Judge that you can copy, edit, and use to test.
-              </Typography>
-              <ol className="list-decimal list-inside mb-4">
-                <li className="mb-2">
-                  <Typography
-                    style={{
-                      fontSize: "16px",
-                      color: "#3B3B3B",
-                      margin: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    RAG Evaluation (Similarity):
-                  </Typography>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>
-                      <b>Function: </b>Compare a golden text to a generated text
-                    </li>
-                    <li>
-                      <b>Input: </b>Provide an excel/csv file with the following
-                      columns:
-                    </li>
-
-                    <ul className="list-none ml-8">
-                      <li>golden_text</li>
-                      <li>generated_text</li>
-                    </ul>
-                    <li>
-                      <b>Output: </b>The LLM Judge will output a Grade and
-                      Explanation. A grade of 0 means the texts are dissimilar,
-                      while a grade of 1 means the texts are similar.
-                    </li>
-                  </ul>
-                </li>
-
-                <li className="mb-2">
-                  <Typography
-                    style={{
-                      fontSize: "16px",
-                      color: "#3B3B3B",
-                      margin: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    RAG Evaluation (Rating):
-                  </Typography>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>
-                      <b>Function: </b>Compare a golden text to a generated text
-                    </li>
-                    <li>
-                      <b>Input: </b>Provide an excel/csv file with the following
-                      columns:
-                    </li>
-                    <ul className="list-none ml-8">
-                      <li>golden_text</li>
-                      <li>generated_text</li>
-                    </ul>
-                    <li>
-                      <b>Output: </b>The LLM Judge will output a Grade and
-                      Explanation. A grade of 1 means the texts are dissimilar,
-                      a grade of 2 means the texts are partially similar, and a
-                      text of 3 means the texts are significantly similar
-                    </li>
-                  </ul>
-                </li>
-
-                <li className="mb-2">
-                  <Typography
-                    style={{
-                      fontSize: "16px",
-                      color: "#3B3B3B",
-                      margin: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Multi-turn Evaluation:
-                  </Typography>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>
-                      <b>Function: </b>Compare a golden rewritten query to a
-                      rewritten query based on a multi-turn conversation
-                    </li>
-                    <li>
-                      <b>Input: </b>Provide an excel/csv file with the following
-                      columns:
-                    </li>
-                    <ul className="list-none ml-8">
-                      <li>previous_question</li>
-                      <li>previous_answer</li>
-                      <li>current_question</li>
-                      <li>golden_rewritten_question</li>
-                      <li>rewritten_question</li>
-                    </ul>
-                    <li>
-                      <b>Output: </b>The LLM Judge will output a Grade and
-                      Explanation. A grade of 0 means the texts are dissimilar,
-                      while a grade of 1 means the texts are similar.
-                    </li>
-                  </ul>
-                </li>
-              </ol>
-
-              <Typography
-                style={{
-                  fontSize: "16px",
-                  color: "#3B3B3B",
-                  margin: "10px",
-                }}
-              >
-                <b>Note:</b> Your input files can contain additional columns
-                than the ones specified above. These columns will have no effect
-                on the LLM Judge and will be preserved in the output file.
-              </Typography>
-            </Box>
+            <BatchInstructions></BatchInstructions>
           </form>
         </div>
       )}
