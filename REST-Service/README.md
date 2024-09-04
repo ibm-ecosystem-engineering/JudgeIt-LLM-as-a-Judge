@@ -165,18 +165,18 @@ The following prerequisites are required to run the tester:
    Validate if all the services are up and running.
 
    ```sh
-   podman-compose up -d
+   podman-compose ps
    ```
 
    The output will be like below.
 
-```sh
-CONTAINER ID  IMAGE                                        COMMAND               CREATED        STATUS        PORTS                                       NAMES
-1a6c7af902fa  localhost/rest-service_fastapi_app:latest    python3 main.py       9 seconds ago  Up 9 seconds  0.0.0.0:3001->3001/tcp, 3001/tcp, 8080/tcp  fastapi_app
-16117ab1b15e  docker.io/library/redis:7.2.5-alpine         redis-server          6 seconds ago  Up 7 seconds  6379/tcp                                    redis
-0269de20e376  localhost/rest-service_celery_worker:latest  celery -A app.cel...  5 seconds ago  Up 6 seconds  3001/tcp, 8080/tcp                          celery_worker
-600c2aa3d650  localhost/rest-service_flower:latest         celery --broker=r...  5 seconds ago  Up 5 seconds  0.0.0.0:5556->5555/tcp, 3001/tcp, 8080/tcp  flower
-```
+  ```sh
+  CONTAINER ID  IMAGE                                        COMMAND               CREATED        STATUS        PORTS                                       NAMES
+  1a6c7af902fa  localhost/rest-service_fastapi_app:latest    python3 main.py       9 seconds ago  Up 9 seconds  0.0.0.0:3001->3001/tcp, 3001/tcp, 8080/tcp  fastapi_app
+  16117ab1b15e  docker.io/library/redis:7.2.5-alpine         redis-server          6 seconds ago  Up 7 seconds  6379/tcp                                    redis
+  0269de20e376  localhost/rest-service_celery_worker:latest  celery -A app.cel...  5 seconds ago  Up 6 seconds  3001/tcp, 8080/tcp                          celery_worker
+  600c2aa3d650  localhost/rest-service_flower:latest         celery --broker=r...  5 seconds ago  Up 5 seconds  0.0.0.0:5556->5555/tcp, 3001/tcp, 8080/tcp  flower
+  ```
 
 ## Test
 
