@@ -62,10 +62,28 @@ It monitors the Celery cluster in real-time, offering a web-based interface to t
 
 The following prerequisites are required to run the tester:
 
-1. Docker desktop is installed: <https://docs.docker.com/desktop/>
-2. docker-compose is installed (for mac: <https://formulae.brew.sh/formula/docker-compose>)
-3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
-4. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+1. podman and podman-compose are installed
+    - **macOS:** use the following commands to install Podman and Podman Compose
+
+    ```sh
+        brew install podman podman-compose
+    ```
+
+    - **Ubuntu:** Use the following commands to install Podman and Podman Compose
+
+    ```sh
+        sudo apt update
+        sudo apt install podman podman-compose
+    ```
+
+    - **Windows:**
+
+        - Download Podman for Windows: Visit the Podman for Windows release page (https://github.com/containers/podman-desktop/releases) and download the latest installer for your Windows version.
+
+        - Run the installer: Double-click the downloaded installer file and follow the on-screen instructions to complete the installation process.
+
+2. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+3. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
 
 ### Installation
 
@@ -133,14 +151,32 @@ The following prerequisites are required to run the tester:
 3. Build
 
    ```sh
-   docker-compose build
+   podman-compose build
    ```
 
 4. Run
 
    ```sh
-   docker-compose up -d
+   podman-compose up -d
    ```
+
+5. Validate
+
+   Validate if all the services are up and running.
+
+   ```sh
+   podman-compose up -d
+   ```
+
+   The output will be like below.
+
+```sh
+CONTAINER ID  IMAGE                                        COMMAND               CREATED        STATUS        PORTS                                       NAMES
+1a6c7af902fa  localhost/rest-service_fastapi_app:latest    python3 main.py       9 seconds ago  Up 9 seconds  0.0.0.0:3001->3001/tcp, 3001/tcp, 8080/tcp  fastapi_app
+16117ab1b15e  docker.io/library/redis:7.2.5-alpine         redis-server          6 seconds ago  Up 7 seconds  6379/tcp                                    redis
+0269de20e376  localhost/rest-service_celery_worker:latest  celery -A app.cel...  5 seconds ago  Up 6 seconds  3001/tcp, 8080/tcp                          celery_worker
+600c2aa3d650  localhost/rest-service_flower:latest         celery --broker=r...  5 seconds ago  Up 5 seconds  0.0.0.0:5556->5555/tcp, 3001/tcp, 8080/tcp  flower
+```
 
 ## Test
 
