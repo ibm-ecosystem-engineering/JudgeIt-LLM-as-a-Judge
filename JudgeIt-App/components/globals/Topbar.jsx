@@ -4,12 +4,10 @@ import IBMIcon from "./icons/IBMIcon";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DrawerMenu from "@/components/globals/DrawerMenu";
 import { useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
 
 
 const Topbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { data: session, status } = useSession();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
@@ -38,8 +36,6 @@ const Topbar = () => {
   };
 
   return (
-    <>
-      {session && (
         <AppBar
         position="static"
           style={{
@@ -92,7 +88,6 @@ const Topbar = () => {
               width="100%"
             >
               <Typography style={{ fontSize: "12px", color: '#3B3B3B', marginRight: '10px' }}>
-                Logged in as {session.user.email}
               </Typography>
               <MenuOutlinedIcon
                 sx={{ cursor: "pointer", color: "#3B3B3B", marginRight: "20px" }}
@@ -107,8 +102,6 @@ const Topbar = () => {
             </Box>
           </Box>
         </AppBar>
-      )}
-    </>
   );
 };
 

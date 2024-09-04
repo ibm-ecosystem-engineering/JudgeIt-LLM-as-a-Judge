@@ -18,7 +18,7 @@ const SoloResult = ({ data, api_type }) => {
   return (
     <Paper
       elevation={2}
-      sx={{ width: "90%", marginBottom: "10px", backgroundColor: "#F0F7FF" }}
+      sx={{ width: "95%", marginBottom: "10px", backgroundColor: "#F0F7FF" }}
     >
       <Table>
         <TableHead>
