@@ -82,7 +82,7 @@ const DrawerMenu = ({
         <ListItem disablePadding>
           <ListItemButton
             onClick={(event) => {
-              signOut();
+              signOut({ callbackUrl: "/" });
             }}
           >
             <ListItemIcon>
