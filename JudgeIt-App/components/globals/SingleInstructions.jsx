@@ -5,12 +5,11 @@ import {
 } from "@mui/material";
 
 function SingleInstructions() {
-    return(<Box sx={{ width: "90%", marginBottom: 2 }}>
+    return(<Box sx={{ width: "95%", marginBottom: 2 }}>
         <Typography
           style={{
             fontSize: "36px",
             color: "#3B3B3B",
-            margin: "10px",
             fontWeight: "bold",
           }}
         >
