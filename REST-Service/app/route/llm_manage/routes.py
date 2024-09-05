@@ -1,0 +1,89 @@
+from dotenv import load_dotenv
+from fastapi import APIRouter, File, HTTPException, Query, Header, Security, requests as request
+from fastapi.security import APIKeyHeader
+from app.celery.celery_worker import multi_turn_batch_task, rating_batch_task, similarity_batch_task
+from app.src.models.Experiment import Experiment
+from app.src.models.RequestHistory import RequestHistory
+from app.src.services.ManagementService import ManagementService
+from starlette.status import HTTP_403_FORBIDDEN, HTTP_500_INTERNAL_SERVER_ERROR
+import os
+from app.src.services.MongoService import MongoService
+from fastapi.responses import JSONResponse
+from app.src.utils.Helper import Helper
+import pandas as pd
+
+load_dotenv()
+
+mongo_db = MongoService()
+management_service = ManagementService(mongo_db)
+
+
+judge_management_api_route = APIRouter(
+    prefix="/api/v1/manage",
+    tags=["LLM Judge management API"]
+)
+
+# RAG APP Security
+API_KEY_NAME = "LLM_JUDGE_API_KEY"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+# Basic security for accessing the App
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if api_key_header == os.environ.get("LLM_JUDGE_API_KEY"):
+        return api_key_header
+    else:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN, detail="Could not validate RAG APP credentials. Please check your ENV."
+        )
+
+##### Experiment section #####################################################################
+
+@judge_management_api_route.get(path='/experiments', description="Returns list of experiments")
+def get_experiment_list(user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    experiments = management_service.get_experiments(user_id)
+    return JSONResponse(content=experiments)
+
+@judge_management_api_route.post(path='/experiment', description="Add a new experiment")
+def add_new_experiment(experiment_input: Experiment, api_key: str = Security(get_api_key)):
+    insert_id = management_service.add_experiment(experiment_input)
+    return JSONResponse(content={
+        "insert_id": insert_id
+    })
+
+@judge_management_api_route.delete(path='/experiment/{doc_id}', description="Delete an experiment by id")
+def delete_experiment(doc_id: str, api_key: str = Security(get_api_key)):
+    del_count = management_service.delete_experiment(doc_id)
+    res = "success" if del_count > 0 else "failed"
+    return JSONResponse(content={
+        "status": res
+    })    
+
+@judge_management_api_route.delete(path='/experiment/name/{experiment_name}', description="Delete an experiment by experiment name")
+def delete_experiment_by_experiment_name(experiment_name: str, api_key: str = Security(get_api_key)):
+    del_count =  management_service.delete_experiment_by_name(experiment_name)
+    res = "success" if del_count > 0 else "failed"
+    return JSONResponse(content={
+        "status": res
+    })   
+
+##### History section #####################################################################
+
+@judge_management_api_route.get(path='/histories', description="Returns list of request history")
+def get_request_histories(user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    histories = management_service.get_histories(user_id)
+    return JSONResponse(content=histories)
+
+@judge_management_api_route.post(path='/history', description="Add a new request history")
+def add_new_request_history(history_input: RequestHistory, api_key: str = Security(get_api_key)):
+    insert_id = management_service.add_history(history_input)
+    return JSONResponse(content={
+        "insert_id": insert_id
+    })
+
+@judge_management_api_route.delete(path='/history/{doc_id}', description="Delete a request history by document id")
+def delete_request_history(doc_id: str, api_key: str = Security(get_api_key)):
+    del_count = management_service.delete_history(doc_id)
+    res = "success" if del_count > 0 else "failed"
+    return JSONResponse(content={
+        "status": res
+    })   

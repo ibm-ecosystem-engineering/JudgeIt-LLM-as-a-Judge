@@ -14,6 +14,7 @@ from app.src.services.WatsonXService import WatsonXService
 from app.src.utils.Helper import Helper
 import pandas as pd
 from celery.result import AsyncResult
+import json
 
 load_dotenv()
 
@@ -333,6 +334,18 @@ async def download_file(task_id: str, api_key: str = Security(get_api_key)):
             df.to_excel(writer, index=False, sheet_name='evaluation-result')
         output.seek(0)
         return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=data.xlsx"})
+    
+    if result.state == 'PENDING' and not result.result:
+        return {"status": "ERROR", "msg": "Task not found."}
+    
+    return {"status": "ERROR", "msg": "Task not completed or file not found."}
+
+@judge_api_route.get(path="/result/{task_id}", description="Get JSON version of result by task_id")
+async def get_result(task_id: str, api_key: str = Security(get_api_key)):
+    result = AsyncResult(task_id)
+    if result.state == 'SUCCESS':
+        json_object = json.loads(result.result)
+        return JSONResponse(content=json_object)
     
     if result.state == 'PENDING' and not result.result:
         return {"status": "ERROR", "msg": "Task not found."}

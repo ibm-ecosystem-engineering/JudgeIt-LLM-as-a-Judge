@@ -5,6 +5,7 @@ import logging
 from dotenv import load_dotenv
 from app.route.root import routes as root_api
 from app.route.llm_judge import routes as llm_judge_api
+from app.route.llm_manage import routes as judge_management_api
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from app.src.config.TimeoutMiddleware import TimeoutMiddleware
@@ -30,6 +31,7 @@ logger = logging.getLogger('api-service')
 # Register blueprints
 app.include_router(root_api.root_api_route)
 app.include_router(llm_judge_api.judge_api_route)
+app.include_router(judge_management_api.judge_management_api_route)
 
 origins = [ "*"]
 
