@@ -73,6 +73,11 @@ def get_request_histories(user_id: str = Header(...), api_key: str = Security(ge
     histories = management_service.get_histories(user_id)
     return JSONResponse(content=histories)
 
+@judge_management_api_route.get(path='/histories/{experiment_name}', description="Returns list of request history by experiment name")
+def get_request_histories_by_experiment_name(experiment_name: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    histories = management_service.get_histories_by_experiment_name(user_id, experiment_name)
+    return JSONResponse(content=histories)
+
 @judge_management_api_route.post(path='/history', description="Add a new request history")
 def add_new_request_history(history_input: RequestHistory, api_key: str = Security(get_api_key)):
     insert_id = management_service.add_history(history_input)

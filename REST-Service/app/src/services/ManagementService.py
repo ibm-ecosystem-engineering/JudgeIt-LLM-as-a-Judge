@@ -22,6 +22,11 @@ class ManagementService:
         histories = [self.bson_to_dict(doc) for doc in cursor]
         return histories
     
+    def get_histories_by_experiment_name(self, user_id, experiment_name):
+        cursor = self.history_collection.find({ "user_id": user_id, "experiment_name": experiment_name })
+        histories = [self.bson_to_dict(doc) for doc in cursor]
+        return histories
+    
     def add_experiment(self, experiment: Experiment):
         input = experiment.model_dump()
         insertion = self.experiment_collection.insert_one(input)
