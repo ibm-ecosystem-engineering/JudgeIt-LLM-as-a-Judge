@@ -78,6 +78,11 @@ def get_request_histories(user_id: str = Header(...), api_key: str = Security(ge
     histories = management_service.get_histories(user_id)
     return JSONResponse(content=histories)
 
+@judge_management_api_route.get(path='/histories/{doc_id}', description="Get request history by id")
+def get_request_histories_by_doc_id(doc_id: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    histories = management_service.get_history_by_id(user_id, doc_id)
+    return JSONResponse(content=histories)
+
 @judge_management_api_route.get(path='/histories/name/{experiment_name}', description="Returns list of request history by experiment name")
 def get_request_histories_by_experiment_name(experiment_name: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
     histories = management_service.get_histories_by_experiment_name(user_id, experiment_name)

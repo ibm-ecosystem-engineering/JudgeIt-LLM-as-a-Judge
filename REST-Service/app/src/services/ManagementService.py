@@ -21,6 +21,11 @@ class ManagementService:
         cursor = self.experiment_collection.find({ "user_id": user_id, "type": type })
         experiments = [self.bson_to_dict(doc) for doc in cursor]
         return experiments
+    
+    def get_history_by_id(self, user_id: str, doc_id: str):
+        object_id = ObjectId(doc_id)
+        cursor = self.history_collection.find_one({"user_id": user_id, "_id": object_id})
+        return self.bson_to_dict(cursor)
 
     def get_histories(self, user_id):
         cursor = self.history_collection.find({ "user_id": user_id })
@@ -28,7 +33,8 @@ class ManagementService:
         return histories
     
     def get_histories_by_type(self, user_id: str, type: str):
-        cursor = self.history_collection.find({ "user_id": user_id, "type": type })
+        projection = {'content': 0}
+        cursor = self.history_collection.find({ "user_id": user_id, "type": type }, projection )
         histories = [self.bson_to_dict(doc) for doc in cursor]
         return histories
     
