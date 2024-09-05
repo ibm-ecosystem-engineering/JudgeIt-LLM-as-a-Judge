@@ -43,6 +43,11 @@ def get_experiment_list(user_id: str = Header(...), api_key: str = Security(get_
     experiments = management_service.get_experiments(user_id)
     return JSONResponse(content=experiments)
 
+@judge_management_api_route.get(path='/experiments/type/{type}', description="Returns list of experiments by type")
+def get_experiment_list_by_type(type: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    experiments = management_service.get_experiments_by_type(user_id, type)
+    return JSONResponse(content=experiments)
+
 @judge_management_api_route.post(path='/experiment', description="Add a new experiment")
 def add_new_experiment(experiment_input: Experiment, api_key: str = Security(get_api_key)):
     insert_id = management_service.add_experiment(experiment_input)
@@ -73,9 +78,14 @@ def get_request_histories(user_id: str = Header(...), api_key: str = Security(ge
     histories = management_service.get_histories(user_id)
     return JSONResponse(content=histories)
 
-@judge_management_api_route.get(path='/histories/{experiment_name}', description="Returns list of request history by experiment name")
+@judge_management_api_route.get(path='/histories/name/{experiment_name}', description="Returns list of request history by experiment name")
 def get_request_histories_by_experiment_name(experiment_name: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
     histories = management_service.get_histories_by_experiment_name(user_id, experiment_name)
+    return JSONResponse(content=histories)
+
+@judge_management_api_route.get(path='/histories/type/{type}', description="Returns list of request history by experiment name")
+def get_request_histories_by_type(type: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    histories = management_service.get_histories_by_type(user_id, type)
     return JSONResponse(content=histories)
 
 @judge_management_api_route.post(path='/history', description="Add a new request history")
