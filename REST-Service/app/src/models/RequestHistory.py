@@ -7,3 +7,4 @@ class RequestHistory(BaseModel):
     experiment_name: str
     content: Any
     type: str
+    eval_type: str
