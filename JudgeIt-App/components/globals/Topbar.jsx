@@ -4,7 +4,7 @@ import IBMIcon from "./icons/IBMIcon";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DrawerMenu from "@/components/globals/DrawerMenu";
 import { useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 
 const Topbar = () => {
@@ -16,8 +16,8 @@ const Topbar = () => {
 
   const getFontSize = () => {
     if (isSmallScreen) return '16px';
-    if (isMediumScreen) return '20px';
-    return '24px';
+    if (isMediumScreen) return '18px';
+    return '20px';
   };
 
   const getLogoText = () => {
@@ -78,7 +78,6 @@ const Topbar = () => {
                   fontSize: getFontSize(), 
                   color: '#3B3B3B', 
                   ml: 1, 
-                  fontWeight: 'bold',
                 }}
               >
                 {getLogoText()}

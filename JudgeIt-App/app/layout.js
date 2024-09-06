@@ -18,7 +18,6 @@ export default function RootLayout({ children }) {
             <Topbar />
             <Grid sx={{ flexGrow: 1 }} container spacing={0}>
               <Grid item xs={12}>
-                <Box height={"50px"}></Box>
                 <Box>{children}</Box>
               </Grid>
             </Grid>
