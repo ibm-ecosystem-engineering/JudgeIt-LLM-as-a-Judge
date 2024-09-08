@@ -3,17 +3,19 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import BatchPredictionOutlinedIcon from "@mui/icons-material/BatchPredictionOutlined";
 
 function BatchInstructions() {
     return(<Box sx={{ width: "95%", marginBottom: 2 }}>
         <Typography
           style={{
-            fontSize: "36px",
+            fontSize: "30px",
             color: "#3B3B3B",
             fontWeight: "bold",
           }}
         >
-          Instructions
+          <BatchPredictionOutlinedIcon fontSize="30px" style={{ marginRight: "10px"}}/> 
+          Batch Instructions
         </Typography>
 
         <Typography

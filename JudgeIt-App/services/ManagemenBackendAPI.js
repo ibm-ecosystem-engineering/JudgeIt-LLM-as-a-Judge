@@ -56,8 +56,8 @@ export const fetch_request_history_by_id = async (user_id, doc_id) => {
     }
   };
 
-  export const get_experiment_list = async (user_id) => {
-    const url = LLM_JUDGE_MANAGEMENT_API_URL + "experiments";
+  export const get_experiment_list = async (user_id, type) => {
+    const url = LLM_JUDGE_MANAGEMENT_API_URL + "experiments/type/"+ type;
   
     const headers = {
       accept: "application/json",

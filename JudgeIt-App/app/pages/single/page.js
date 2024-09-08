@@ -215,6 +215,7 @@ const SoloRequestPage = () => {
                               handleBlur={handleBlur}
                               errors={errors}
                               touched={touched}
+                              type={'single'}
                             />
                             {values.apiType === API_TYPE_MULTITURN ? (
                               <>

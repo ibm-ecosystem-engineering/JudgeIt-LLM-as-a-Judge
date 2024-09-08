@@ -3,17 +3,19 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import GavelOutlinedIcon from "@mui/icons-material/GavelOutlined";
 
 function SingleInstructions() {
     return(<Box sx={{ width: "95%", marginBottom: 2 }}>
         <Typography
           style={{
-            fontSize: "36px",
+            fontSize: "30px",
             color: "#3B3B3B",
             fontWeight: "bold",
           }}
         >
-          Instructions
+          <GavelOutlinedIcon fontSize="30px" style={{ marginRight: "10px"}}/> 
+          Single Evaluation Instructions
         </Typography>
 
         <Typography

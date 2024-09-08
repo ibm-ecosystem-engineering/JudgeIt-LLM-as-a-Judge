@@ -21,6 +21,7 @@ const ExperimentForm = ({
   handleBlur,
   errors,
   touched,
+  type
 }) => {
   const [serverData, setServerData] = useState([]);
   const hasEffectRun = useRef(false);
@@ -32,7 +33,7 @@ const ExperimentForm = ({
     }
 
     const fetch_data = async () => {
-      const data = await get_experiment_list(session.user.email);
+      const data = await get_experiment_list(session.user.email, type);
       setServerData(data);
       console.log(data)
     };
