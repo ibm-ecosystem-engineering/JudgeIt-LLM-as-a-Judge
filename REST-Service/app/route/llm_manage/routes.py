@@ -88,6 +88,11 @@ def get_request_histories_by_experiment_name(experiment_name: str, user_id: str 
     histories = management_service.get_histories_by_experiment_name(user_id, experiment_name)
     return JSONResponse(content=histories)
 
+@judge_management_api_route.get(path='/histories/name/{experiment_name}/type/{type}', description="Returns list of request history by experiment name and type")
+def get_request_histories_by_experiment_name(experiment_name: str, type: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    histories = management_service.get_histories_by_experiment_name_type(user_id, experiment_name, type)
+    return JSONResponse(content=histories)
+
 @judge_management_api_route.get(path='/histories/type/{type}', description="Returns list of request history by experiment name")
 def get_request_histories_by_type(type: str, user_id: str = Header(...), api_key: str = Security(get_api_key)):
     histories = management_service.get_histories_by_type(user_id, type)
