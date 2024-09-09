@@ -5,13 +5,23 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const BarChart = ({ gradeData }) => {
 
+  const getRandomColor = () => {
+    // Generate a random color
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
   const data = {
     labels: Object.keys(gradeData),
     datasets: [
       {
         label: 'Count',
         data: Object.values(gradeData),
-        backgroundColor: 'rgba(144, 202, 249, 0.6)',
+        backgroundColor: Object.keys(gradeData).map(() => getRandomColor()),
         borderColor: 'rgba(144, 202, 249, 1)',
         borderWidth: 1,
       },

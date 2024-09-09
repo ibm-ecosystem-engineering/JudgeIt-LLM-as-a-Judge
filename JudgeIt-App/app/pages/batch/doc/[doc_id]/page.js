@@ -1,0 +1,147 @@
+"use client";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { fetch_request_history_by_id } from "@/services/ManagemenBackendAPI";
+import { get_result_by_task_id } from "@/services/JudgeBackendAPIBatch";
+import DataGridToolbar from "@/components/globals/DataGridToolbar";
+import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
+
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Grid,
+  Typography,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Alert,
+  Box,
+  CircularProgress,
+} from "@mui/material";
+import { generateColumns, generateRows } from "@/utils/Helper";
+import { DataGrid } from "@mui/x-data-grid";
+import BarChart from "@/components/globals/BarChart";
+
+const page = () => {
+  const params = useParams();
+  const { doc_id } = params; // Get the 'id' from the URL
+  const { data: session, status } = useSession();
+  const [serverData, setServerData] = useState(null);
+  const [task_object, setTask_object] = useState(null);
+  const [gradeData, setGradeData] = useState(null);
+  const hasEffectRun = useRef(false);
+
+  useEffect(() => {
+    if (hasEffectRun.current) {
+      return; // Prevents the effect from running again
+    }
+
+    const fetch_data = async () => {
+      const task_id_object = await fetch_request_history_by_id(
+        session.user.email,
+        doc_id
+      );
+
+      setTask_object(task_id_object);
+
+      const data = await get_result_by_task_id(task_id_object.content.task_id);
+      setServerData(data);
+
+      const grades = Object.values(data.Grade).filter(
+        (grade) => grade !== undefined
+      );
+
+      const gradeDistribution = grades.reduce((acc, grade) => {
+        acc[grade] = (acc[grade] || 0) + 1;
+        return acc;
+      }, {});
+      setGradeData(gradeDistribution);
+    };
+
+    if (session?.user.email) {
+      fetch_data();
+      hasEffectRun.current = true;
+    }
+  }, [session?.user.email, doc_id]); // Empty dependency array, runs only once
+
+  if (status === "loading") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {session && serverData && (
+        <Grid spacing={0} sx={{ flexGrow: 1 }} container>
+          <Grid item xs={2}>
+            <EvaluationHistoryLeftBar type={"batch"} />
+          </Grid>
+          <Grid item xs={9}>
+            <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>
+              <Grid item xs={12}>
+                <Typography
+                  style={{
+                    fontSize: "30px",
+                    marginLeft: "25px",
+                    color: "#3B3B3B",
+                    fontWeight: "bold",
+                    marginBottom: "15px",
+                  }}
+                >
+                  Batch Evaluation {task_object && " - " + task_object.eval_type}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} marginLeft={"25px"}>
+              {gradeData && (
+                    <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
+                      <Typography
+                        style={{
+                          fontSize: "20px",
+                          color: "#3B3B3B",
+                          margin: "10px",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
+                      >
+                        Grade Distribution
+                      </Typography>
+                      <BarChart gradeData={gradeData} />
+                    </Box>
+                  )}
+              </Grid>
+              <Grid item xs={12} marginLeft={"25px"}>
+                {serverData && (
+                  <DataGrid
+                    rows={generateRows(serverData)}
+                    columns={generateColumns(serverData)}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    density="compact"
+                    getRowHeight={() => "auto"}
+                    autoHeight={true}
+                    pageSizeOptions={[5, 10, 25]}
+                    slots={{ toolbar: DataGridToolbar }}
+                  />
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      )}
+    </>
+  );
+};
+
+export default page;

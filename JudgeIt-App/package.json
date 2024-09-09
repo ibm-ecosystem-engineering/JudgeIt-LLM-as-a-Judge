@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.16.0",
     "@mui/material": "^5.16.0",
+    "@mui/x-data-grid": "^7.16.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.4",
     "cryptr": "^6.3.0",

@@ -8,6 +8,8 @@ import {
   LLM_JUDGE_MANAGEMENT_API_URL,
 } from "./Config";
 
+import { create_experiment } from "./ManagemenBackendAPI";
+
 /* SOLO API ENDPOINTS */
 const API_RATING_URL = LLM_JUDGE_BASE_URL + "/api/v1/judge/rating";
 const API_SIMLARITY_URL = LLM_JUDGE_BASE_URL + "/api/v1/judge/similarity";
@@ -36,32 +38,6 @@ export async function judge_api_solo_call(payload) {
   } catch (error) {
     throw error;
   } finally {
-  }
-}
-
-async function create_experiment(payload) {
-  console.log(payload, "inside create");
-  if (payload.experiment_option === "new_experiment") {
-    const headers = {
-      accept: "application/json",
-      "user-id": payload.user_id,
-      LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
-      "Content-Type": "application/json",
-    };
-
-    const url = LLM_JUDGE_MANAGEMENT_API_URL + "experiment";
-
-    const data = {
-      name: payload.new_experiment,
-      user_id: payload.user_id,
-      type: "single",
-    };
-
-    console.log(data, "inside d create");
-
-    try {
-      await axios.post(url, data, { headers });
-    } catch (error) {}
   }
 }
 
@@ -127,7 +103,7 @@ async function rating_api_call(payload) {
     const response = await axios.post(API_RATING_URL, payload, config);
 
     // creating new experiment after a successful call
-    await create_experiment(payload);
+    await create_experiment(payload, "single");
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);
@@ -146,7 +122,7 @@ async function similarity_api_call(payload) {
   try {
     const response = await axios.post(API_SIMLARITY_URL, payload, config);
     // creating new experiment after a successful call
-    await create_experiment(payload);
+    await create_experiment(payload, "single");
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);
@@ -165,7 +141,7 @@ async function multiturn_api_call(payload) {
   try {
     const response = await axios.post(API_MULTITURN_URL, payload, config);
     // creating new experiment after a successful call
-    await create_experiment(payload);
+    await create_experiment(payload, "single");
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);

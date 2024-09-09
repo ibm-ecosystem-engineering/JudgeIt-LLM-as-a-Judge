@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { get_experiment_list } from "@/services/ManagemenBackendAPI";
 import { useSession } from "next-auth/react";
+import { getRandomInt } from "@/utils/Helper";
 
 const ExperimentForm = ({
   values,
@@ -21,7 +22,8 @@ const ExperimentForm = ({
   handleBlur,
   errors,
   touched,
-  type
+  type,
+  created_experiment,
 }) => {
   const [serverData, setServerData] = useState([]);
   const hasEffectRun = useRef(false);
@@ -35,7 +37,7 @@ const ExperimentForm = ({
     const fetch_data = async () => {
       const data = await get_experiment_list(session.user.email, type);
       setServerData(data);
-      console.log(data)
+      console.log(data);
     };
 
     if (session?.user.email) {
@@ -44,13 +46,22 @@ const ExperimentForm = ({
     }
   }, [session]); // Empty dependency array, runs only once
 
+  useEffect(() => {
+    if (created_experiment) {
+      const newData = {
+        name: created_experiment,
+      };
+      setServerData((prevData) => [...prevData, newData]);
+      console.log("useeffect", serverData);
+    }
+  }, [created_experiment]); // Trigger update when `result` changes
 
   return (
     <div>
-      <Box marginBottom={"20px"} marginLeft={"20px"} marginRight={"20px"}>
+      <Box marginBottom={"20px"} marginRight={"20px"}>
         <FormControl
           component="fieldset"
-          error={touched.apiType && Boolean(errors.apiType)}
+          error={touched.experiment_option && Boolean(errors.experiment_option)}
         >
           <RadioGroup
             row
@@ -71,33 +82,35 @@ const ExperimentForm = ({
               label="Existing"
             />
           </RadioGroup>
-          {touched.apiType && errors.apiType && (
-            <FormHelperText>{errors.apiType}</FormHelperText>
+          {touched.experiment_option && errors.experiment_option && (
+            <FormHelperText>{errors.experiment_option}</FormHelperText>
           )}
         </FormControl>
       </Box>
       {values.experiment_option === "new_experiment" && (
-        <Box marginBottom={"20px"} margin={"20px"}>
+        <Box marginBottom={"20px"}>
           <TextField
             label="New experiment"
             name="new_experiment"
             value={values.new_experiment}
             onChange={handleChange}
             onBlur={handleBlur}
-            error={
-              touched.new_experiment && Boolean(errors.new_experiment)
-            }
+            error={touched.new_experiment && Boolean(errors.new_experiment)}
             helperText={touched.new_experiment && errors.new_experiment}
             style={{ width: "100%" }}
           />
         </Box>
       )}
       {values.experiment_option === "existing_experiment" && (
-        <Box marginBottom={"20px"} marginLeft={"20px"} marginRight={"20px"}>
-          <FormControl error={touched.existing_experiment && Boolean(errors.existing_experiment)}>
+        <Box marginBottom={"20px"} marginRight={"20px"}>
+          <FormControl
+            error={
+              touched.existing_experiment && Boolean(errors.existing_experiment)
+            }
+          >
             <InputLabel id="existing_experiment-label">Experiment</InputLabel>
             <Select
-              sx={{ width: '200px'}}
+              sx={{ width: "200px" }}
               labelId="existing_experiment-label"
               id="existing_experiment"
               name="existing_experiment"
@@ -107,7 +120,10 @@ const ExperimentForm = ({
               label="Experiment"
             >
               {serverData.map((item, index) => (
-                <MenuItem key={index} value={item.name}>
+                <MenuItem
+                  key={index + "-" + getRandomInt(100)}
+                  value={item.name}
+                >
                   {item.name}
                 </MenuItem>
               ))}

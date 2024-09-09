@@ -5,9 +5,9 @@ import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { fetch_experiment_list_single_type } from "@/services/ManagemenBackendAPI";
+import { fetch_experiment_list_by_type } from "@/services/ManagemenBackendAPI";
 
-const SingleEvaluationLeftBar = ({ result }) => {
+const EvaluationHistoryLeftBar = ({ result, type }) => {
   const { data: session, status } = useSession();
   const hasEffectRun = useRef(false);
   const [serverData, setServerData] = useState([]);
@@ -18,9 +18,11 @@ const SingleEvaluationLeftBar = ({ result }) => {
     }
 
     const fetch_data = async () => {
-      const data = await fetch_experiment_list_single_type(session.user.email);
+      const data = await fetch_experiment_list_by_type(
+        session.user.email,
+        type
+      );
       setServerData(data);
-      console.log(data, "groupded");
     };
 
     if (session.user.email) {
@@ -31,7 +33,6 @@ const SingleEvaluationLeftBar = ({ result }) => {
 
   useEffect(() => {
     if (result) {
-      
       setServerData((prevServerData) => {
         // Create a copy of prevServerData to avoid direct mutation
         const newServerData = { ...prevServerData };
@@ -85,13 +86,17 @@ const SingleEvaluationLeftBar = ({ result }) => {
               key={experiment_name}
               label={experiment_name}
               style={{ backgroundColor: "#202123", color: "#FFFFFF" }}
-              component={<Link href={"/pages/single/exp/" + experiment_name} />}
+              component={
+                <Link href={"/pages/" + type + "/exp/" + experiment_name} />
+              }
             >
               {serverData[experiment_name].map((item) => (
                 <MenuItem
                   key={item._id}
                   style={{ backgroundColor: "#202123", color: "#FFFFFF" }}
-                  component={<Link href={"/pages/single/doc/" + item._id} />}
+                  component={
+                    <Link href={"/pages/" + type + "/doc/" + item._id} />
+                  }
                 >
                   {item.name}
                 </MenuItem>
@@ -104,4 +109,4 @@ const SingleEvaluationLeftBar = ({ result }) => {
   );
 };
 
-export default SingleEvaluationLeftBar;
+export default EvaluationHistoryLeftBar;

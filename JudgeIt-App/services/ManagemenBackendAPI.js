@@ -4,8 +4,34 @@ import {
   LLM_JUDGE_MANAGEMENT_API_URL,
 } from "./Config";
 
-export const fetch_experiment_list_single_type = async (user_id) => {
-  const url = LLM_JUDGE_MANAGEMENT_API_URL + "histories/type/single";
+export async function create_experiment(payload, type) {
+
+  console.log(payload)
+  if (payload.experiment_option === "new_experiment") {
+    console.log("I am inside the management api ")
+    const headers = {
+      accept: "application/json",
+      "user-id": payload.user_id,
+      LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
+      "Content-Type": "application/json",
+    };
+
+    const url = LLM_JUDGE_MANAGEMENT_API_URL + "experiment";
+
+    const data = {
+      name: payload.new_experiment,
+      user_id: payload.user_id,
+      type: type,
+    };
+
+    try {
+      await axios.post(url, data, { headers });
+    } catch (error) {}
+  }
+}
+
+export const fetch_experiment_list_by_type = async (user_id, type) => {
+  const url = LLM_JUDGE_MANAGEMENT_API_URL + "histories/type/" + type;
 
   const headers = {
     accept: "application/json",
@@ -38,45 +64,7 @@ export const fetch_experiment_list_single_type = async (user_id) => {
 };
 
 export const fetch_request_history_by_id = async (user_id, doc_id) => {
-    const url = LLM_JUDGE_MANAGEMENT_API_URL + "histories/"+doc_id;
-  
-    const headers = {
-      accept: "application/json",
-      "user-id": user_id,
-      LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
-    };
-  
-    try {
-      const response = await axios.get(url, { headers });
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error("Error fetching fetch_request_history_by_id :", error); // Handle any errors
-      throw error;
-    }
-  };
-
-  export const get_experiment_list = async (user_id, type) => {
-    const url = LLM_JUDGE_MANAGEMENT_API_URL + "experiments/type/"+ type;
-  
-    const headers = {
-      accept: "application/json",
-      "user-id": user_id,
-      LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
-    };
-  
-    try {
-      const response = await axios.get(url, { headers });
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error("Error fetching get_experiment_list :", error); // Handle any errors
-      throw error;
-    }
-  };
-
-export const fetch_experiment_batch_type = async (user_id) => {
-  const url = LLM_JUDGE_MANAGEMENT_API_URL + "experiments/type/batch";
+  const url = LLM_JUDGE_MANAGEMENT_API_URL + "histories/" + doc_id;
 
   const headers = {
     accept: "application/json",
@@ -86,9 +74,57 @@ export const fetch_experiment_batch_type = async (user_id) => {
 
   try {
     const response = await axios.get(url, { headers });
-    return response.data;
+    const data = response.data;
+    return data;
   } catch (error) {
-    console.error("Error fetching data:", error); // Handle any errors
+    console.error("Error fetching fetch_request_history_by_id :", error); // Handle any errors
+    throw error;
+  }
+};
+
+export const fetch_request_history_by_name_and_type = async (
+  user_id,
+  experiment_name,
+  type
+) => {
+  const url =
+    LLM_JUDGE_MANAGEMENT_API_URL +
+    "histories/name/" +
+    experiment_name +
+    "/type/" +
+    type;
+
+  const headers = {
+    accept: "application/json",
+    "user-id": user_id,
+    LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
+  };
+
+  try {
+    const response = await axios.get(url, { headers });
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error("Error fetching fetch_request_history_by_name_and_type :", error); // Handle any errors
+    throw error;
+  }
+};
+
+export const get_experiment_list = async (user_id, type) => {
+  const url = LLM_JUDGE_MANAGEMENT_API_URL + "experiments/type/" + type;
+
+  const headers = {
+    accept: "application/json",
+    "user-id": user_id,
+    LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
+  };
+
+  try {
+    const response = await axios.get(url, { headers });
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error("Error fetching get_experiment_list :", error); // Handle any errors
     throw error;
   }
 };

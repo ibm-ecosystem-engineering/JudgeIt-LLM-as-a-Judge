@@ -2,19 +2,12 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  Button,
-  TextField,
-  Box,
-  Typography,
-  Link,
-  Paper,
-  Grid,
-} from "@mui/material";
+import { Button, Box, Typography, Paper, Grid } from "@mui/material";
 import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
 import { useDropzone } from "react-dropzone";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
-
+import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
+import ExperimentForm from "@/components/judge/ExperimentForm";
 import {
   MenuItem,
   Select,
@@ -43,8 +36,6 @@ import { useSession } from "next-auth/react";
 
 import * as XLSX from "xlsx";
 import BarChart from "@/components/globals/BarChart";
-import { create } from "@mui/material/styles/createTransitions";
-import BatchInstructions from "@/components/globals/BatchInstructions";
 
 const FileUploadForm = () => {
   const [file, setFile] = useState(null);
@@ -54,6 +45,7 @@ const FileUploadForm = () => {
   const [task_id, setTask_id] = useState(null);
   const { data: session, status } = useSession();
   const [gradeData, setGradeData] = useState(null);
+  const [newData, setNewData] = useState(null);
 
   const required_column_rating_similarity = "golden_text, generated_text";
   const required_column_multi_turn =
@@ -144,14 +136,34 @@ const FileUploadForm = () => {
     initialValues: {
       model: "meta-llama/llama-3-70b-instruct",
       apiType: API_TYPE_RATING,
+      experiment_option: "new_experiment",
+      new_experiment: "",
+      existing_experiment: "",
     },
     validationSchema: Yup.object({
       model: Yup.string().required("Model is required"),
       apiType: Yup.string().required("Api type is required"),
+      new_experiment: Yup.string().when("experiment_option", {
+        is: "new_experiment",
+        then: (schema) =>
+          schema
+            .matches(
+              /^[a-zA-Z0-9-]*$/,
+              "No spaces or special characters allowed"
+            )
+            .required("Experiment name is required"),
+        otherwise: (schema) => schema,
+      }),
+
+      existing_experiment: Yup.string().when("experiment_option", {
+        is: "existing_experiment",
+        then: (schema) => schema.required("Please select experiment"),
+        otherwise: (schema) => schema,
+      }),
     }),
     onSubmit: async (values) => {
       if (!file) {
-        alert("Please upload a file");
+        setErrorStatus("Please upload a file");
         return;
       }
 
@@ -168,12 +180,21 @@ const FileUploadForm = () => {
         formData.append(API_TYPE_KEY, values.apiType);
         formData.append("file", file);
 
-        setErrorStatus(null);
-        const response = await judge_api_batch_call(formData);
-        const returned_task_id = response.data.task_id;
+        const experiment_payload = {
+          experiment_option: values.experiment_option,
+          existing_experiment: values.existing_experiment,
+          new_experiment: values.new_experiment,
+          user_id: session?.user?.email,
+          apiType: values.apiType,
+          filename: file.name,
+        };
 
+        setErrorStatus(null);
+        const response = await judge_api_batch_call(formData, experiment_payload);
+        const returned_task_id = response.data.task_id;
         /** if returned task id is valid then make an event source call to get continuous update */
         setTask_id(returned_task_id);
+        setNewData(response.query);
 
         const eventSource = new EventSource(
           LLM_JUDGE_BATCH_EVENT_URL + returned_task_id
@@ -231,6 +252,7 @@ const FileUploadForm = () => {
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     setFile(file);
+    console.log(file, "file name");
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -261,189 +283,203 @@ const FileUploadForm = () => {
   return (
     <>
       {session && (
-        <Grid
-          marginTop={"10px"}
-          spacing={0}
-          sx={{ flexGrow: 1 }}
-          container
-        >
-          <Grid item xs={12}>
-            <Typography
-              style={{
-                fontSize: "48px",
-                marginLeft: "25px",
-                color: "#3B3B3B",
-                fontWeight: "bold",
-                marginBottom: "15px",
-
-              }}
-            >
-              Batch Evaluation
-            </Typography>
+        <Grid spacing={0} sx={{ flexGrow: 1 }} container>
+          <Grid item xs={2}>
+            <EvaluationHistoryLeftBar result={newData} type={"batch"} />
           </Grid>
-          <Grid item xs={7}>
-            <div style={{ marginLeft: "30px" }}>
-              {errorStatus && (
-                <Alert
-                  variant="outlined"
-                  severity="error"
-                  sx={{ width: "75%", marginBottom: "20px" }}
-                >
-                  {errorStatus}
-                </Alert>
-              )}
-              <form onSubmit={formik.handleSubmit}>
-                <Paper elevation={2} sx={{ padding: "20px", width: "90%" }}>
-                  <Box>
-                    <FormControl
-                      error={
-                        formik.touched.model && Boolean(formik.errors.model)
-                      }
-                    >
-                      <InputLabel id="model-label">Model</InputLabel>
-                      <Select
-                        labelId="model-label"
-                        id="model"
-                        name="model"
-                        value={formik.values.model}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        label="Model"
-                      >
-                        {LLM_MODELS.map((item, index) => (
-                          <MenuItem key={index} value={item.value}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {formik.touched.model && formik.errors.model && (
-                        <FormHelperText>{formik.errors.model}</FormHelperText>
-                      )}
-                    </FormControl>
-                  </Box>
+          <Grid item xs={8}>
+            <Grid item xs={12} marginTop={"10px"}>
+              <Typography
+                style={{
+                  fontSize: "30px",
+                  marginLeft: "25px",
+                  color: "#3B3B3B",
+                  fontWeight: "bold",
+                  marginBottom: "15px",
+                }}
+              >
+                Batch Evaluation
+              </Typography>
+            </Grid>
 
-                  <Box>
-                    <FormControl
-                      component="fieldset"
-                      error={
-                        formik.touched.apiType && Boolean(formik.errors.apiType)
-                      }
-                    >
-                      <RadioGroup
-                        row
-                        aria-label="option"
-                        name="apiType"
-                        value={formik.values.apiType}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        style={{ marginTop: "15px", marginBottom: "15px" }}
-                      >
-                        <FormControlLabel
-                          value={API_TYPE_RATING}
-                          control={<Radio />}
-                          label="RAG Evaluation - Rating"
-                        />
-                        <FormControlLabel
-                          value={API_TYPE_SIMILARITY}
-                          control={<Radio />}
-                          label="RAG Evaluation - Similarity"
-                        />
-                        <FormControlLabel
-                          value={API_TYPE_MULTITURN}
-                          control={<Radio />}
-                          label="Multi-turn Query Rewrite Evaluation"
-                        />
-                      </RadioGroup>
-                      {formik.touched.apiType && formik.errors.apiType && (
-                        <FormHelperText>{formik.errors.apiType}</FormHelperText>
-                      )}
-                    </FormControl>
-                  </Box>
-                  <Box lineHeight={"40px"} color={"#3B4151"}>
-                    <span style={{ color: "red" }}>**</span>Required columns in
-                    csv/xlsx file{" "}
-                    <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
-                      {formik.values.apiType == API_TYPE_MULTITURN
-                        ? required_column_multi_turn
-                        : required_column_rating_similarity}
-                    </span>
-                  </Box>
-                  <Box
-                    {...getRootProps()}
-                    sx={{
-                      border: "2px dashed #ccc",
-                      p: 2,
-                      textAlign: "center",
-                      my: 2,
-                      width: "90%",
-                    }}
-                  >
-                    <input {...getInputProps()} />
-                    <CloudUploadIcon sx={{ fontSize: 40, color: "#aaa" }} />
-                    <Typography variant="body1">
-                      Drag & Drop a to Upload CSV/Excel File, or Click to Browse
-                    </Typography>
-                  </Box>
-                  {file && (
-                    <Typography variant="body2" marginBottom={"20px"}>
-                      Selected file: {file.name}
-                    </Typography>
-                  )}
-
-                  <Button
-                    disabled={progress === "PROGRESS" || progress === "PENDING"}
+            <Grid item xs={12}>
+              <div style={{ marginLeft: "30px" }}>
+                {errorStatus && (
+                  <Alert
                     variant="outlined"
-                    style={{ width: "200px", marginTop: "10px" }}
-                    type="submit"
+                    severity="error"
+                    sx={{ width: "100%", marginBottom: "20px" }}
                   >
-                    Submit
-                  </Button>
-                </Paper>
-                {progress &&
-                  (progress === "PENDING" || progress === "PROGRESS") && (
-                    <Box
-                      marginBottom={"10px"}
-                      sx={{ justifyContent: "center", marginTop: "30px" }}
-                    >
-                      <LinearProgressWithLabel
-                        value={progressVal}
-                        width={"90%"}
+                    {errorStatus}
+                  </Alert>
+                )}
+                <form onSubmit={formik.handleSubmit}>
+                  <Paper elevation={2} sx={{ padding: "20px", width: "100%" }}>
+                    <Box>
+                      <ExperimentForm
+                        values={formik.values}
+                        handleChange={formik.handleChange}
+                        handleBlur={formik.handleBlur}
+                        errors={formik.errors}
+                        touched={formik.touched}
+                        type={"batch"}
+                        created_experiment={newData?.experiment_name}
                       />
                     </Box>
-                  )}
-                {progress && progress === "SUCCESS" && (
-                  <Box sx={{ marginTop: 4, marginBottom: 2 }}>
-                    <Button
-                      onClick={download_evaluation_result}
-                      variant="outlined"
-                      startIcon={<CloudDownloadOutlinedIcon />}
-                      sx={{ marginBottom: "20px" }}
-                    >
-                      Download evaluation result
-                    </Button>
-                  </Box>
-                )}
-                {gradeData && (
-                  <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
-                    <Typography
-                      style={{
-                        fontSize: "20px",
-                        color: "#3B3B3B",
-                        margin: "10px",
-                        fontWeight: "bold",
-                        textDecoration: "none",
+                    <Box>
+                      <FormControl
+                        error={
+                          formik.touched.model && Boolean(formik.errors.model)
+                        }
+                      >
+                        <InputLabel id="model-label">Model</InputLabel>
+                        <Select
+                          labelId="model-label"
+                          id="model"
+                          name="model"
+                          value={formik.values.model}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          label="Model"
+                        >
+                          {LLM_MODELS.map((item, index) => (
+                            <MenuItem key={index} value={item.value}>
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {formik.touched.model && formik.errors.model && (
+                          <FormHelperText>{formik.errors.model}</FormHelperText>
+                        )}
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <FormControl
+                        component="fieldset"
+                        error={
+                          formik.touched.apiType &&
+                          Boolean(formik.errors.apiType)
+                        }
+                      >
+                        <RadioGroup
+                          row
+                          aria-label="option"
+                          name="apiType"
+                          value={formik.values.apiType}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          style={{ marginTop: "15px", marginBottom: "15px" }}
+                        >
+                          <FormControlLabel
+                            value={API_TYPE_RATING}
+                            control={<Radio />}
+                            label="RAG Evaluation - Rating"
+                          />
+                          <FormControlLabel
+                            value={API_TYPE_SIMILARITY}
+                            control={<Radio />}
+                            label="RAG Evaluation - Similarity"
+                          />
+                          <FormControlLabel
+                            value={API_TYPE_MULTITURN}
+                            control={<Radio />}
+                            label="Multi-turn Query Rewrite Evaluation"
+                          />
+                        </RadioGroup>
+                        {formik.touched.apiType && formik.errors.apiType && (
+                          <FormHelperText>
+                            {formik.errors.apiType}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Box>
+                    <Box lineHeight={"40px"} color={"#3B4151"}>
+                      <span style={{ color: "red" }}>**</span>Required columns
+                      in csv/xlsx file{" "}
+                      <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
+                        {formik.values.apiType == API_TYPE_MULTITURN
+                          ? required_column_multi_turn
+                          : required_column_rating_similarity}
+                      </span>
+                    </Box>
+                    <Box
+                      {...getRootProps()}
+                      sx={{
+                        border: "2px dashed #ccc",
+                        p: 2,
+                        textAlign: "center",
+                        my: 2,
+                        width: "90%",
                       }}
                     >
-                      Grade Distribution
-                    </Typography>
-                    <BarChart gradeData={gradeData} />
-                  </Box>
-                )}
-              </form>
-            </div>
-          </Grid>
-          <Grid item xs={5}>
-            <BatchInstructions />
+                      <input {...getInputProps()} />
+                      <CloudUploadIcon sx={{ fontSize: 40, color: "#aaa" }} />
+                      <Typography variant="body1">
+                        Drag & Drop a to Upload CSV/Excel File, or Click to
+                        Browse
+                      </Typography>
+                    </Box>
+                    {file && (
+                      <Typography variant="body2" marginBottom={"20px"}>
+                        Selected file: {file.name}
+                      </Typography>
+                    )}
+
+                    <Button
+                      disabled={
+                        progress === "PROGRESS" || progress === "PENDING"
+                      }
+                      variant="outlined"
+                      style={{ width: "200px", marginTop: "10px" }}
+                      type="submit"
+                    >
+                      Submit
+                    </Button>
+                  </Paper>
+                  {progress &&
+                    (progress === "PENDING" || progress === "PROGRESS") && (
+                      <Box
+                        marginBottom={"10px"}
+                        sx={{ justifyContent: "center", marginTop: "30px" }}
+                      >
+                        <LinearProgressWithLabel
+                          value={progressVal}
+                          width={"90%"}
+                        />
+                      </Box>
+                    )}
+                  {progress && progress === "SUCCESS" && (
+                    <Box sx={{ marginTop: 4, marginBottom: 2 }}>
+                      <Button
+                        onClick={download_evaluation_result}
+                        variant="outlined"
+                        startIcon={<CloudDownloadOutlinedIcon />}
+                        sx={{ marginBottom: "20px" }}
+                      >
+                        Download evaluation result
+                      </Button>
+                    </Box>
+                  )}
+                  {gradeData && (
+                    <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
+                      <Typography
+                        style={{
+                          fontSize: "20px",
+                          color: "#3B3B3B",
+                          margin: "10px",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
+                      >
+                        Grade Distribution
+                      </Typography>
+                      <BarChart gradeData={gradeData} />
+                    </Box>
+                  )}
+                </form>
+              </div>
+            </Grid>
           </Grid>
         </Grid>
       )}

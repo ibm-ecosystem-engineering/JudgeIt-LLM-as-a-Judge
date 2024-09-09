@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Grid, Paper, Typography, CircularProgress } from "@mui/material";
-import SingleEvaluationLeftBar from "@/components/judge/SingleEvaluationLeftBar";
+import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 import { useEffect, useRef, useState } from "react";
 import { fetch_request_history_by_id } from "@/services/ManagemenBackendAPI";
 import {
@@ -60,7 +60,7 @@ const ItemPage = () => {
       {session && serverData && (
         <Grid spacing={0} sx={{ flexGrow: 1 }} container>
           <Grid item xs={2}>
-            <SingleEvaluationLeftBar />
+            <EvaluationHistoryLeftBar type={"single"} />
           </Grid>
           <Grid item xs={8}>
             <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>

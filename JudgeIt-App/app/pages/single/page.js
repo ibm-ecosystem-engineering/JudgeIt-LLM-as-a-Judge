@@ -34,7 +34,7 @@ import {
 import { useState } from "react";
 import SoloResult from "@/components/judge/SoloResult";
 import { useSession } from "next-auth/react";
-import SingleEvaluationLeftBar from "@/components/judge/SingleEvaluationLeftBar";
+import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 
 const validationSchema = Yup.object({
   apiType: Yup.string().required("API type is required"),
@@ -42,7 +42,10 @@ const validationSchema = Yup.object({
 
   new_experiment: Yup.string().when("experiment_option", {
     is: "new_experiment",
-    then: (schema) => schema.matches(/^[a-zA-Z0-9-]*$/, "No spaces or special characters allowed").required("Experiment name is required"),
+    then: (schema) =>
+      schema
+        .matches(/^[a-zA-Z0-9-]*$/, "No spaces or special characters allowed")
+        .required("Experiment name is required"),
     otherwise: (schema) => schema,
   }),
 
@@ -131,7 +134,7 @@ const SoloRequestPage = () => {
       {session && (
         <Grid spacing={0} sx={{ flexGrow: 1 }} container>
           <Grid item xs={2}>
-            <SingleEvaluationLeftBar result={newData} />
+            <EvaluationHistoryLeftBar result={newData} type={"single"} />
           </Grid>
           <Grid item xs={8}>
             <Grid marginTop={"10px"} spacing={0} sx={{ flexGrow: 1 }} container>
@@ -209,14 +212,17 @@ const SoloRequestPage = () => {
                           touched,
                         }) => (
                           <Form>
-                            <ExperimentForm
-                              values={values}
-                              handleChange={handleChange}
-                              handleBlur={handleBlur}
-                              errors={errors}
-                              touched={touched}
-                              type={'single'}
-                            />
+                            <Box marginLeft={"20px"}>
+                              <ExperimentForm
+                                values={values}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                errors={errors}
+                                touched={touched}
+                                type={"single"}
+                                created_experiment={newData?.experiment_name}
+                              />
+                            </Box>
                             {values.apiType === API_TYPE_MULTITURN ? (
                               <>
                                 <MultiTurnForm
