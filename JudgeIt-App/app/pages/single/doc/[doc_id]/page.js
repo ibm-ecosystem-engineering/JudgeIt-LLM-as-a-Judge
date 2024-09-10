@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Grid, Paper, Typography, CircularProgress } from "@mui/material";
+import { Grid, Box, Button, Typography, CircularProgress } from "@mui/material";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 import { useEffect, useRef, useState } from "react";
 import { fetch_request_history_by_id } from "@/services/ManagemenBackendAPI";
@@ -12,6 +12,7 @@ import {
 } from "@/services/Config";
 import DisplayRequestHistoryRatingSimilarity from "@/components/judge/DisplayRequestHistoryRatingSimilarity";
 import DisplayRequestHistoryMultiTurn from "@/components/judge/DisplayRequestHistoryMultiTurn";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 
 const ItemPage = () => {
   const params = useParams();
@@ -62,20 +63,33 @@ const ItemPage = () => {
           <Grid item xs={2}>
             <EvaluationHistoryLeftBar type={"single"} />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={9}>
             <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>
               <Grid item xs={12}>
-                <Typography
-                  style={{
-                    fontSize: "30px",
-                    marginLeft: "25px",
-                    color: "#3B3B3B",
-                    fontWeight: "bold",
-                    marginBottom: "15px",
-                  }}
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  justifyContent={"space-between"}
                 >
-                  Single Answer Evaluation {serverData.eval_type}
-                </Typography>
+                  <Typography
+                    style={{
+                      fontSize: "30px",
+                      marginLeft: "25px",
+                      color: "#3B3B3B",
+                      fontWeight: "bold",
+                      marginBottom: "15px",
+                    }}
+                  >
+                    Single Answer Evaluation {serverData.eval_type}
+                  </Typography>
+                  <Button
+                    size="small"
+                    href="/pages/single"
+                    startIcon={<ArrowBackOutlinedIcon />}
+                  >
+                    Back
+                  </Button>
+                </Box>
               </Grid>
               {(API_TYPE_RATING === serverData.eval_type ||
                 API_TYPE_SIMILARITY === serverData.eval_type) && (

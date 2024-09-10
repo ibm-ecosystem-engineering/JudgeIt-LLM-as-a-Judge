@@ -3,25 +3,10 @@ import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { fetch_request_history_by_name_and_type } from "@/services/ManagemenBackendAPI";
 import { get_result_by_task_id } from "@/services/JudgeBackendAPIBatch";
-import DataGridToolbar from "@/components/globals/DataGridToolbar";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Grid,
-  Typography,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Alert,
-  Box,
-  CircularProgress,
-} from "@mui/material";
-import { generateColumns, generateRows } from "@/utils/Helper";
-import { DataGrid } from "@mui/x-data-grid";
+import { Grid, Typography, Box, CircularProgress, Button } from "@mui/material";
 import BarChart from "@/components/globals/BarChart";
 
 const ExperimentPage = () => {
@@ -106,17 +91,30 @@ const ExperimentPage = () => {
         <Grid item xs={9}>
           <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>
             <Grid item xs={12}>
-              <Typography
-                style={{
-                  fontSize: "24px",
-                  marginLeft: "25px",
-                  color: "#3B3B3B",
-                  fontWeight: "bold",
-                  marginBottom: "15px",
-                }}
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                justifyContent={"space-between"}
               >
-                Batch Evaluation - {experiment_name}
-              </Typography>
+                <Typography
+                  style={{
+                    fontSize: "24px",
+                    marginLeft: "25px",
+                    color: "#3B3B3B",
+                    fontWeight: "bold",
+                    marginBottom: "15px",
+                  }}
+                >
+                  Batch Evaluation - {experiment_name}
+                </Typography>
+                <Button
+                  size="small"
+                  href="/pages/batch"
+                  startIcon={<ArrowBackOutlinedIcon />}
+                >
+                  Back
+                </Button>
+              </Box>
             </Grid>
             <Grid
               item

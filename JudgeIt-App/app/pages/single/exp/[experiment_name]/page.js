@@ -1,13 +1,13 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Grid, Typography, CircularProgress } from "@mui/material";
+import { Grid, Typography, CircularProgress, Box, Button } from "@mui/material";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 import { useEffect, useRef, useState } from "react";
 import { fetch_request_history_by_name_and_type } from "@/services/ManagemenBackendAPI";
 import RatingSimilarityDataGrid from "@/components/judge/RatingSimilarityDataGrid";
 import DataGridMultiTurn from "@/components/judge/DataGridMultiTurn";
-
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import {
   API_TYPE_MULTITURN,
   API_TYPE_RATING,
@@ -80,6 +80,11 @@ const ExperimentPage = () => {
           <Grid item xs={9}>
             <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>
               <Grid item xs={12}>
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                justifyContent={"space-between"}
+              >
                 <Typography
                   style={{
                     fontSize: "30px",
@@ -91,6 +96,14 @@ const ExperimentPage = () => {
                 >
                   Single Answer Evaluation - {experiment_name}
                 </Typography>
+                <Button
+                  size="small"
+                  href="/pages/single"
+                  startIcon={<ArrowBackOutlinedIcon />}
+                >
+                  Back
+                </Button>
+              </Box>
               </Grid>
               <Grid item xs={12} marginLeft={"25px"}>
                 {serverData && serverData.rating_similarity.length > 0 && (
