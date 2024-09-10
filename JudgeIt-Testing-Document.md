@@ -1,3 +1,4 @@
+<!-- omit in toc -->
 # JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines
 
 JudgeIt is an automated evaluation framework designed for various Generative AI pipelines such as RAG Evaluation, Multi-Turn Query Rewrite evaluation, Text-to-SQL Evaluation, and more. It utilizes an LLM Judge to accurately and efficiently evaluate generated text against a provided golden text.
@@ -7,7 +8,7 @@ JudgeIt is an automated evaluation framework designed for various Generative AI 
 - **Automated Evaluation**: JudgeIt automates batch evaluation processes, resulting in more efficient evaluation compared to human testers.
 - **Multi-Pipeline Support**: Evaluate different types of LLM pipelines including:
   - **RAG**: evaluate generated text against golden text
-  - **Multi-turn query rewritings**: evaluate rewritten queries given a mult-turn conversation
+  - **Multi-turn query rewritings**: evaluate rewritten queries given a multi-turn conversation
   - **Text-to-SQL conversions**: evaluate natural language to SQL generations
 - **Customization**: Configure the evaluation process with your datasets, LLM models, and specific parameters.
 
@@ -43,22 +44,10 @@ The LLM Judges in this repository have been tested against human evaluation to v
       1. [REST Service Instructions](#judgeit-rest-service)
       2. [JudgeIt App Instructions](#judgeit-application)
 
-## Contributors
-
-- Kunal Sawarkar, Chief Data Scientist
-- Shivam Solanki, Senior Advisory Data Scientist
-- Anand Das, Technology Engineer
-- Himadri Talukder - Senior Software Engineer
-- Abhilasha Mangal, Senior Data Scientist
-- Kevin Huang, Sr. ML-Ops Engineer
-
-## License
-
-This project is licensed under the Apache-2.0 License. See the `LICENSE` file for more details.
-
 <!-- ABOUT THE PROJECT -->
 
-## JudgeIt Framework
+<!-- omit in toc -->
+# JudgeIt Framework
 
 One method of using JudgeIt is through the JudgeIt Python framework. The framework contains Python modules for different types of LLM Judge evaluations. There are three types of LLM Judges:
 
@@ -72,9 +61,9 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 
 <!-- GETTING STARTED -->
 
-### Getting Started
+## Getting Started
 
-#### Prerequisites
+### Prerequisites
 
 The following prerequisites are required to run the tester:
 
@@ -83,7 +72,7 @@ The following prerequisites are required to run the tester:
 3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
    1. This project must be associated with a WML instance
 
-#### Installation
+### Installation
 
 1. Change directory into the JudgeIt Framework
 
@@ -110,7 +99,7 @@ The following prerequisites are required to run the tester:
    1. `home_dir`: the path to the folder where you have downloaded the repository
    2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge
    3. `input_file_name`:
-      1. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
+      1. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/Framework/data/input](./data/input)
       2. see [Configuring Your Input File](#configuring-your-input-file) for more details
    4. `output_file_name`: specify the name of your output file
    5. `judge_type`: specify the LLM Judge type. Possible values:
@@ -134,7 +123,7 @@ The following prerequisites are required to run the tester:
    deactivate
    ```
 
-### Configuring your Input File
+## Configuring your Input File
 
 Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
 
@@ -144,7 +133,7 @@ Each type of LLM Judge will accept an excel/csv file as an input file. The repos
 
 Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
 
-### Understanding the Results
+## Understanding the Results
 
 The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
 
@@ -154,7 +143,8 @@ The generated results will be saved to an excel/csv file at the location specifi
 
 <!-- ABOUT THE PROJECT -->
 
-## JudgeIt REST Service
+<!-- omit in toc -->
+# JudgeIt REST Service
 
 One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the RESTful service code that interfaces with the JudgeIt framework. It offers endpoints for initiating evaluations, retrieving results, and configuring evaluation parameters.
 
@@ -162,7 +152,7 @@ One method of using JudgeIt is through a Service-Oriented Architecture (SOA). Th
 
 <!-- Components -->
 
-### Components
+## Components
 
 There are four components in this service.
 
@@ -171,7 +161,7 @@ There are four components in this service.
 - Celery Worker
 - Flower Server
 
-#### REST Server
+### REST Server
 
 This FastAPI-based Python REST service offers various endpoints to evaluate LLM (Large Language Model) generations. It supports two types of requests: batch and single, with three evaluation types—rating, similarity, and multi-turn. Additionally, it provides a Swagger UI for easy interaction with the endpoints.
 
@@ -179,32 +169,50 @@ This FastAPI-based Python REST service offers various endpoints to evaluate LLM 
 
 We submit our long-running tasks to the Redis broker for asynchronous execution. After submitting a task, we monitor its progress using status endpoints (including server-sent events, WebSocket, and HTTP requests). Once the task is completed, we retrieve the result from the download endpoint.
 
-#### Redis Broker
+### Redis Broker
 
 Redis is an in-memory data store that can be used as a message broker in Celery, providing a simple and efficient way to manage task queues, making it an ideal choice for our solution.It receives tasks from the FastAPI service and places them in the queue for processing.
 
-#### Celery Worker
+### Celery Worker
 
 Consume tasks from the Redis queue and execute them asynchronously, then return the result to the Redis broker.
 
-#### Flower Server
+### Flower Server
 
 It monitors the Celery cluster in real-time, offering a web-based interface to track task execution, worker performance, and queue status.
 
 <!-- GETTING STARTED -->
 
-### Getting Started
+## Getting Started
 
-#### Prerequisites
+### Prerequisites
 
 The following prerequisites are required to run the tester:
 
-1. Docker desktop is installed: <https://docs.docker.com/desktop/>
-2. docker-compose is installed (for mac: <https://formulae.brew.sh/formula/docker-compose>)
-3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
-4. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+1. podman and podman-compose are installed
+    - **macOS:** use the following commands to install Podman and Podman Compose
 
-#### Installation
+    ```sh
+        brew install podman podman-compose
+    ```
+
+    - **Ubuntu:** Use the following commands to install Podman and Podman Compose
+
+    ```sh
+        sudo apt update
+        sudo apt install podman podman-compose
+    ```
+
+    - **Windows:**
+
+        - Download Podman for Windows: Visit the Podman for Windows release page (<https://github.com/containers/podman-desktop/releases>) and download the latest installer for your Windows version.
+
+        - Run the installer: Double-click the downloaded installer file and follow the on-screen instructions to complete the installation process.
+
+2. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+3. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+
+### Installation
 
 1. Change directory into the JudgeIt REST-Service
 
@@ -270,27 +278,45 @@ The following prerequisites are required to run the tester:
 3. Build
 
    ```sh
-   docker-compose build
+   podman-compose build
    ```
 
 4. Run
 
    ```sh
-   docker-compose up -d
+   podman-compose up -d
    ```
 
-### Test
+5. Validate
+
+   Validate if all the services are up and running.
+
+   ```sh
+   podman-compose ps
+   ```
+
+   The output will be like below.
+
+  ```sh
+  CONTAINER ID  IMAGE                                        COMMAND               CREATED        STATUS        PORTS                                       NAMES
+  1a6c7af902fa  localhost/rest-service_fastapi_app:latest    python3 main.py       9 seconds ago  Up 9 seconds  0.0.0.0:3001->3001/tcp, 3001/tcp, 8080/tcp  fastapi_app
+  16117ab1b15e  docker.io/library/redis:7.2.5-alpine         redis-server          6 seconds ago  Up 7 seconds  6379/tcp                                    redis
+  0269de20e376  localhost/rest-service_celery_worker:latest  celery -A app.cel...  5 seconds ago  Up 6 seconds  3001/tcp, 8080/tcp                          celery_worker
+  600c2aa3d650  localhost/rest-service_flower:latest         celery --broker=r...  5 seconds ago  Up 5 seconds  0.0.0.0:5556->5555/tcp, 3001/tcp, 8080/tcp  flower
+  ```
+
+## Test
 
 - REST Endpoint: <http://localhost:3001>
 - Flower server: <http://localhost:5556>
 
-### JudgeIt App
+## JudgeIt App
 
 You can now move on to spinning up the [JudgeIt NextJS App](#judgeit-application)
 
-### Configuring your Input File
+## Configuring your Input File
 
-Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
+Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](/Framework/data/input)
 
 1. RAG Evaluation (Similarity): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
 2. RAG Evaluation (Rating): provide an excel/csv file with a `golden_text` column and `generated_text` column to compare
@@ -298,7 +324,7 @@ Each type of LLM Judge will accept an excel/csv file as an input file. The repos
 
 Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
 
-### Understanding the Results
+## Understanding the Results
 
 The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
 
@@ -308,6 +334,7 @@ The generated results will be saved to an excel/csv file at the location specifi
 
 <!-- ABOUT THE PROJECT -->
 
+<!-- omit in toc -->
 # JudgeIt Application
 
 One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the code for a React-based application that provides a user interface for interacting with the LLM Judge service. It is built on the Next.js framework and integrates with IBM App ID for authentication. There are three types of evaluation currently available:
@@ -322,17 +349,16 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 
 <!-- GETTING STARTED -->
 
-### Getting Started
+## Getting Started
 
-#### Prerequisites
+### Prerequisites
 
 The following prerequisites are required to run the tester:
 
 1. [JudgeIt Backend REST Service](#judgeit-rest-service) is up and running
 2. [Node.js](https://nodejs.org/en) v18 or higher
-3. [IBM AppID](https://www.ibm.com/products/app-id) for application authentication
 
-#### Installation
+### Installation
 
 1. Change directory into the JudgeIt App
 
@@ -362,7 +388,7 @@ The following prerequisites are required to run the tester:
 
 6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Configuring your Input File
+## Configuring your Input File
 
 Each type of LLM Judge will accept an excel/csv file as an input file. The repository contains a sample input file for each type of LLM Judge that you can copy, edit, and use to test. They are located at: [JudgeIt-LLM-as-a-Judge/Framework/data/input](./Framework/data/input)
 
@@ -372,7 +398,7 @@ Each type of LLM Judge will accept an excel/csv file as an input file. The repos
 
 Note: Your input files can contain additional columns than the ones specified above. These columns will have no effect on the LLM Judge and will be perserved in the output file.
 
-### Understanding the Results
+## Understanding the Results
 
 The generated results will be saved to an excel/csv file at the location specified in your config file. Each file will contain all the columns provided in the input file.
 
