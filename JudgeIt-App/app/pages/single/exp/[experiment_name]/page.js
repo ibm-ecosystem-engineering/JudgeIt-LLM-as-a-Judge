@@ -6,12 +6,14 @@ import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBa
 import { useEffect, useRef, useState } from "react";
 import { fetch_request_history_by_name_and_type } from "@/services/ManagemenBackendAPI";
 import RatingSimilarityDataGrid from "@/components/judge/RatingSimilarityDataGrid";
+import DataGridMultiTurn from "@/components/judge/DataGridMultiTurn";
+
 import {
   API_TYPE_MULTITURN,
   API_TYPE_RATING,
   API_TYPE_SIMILARITY,
 } from "@/services/Config";
-import MultiTurnDataGrid from "@/components/judge/MultiturnDataGrid";
+
 const ExperimentPage = () => {
   const params = useParams();
   const { data: session, status } = useSession();
@@ -99,7 +101,7 @@ const ExperimentPage = () => {
               </Grid>
               <Grid item xs={12} marginLeft={"25px"}>
                 {serverData && serverData.multi_turn.length > 0 && (
-                  <MultiTurnDataGrid
+                  <DataGridMultiTurn
                     serverData={serverData.multi_turn}
                   />
                 )}

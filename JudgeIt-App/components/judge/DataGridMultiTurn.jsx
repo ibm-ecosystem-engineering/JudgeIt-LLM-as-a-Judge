@@ -3,7 +3,7 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import DataGridToolbar from "@/components/globals/DataGridToolbar";
 
-const MultiTurnDataGrid = ({ serverData }) => {
+const DataGridMultiTurn = ({ serverData }) => {
   const columns = [
     {
       field: "id",
@@ -94,4 +94,4 @@ const MultiTurnDataGrid = ({ serverData }) => {
   );
 };
 
-export default MultiTurnDataGrid;
+export default DataGridMultiTurn;
