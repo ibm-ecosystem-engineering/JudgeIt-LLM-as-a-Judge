@@ -1,30 +1,41 @@
 "use client";
-import { Box, Typography,AppBar, Link, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  AppBar,
+  Link,
+  useMediaQuery,
+  useTheme,
+  Tooltip,
+  IconButton,
+} from "@mui/material";
 import IBMIcon from "./icons/IBMIcon";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DrawerMenu from "@/components/globals/DrawerMenu";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-
+import GitHubIcon from "@mui/icons-material/GitHub";
+import {
+  GITHUB_SOURCE_CODE,
+  GITHUB_REPORT_ISSUE,
+  APP_VERSION,
+} from "@/services/Config";
 
 const Topbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: session, status } = useSession();
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   const getFontSize = () => {
-    if (isSmallScreen) return '16px';
-    if (isMediumScreen) return '18px';
-    return '20px';
+    if (isSmallScreen) return "16px";
+    if (isMediumScreen) return "18px";
+    return "20px";
   };
 
   const getLogoText = () => {
-    if (isSmallScreen || isMediumScreen) {
-     return 'EE - JudgeIt';
-    }
-    return 'Ecosystem Engineering - JudgeIt';
+    return "Ecosystem Engineering";
   };
 
   const handleDrawerOpen = () => {
@@ -41,7 +52,7 @@ const Topbar = () => {
     <>
       {session && (
         <AppBar
-        position="static"
+          position="static"
           style={{
             backgroundColor: "#FFFFFF",
             height: "70px",
@@ -53,6 +64,7 @@ const Topbar = () => {
             alignItems="center"
             height="100%"
             p={0}
+            color={"#3B3B3B"}
             onClick={handleDrawerClose}
           >
             <Box
@@ -61,28 +73,42 @@ const Topbar = () => {
               alignItems="center"
               height="100%"
               width="100%"
-              
               sx={{ textDecoration: "none" }}
             >
               <Link
                 href="/"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  textDecoration: 'none',
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
                 }}
               >
                 <IBMIcon />
-                <Typography 
-                sx={{ 
-                  fontSize: getFontSize(), 
-                  color: '#3B3B3B', 
-                  ml: 1, 
-                }}
-              >
-                {getLogoText()}
-              </Typography>
+                <Typography
+                  sx={{
+                    fontSize: getFontSize(),
+                    color: "#3B3B3B",
+                    ml: 1,
+                  }}
+                >
+                  {getLogoText()}
+                </Typography>
               </Link>
+            </Box>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              textAlign={"center"}
+              width={"100%"}
+            >
+              <Typography
+                fontWeight={"600"}
+                fontSize={"1.8rem"}
+                lineHeight={"2.5rem"}
+              >
+                JudgeIt
+              </Typography>
+              <Typography variant="h7">LLM as a Judge</Typography>
             </Box>
             <Box
               display="flex"
@@ -90,11 +116,48 @@ const Topbar = () => {
               alignItems="center"
               width="100%"
             >
-              <Typography style={{ fontSize: "12px", color: '#3B3B3B', marginRight: '10px' }}>
+              <Typography
+                style={{
+                  fontSize: "12px",
+                  color: "#3B3B3B",
+                  marginRight: "10px",
+                }}
+              >
                 Logged in as {session.user.email}
               </Typography>
+              <Tooltip title="Source code">
+                <IconButton
+                  href={GITHUB_SOURCE_CODE}
+                  target="_blank"
+                >
+                  <GitHubIcon />
+                </IconButton>
+              </Tooltip>
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                justifyContent={"end"}
+                marginRight={"10px"}
+              >
+                <Typography alignSelf={"end"} fontSize={"11px"}>
+                  {APP_VERSION}
+                </Typography>
+                <Link
+                  href={GITHUB_REPORT_ISSUE}
+                  underline="none"
+                  alignSelf={"end"}
+                  target="_blank"
+                  fontSize={"11px"}
+                >
+                  Report an issue
+                </Link>
+              </Box>
               <MenuOutlinedIcon
-                sx={{ cursor: "pointer", color: "#3B3B3B", marginRight: "20px" }}
+                sx={{
+                  cursor: "pointer",
+                  color: "#3B3B3B",
+                  marginRight: "20px",
+                }}
                 fontSize="large"
                 onClick={handleDrawerOpen}
               />

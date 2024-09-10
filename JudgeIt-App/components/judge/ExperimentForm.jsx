@@ -11,10 +11,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
 import { get_experiment_list } from "@/services/ManagemenBackendAPI";
 import { useSession } from "next-auth/react";
 import { getRandomInt } from "@/utils/Helper";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const ExperimentForm = ({
   values,
@@ -58,7 +60,12 @@ const ExperimentForm = ({
 
   return (
     <div>
-      <Box marginBottom={"20px"} marginRight={"20px"}>
+      <Box
+        marginBottom={"20px"}
+        marginRight={"20px"}
+        display={"flex"}
+        flexDirection={"row"}
+      >
         <FormControl
           component="fieldset"
           error={touched.experiment_option && Boolean(errors.experiment_option)}
@@ -74,21 +81,27 @@ const ExperimentForm = ({
             <FormControlLabel
               value={"new_experiment"}
               control={<Radio />}
-              label="New"
+              label="New Experiment"
             />
             <FormControlLabel
               value={"existing_experiment"}
               control={<Radio />}
-              label="Existing"
+              label="Select An Existing Experiment"
             />
           </RadioGroup>
           {touched.experiment_option && errors.experiment_option && (
             <FormHelperText>{errors.experiment_option}</FormHelperText>
           )}
         </FormControl>
+        <Tooltip
+          title="Help me!"
+          sx={{ marginLeft: "5px", cursor: "help", marginTop: "8px" }}
+        >
+          <InfoOutlinedIcon />
+        </Tooltip>
       </Box>
       {values.experiment_option === "new_experiment" && (
-        <Box marginBottom={"20px"}>
+        <Box marginBottom={"20px"} display={"flex"} flexDirection={"row"}>
           <TextField
             label="New experiment"
             name="new_experiment"
@@ -99,10 +112,18 @@ const ExperimentForm = ({
             helperText={touched.new_experiment && errors.new_experiment}
             style={{ width: "100%" }}
           />
+          <Tooltip title="Help me!" sx={{ marginLeft: "5px", cursor: "help" }}>
+            <InfoOutlinedIcon />
+          </Tooltip>
         </Box>
       )}
       {values.experiment_option === "existing_experiment" && (
-        <Box marginBottom={"20px"} marginRight={"20px"}>
+        <Box
+          marginBottom={"20px"}
+          marginRight={"20px"}
+          display={"flex"}
+          flexDirection={"row"}
+        >
           <FormControl
             error={
               touched.existing_experiment && Boolean(errors.existing_experiment)
@@ -132,6 +153,12 @@ const ExperimentForm = ({
               <FormHelperText>{errors.existing_experiment}</FormHelperText>
             )}
           </FormControl>
+          <Tooltip
+            title="Help me!"
+            sx={{ marginLeft: "5px", cursor: "help", marginTop: "8px" }}
+          >
+            <InfoOutlinedIcon />
+          </Tooltip>
         </Box>
       )}
     </div>

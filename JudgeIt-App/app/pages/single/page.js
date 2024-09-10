@@ -16,9 +16,9 @@ import {
   Alert,
   Typography,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import * as Yup from "yup";
-import PageTitle from "@/components/globals/PageTitle";
 import { judge_api_solo_call } from "@/services/JudgeBackendAPISolo";
 import { Formik, Form, Field } from "formik";
 import MultiTurnForm from "@/components/judge/MultiTurnForm";
@@ -35,6 +35,7 @@ import { useState } from "react";
 import SoloResult from "@/components/judge/SoloResult";
 import { useSession } from "next-auth/react";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const validationSchema = Yup.object({
   apiType: Yup.string().required("API type is required"),
@@ -212,7 +213,7 @@ const SoloRequestPage = () => {
                           touched,
                         }) => (
                           <Form>
-                            <Box marginLeft={"20px"}>
+                            <Box marginLeft={"20px"} marginRight={"20px"}>
                               <ExperimentForm
                                 values={values}
                                 handleChange={handleChange}
@@ -250,6 +251,8 @@ const SoloRequestPage = () => {
                               marginBottom={"20px"}
                               marginLeft={"20px"}
                               marginRight={"20px"}
+                              display={"flex"}
+                              flexDirection={"row"}
                             >
                               <FormControl
                                 error={touched.model && Boolean(errors.model)}
@@ -276,11 +279,19 @@ const SoloRequestPage = () => {
                                   </FormHelperText>
                                 )}
                               </FormControl>
+                              <Tooltip
+                                title="Help me!"
+                                sx={{ marginLeft: "5px", cursor: "help" }}
+                              >
+                                <InfoOutlinedIcon />
+                              </Tooltip>
                             </Box>
                             <Box
                               marginBottom={"20px"}
                               marginLeft={"20px"}
                               marginRight={"20px"}
+                              display={"flex"}
+                              flexDirection={"row"}
                             >
                               <FormControl
                                 component="fieldset"
@@ -319,6 +330,12 @@ const SoloRequestPage = () => {
                                   </FormHelperText>
                                 )}
                               </FormControl>
+                              <Tooltip
+                                title="Help me!"
+                                sx={{ marginLeft: "5px", cursor: "help", marginTop: "8px" }}
+                              >
+                                <InfoOutlinedIcon />
+                              </Tooltip>
                             </Box>
                             <Box
                               marginBottom={"20px"}

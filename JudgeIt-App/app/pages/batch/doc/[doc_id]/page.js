@@ -47,17 +47,19 @@ const page = () => {
       setTask_object(task_id_object);
 
       const data = await get_result_by_task_id(task_id_object.content.task_id);
-      setServerData(data);
 
-      const grades = Object.values(data.Grade).filter(
-        (grade) => grade !== undefined
-      );
+      if (data && data.status !== "ERROR") {
+        setServerData(data);
+        const grades = Object.values(data.Grade).filter(
+          (grade) => grade !== undefined
+        );
 
-      const gradeDistribution = grades.reduce((acc, grade) => {
-        acc[grade] = (acc[grade] || 0) + 1;
-        return acc;
-      }, {});
-      setGradeData(gradeDistribution);
+        const gradeDistribution = grades.reduce((acc, grade) => {
+          acc[grade] = (acc[grade] || 0) + 1;
+          return acc;
+        }, {});
+        setGradeData(gradeDistribution);
+      }
     };
 
     if (session?.user.email) {
@@ -83,7 +85,7 @@ const page = () => {
 
   return (
     <>
-      {session && serverData && (
+      {session && (
         <Grid spacing={0} sx={{ flexGrow: 1 }} container>
           <Grid item xs={2}>
             <EvaluationHistoryLeftBar type={"batch"} />
@@ -100,26 +102,27 @@ const page = () => {
                     marginBottom: "15px",
                   }}
                 >
-                  Batch Evaluation {task_object && " - " + task_object.eval_type}
+                  Batch Evaluation{" "}
+                  {task_object && " - " + task_object.eval_type}
                 </Typography>
               </Grid>
               <Grid item xs={12} marginLeft={"25px"}>
-              {gradeData && (
-                    <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
-                      <Typography
-                        style={{
-                          fontSize: "20px",
-                          color: "#3B3B3B",
-                          margin: "10px",
-                          fontWeight: "bold",
-                          textDecoration: "none",
-                        }}
-                      >
-                        Grade Distribution
-                      </Typography>
-                      <BarChart gradeData={gradeData} />
-                    </Box>
-                  )}
+                {gradeData && (
+                  <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
+                    <Typography
+                      style={{
+                        fontSize: "20px",
+                        color: "#3B3B3B",
+                        margin: "10px",
+                        fontWeight: "bold",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Grade Distribution
+                    </Typography>
+                    <BarChart gradeData={gradeData} />
+                  </Box>
+                )}
               </Grid>
               <Grid item xs={12} marginLeft={"25px"}>
                 {serverData && (

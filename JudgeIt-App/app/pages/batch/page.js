@@ -19,6 +19,7 @@ import {
   Radio,
   Alert,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import {
   API_TYPE_MULTITURN,
@@ -33,7 +34,7 @@ import {
 import { judge_api_batch_call } from "@/services/JudgeBackendAPIBatch";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
 import { useSession } from "next-auth/react";
-
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import * as XLSX from "xlsx";
 import BarChart from "@/components/globals/BarChart";
 
@@ -190,7 +191,10 @@ const FileUploadForm = () => {
         };
 
         setErrorStatus(null);
-        const response = await judge_api_batch_call(formData, experiment_payload);
+        const response = await judge_api_batch_call(
+          formData,
+          experiment_payload
+        );
         const returned_task_id = response.data.task_id;
         /** if returned task id is valid then make an event source call to get continuous update */
         setTask_id(returned_task_id);
@@ -326,7 +330,7 @@ const FileUploadForm = () => {
                         created_experiment={newData?.experiment_name}
                       />
                     </Box>
-                    <Box>
+                    <Box display={"flex"} flexDirection={"row"}>
                       <FormControl
                         error={
                           formik.touched.model && Boolean(formik.errors.model)
@@ -352,9 +356,19 @@ const FileUploadForm = () => {
                           <FormHelperText>{formik.errors.model}</FormHelperText>
                         )}
                       </FormControl>
+                      <Tooltip
+                        title="Help me!"
+                        sx={{
+                          marginLeft: "5px",
+                          cursor: "help",
+                          marginTop: "8px",
+                        }}
+                      >
+                        <InfoOutlinedIcon />
+                      </Tooltip>
                     </Box>
 
-                    <Box>
+                    <Box display={"flex"} flexDirection={"row"}>
                       <FormControl
                         component="fieldset"
                         error={
@@ -393,6 +407,16 @@ const FileUploadForm = () => {
                           </FormHelperText>
                         )}
                       </FormControl>
+                      <Tooltip
+                        title="Help me!"
+                        sx={{
+                          marginLeft: "5px",
+                          cursor: "help",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <InfoOutlinedIcon />
+                      </Tooltip>
                     </Box>
                     <Box lineHeight={"40px"} color={"#3B4151"}>
                       <span style={{ color: "red" }}>**</span>Required columns

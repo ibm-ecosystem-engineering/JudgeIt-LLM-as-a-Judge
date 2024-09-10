@@ -39,35 +39,41 @@ const page = () => {
     }
 
     const fetch_data = async () => {
-      const data = await fetch_request_history_by_name_and_type(
+      const history_data = await fetch_request_history_by_name_and_type(
         session.user.email,
         experiment_name,
         "batch"
       );
 
-      setServerData(data);
+      if (history_data) {
+        setServerData(history_data);
 
-      const grades_list = await Promise.all(
-        data.map(async (item) => {
-          const data = await get_result_by_task_id(item.content.task_id);
+        const grades_list = await Promise.all(
+          history_data.map(async (item) => {
+            const data = await get_result_by_task_id(item.content.task_id);
 
-          const grades = Object.values(data.Grade).filter(
-            (grade) => grade !== undefined
-          );
+            if (data && data.status !== "ERROR") {
+              const grades = Object.values(data.Grade).filter(
+                (grade) => grade !== undefined
+              );
 
-          const gradeDistribution = grades.reduce((acc, grade) => {
-            acc[grade] = (acc[grade] || 0) + 1;
-            return acc;
-          }, {});
+              const gradeDistribution = grades.reduce((acc, grade) => {
+                acc[grade] = (acc[grade] || 0) + 1;
+                return acc;
+              }, {});
 
-          return {
-            grades: gradeDistribution,
-            name: item.name,
-            eval_type: item.eval_type,
-          };
-        })
-      );
-      setGradeData(grades_list);
+              return {
+                grades: gradeDistribution,
+                name: item.name,
+                eval_type: item.eval_type,
+              };
+            } else {
+              return null;
+            }
+          })
+        );
+        setGradeData(grades_list);
+      }
     };
 
     if (session?.user.email) {
@@ -112,7 +118,14 @@ const page = () => {
                 Batch Evaluation - {experiment_name}
               </Typography>
             </Grid>
-            <Grid item xs={12} marginLeft={"25px"} spacing={0} sx={{ flexGrow: 1 }} container>
+            <Grid
+              item
+              xs={12}
+              marginLeft={"25px"}
+              spacing={0}
+              sx={{ flexGrow: 1 }}
+              container
+            >
               {gradeData &&
                 gradeData.map((gdata, index) => (
                   <Grid item xs={gradeData.length == 1 ? 12 : 6} key={index}>
@@ -126,9 +139,9 @@ const page = () => {
                           textDecoration: "none",
                         }}
                       >
-                        Grade Distribution - {gdata.name}
+                        Grade Distribution - {gdata && gdata.name}
                       </Typography>
-                      <BarChart gradeData={gdata.grades} />
+                      {gdata && <BarChart gradeData={gdata.grades} />}
                     </Box>
                   </Grid>
                 ))}

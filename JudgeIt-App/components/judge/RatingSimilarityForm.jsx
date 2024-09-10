@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { TextField, Box } from "@mui/material";
+import { TextField, Box, Tooltip } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const RatingSimilarityForm = ({
   values,
@@ -23,7 +24,7 @@ const RatingSimilarityForm = ({
           style={{ width: "100%" }}
         />
       </Box> */}
-      <Box margin={"20px"}>
+      <Box margin={"20px"} display={"flex"} flexDirection={"row"}>
         <TextField
           label="Golden Text"
           name="golden_text"
@@ -36,8 +37,17 @@ const RatingSimilarityForm = ({
           multiline
           rows={"4"}
         />
+        <Tooltip title="Help me!" sx={{ marginLeft: "5px", cursor: "help" }}>
+          <InfoOutlinedIcon />
+        </Tooltip>
       </Box>
-      <Box marginBottom={"20px"} marginLeft={"20px"} marginRight={'20px'}>
+      <Box
+        marginBottom={"20px"}
+        marginLeft={"20px"}
+        marginRight={"20px"}
+        display={"flex"}
+        flexDirection={"row"}
+      >
         <TextField
           label="LLM Response"
           name="generated_text"
@@ -50,6 +60,9 @@ const RatingSimilarityForm = ({
           multiline
           rows={"4"}
         />
+        <Tooltip title="Help me!" sx={{ marginLeft: "5px", cursor: "help"  }}>
+          <InfoOutlinedIcon />
+        </Tooltip>
       </Box>
     </div>
   );
