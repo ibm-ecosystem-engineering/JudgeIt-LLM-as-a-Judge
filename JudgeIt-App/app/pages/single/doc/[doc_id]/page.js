@@ -74,7 +74,7 @@ const ItemPage = () => {
                     marginBottom: "15px",
                   }}
                 >
-                  Single Evaluation {serverData.eval_type}
+                  Single Answer Evaluation {serverData.eval_type}
                 </Typography>
               </Grid>
               {(API_TYPE_RATING === serverData.eval_type ||

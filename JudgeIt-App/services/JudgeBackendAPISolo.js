@@ -9,6 +9,7 @@ import {
 } from "./Config";
 
 import { create_experiment } from "./ManagemenBackendAPI";
+import { generateRandomString } from "@/utils/Helper";
 
 /* SOLO API ENDPOINTS */
 const API_RATING_URL = LLM_JUDGE_BASE_URL + "/api/v1/judge/rating";
@@ -57,7 +58,7 @@ async function save_request_history(payload, result) {
       : payload.existing_experiment;
 
   let query = {};
-  let name = payload.apiType;
+  let name = payload.apiType + " - " + generateRandomString(4);
 
   if (payload.apiType === API_TYPE_MULTITURN) {
     query = {
@@ -68,14 +69,12 @@ async function save_request_history(payload, result) {
       golden_rewritten_question: payload.golden_rewritten_question,
       rewritten_question: payload.rewritten_question,
     };
-    name = name + " - " + payload.current_question;
   } else {
     query = {
       model: payload.model,
       golden_text: payload.golden_text,
       generated_text: payload.generated_text,
     };
-    name = name + " - " + payload.golden_text;
   }
 
   const content = {
@@ -107,7 +106,6 @@ async function rating_api_call(payload) {
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);
-    console.log(payload);
 
     return {
       query: savedObject,

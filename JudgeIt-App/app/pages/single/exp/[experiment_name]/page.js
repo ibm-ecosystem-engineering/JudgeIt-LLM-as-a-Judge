@@ -87,7 +87,7 @@ const ExperimentPage = () => {
                     marginBottom: "15px",
                   }}
                 >
-                  Single Evaluation - {experiment_name}
+                  Single Answer Evaluation - {experiment_name}
                 </Typography>
               </Grid>
               <Grid item xs={12} marginLeft={"25px"}>

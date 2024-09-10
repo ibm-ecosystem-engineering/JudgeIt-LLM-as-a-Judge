@@ -30,3 +30,18 @@ export const LLM_MODELS = [
 
 export const GITHUB_SOURCE_CODE = "https://github.com/ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge";
 export const GITHUB_REPORT_ISSUE = "https://github.com/ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge/issues";
+
+export const rag_similarity_display = [
+    "Evaluate generated text against golden text and receive a binary score for similarity",
+    "The LLM Judge will output a Grade and Explanation. A grade of 0 means the texts are dissimilar, while a grade of 1 means the texts are similar."
+]
+
+export const rag_rating_display = [
+    "Evaluate generated text against golden text and receive a 1/2/3 rating based on degree of similarity",
+    "The LLM Judge will output a Grade and Explanation. A grade of 1 means the texts are dissimilar, a grade of 2 means the texts are partially similar, and a text of 3 means the texts are significantly similar."
+]
+
+export const multi_turn_display = [
+    "Evaluate rewritten queries given a mult-turn conversation and receive a binary score for similarity",
+    "The LLM Judge will output a Grade. A grade of 0 means the golden rewritten question and rewritten question are dissimilar, while a grade of 1 means the questions are similar."
+]

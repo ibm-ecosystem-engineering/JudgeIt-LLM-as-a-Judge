@@ -1,7 +1,15 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { Button, Typography, CircularProgress } from "@mui/material";
+import { Button, Typography, CircularProgress, Grid, Box } from "@mui/material";
 import SignIn from "@/components/globals/SignIn";
+import JoinInnerOutlinedIcon from "@mui/icons-material/JoinInnerOutlined";
+import GradeOutlinedIcon from "@mui/icons-material/GradeOutlined";
+import TurnSharpRightOutlinedIcon from "@mui/icons-material/TurnSharpRightOutlined";
+import {
+  rag_similarity_display,
+  rag_rating_display,
+  multi_turn_display,
+} from "@/services/Config";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -30,26 +38,151 @@ export default function Home() {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "center",
+            marginLeft: "200px",
+            marginRight: "200px",
+            marginTop: "70px",
           }}
         >
+          <Grid spacing={0} sx={{ flexGrow: 1 }} container>
+            <Grid item xs={4}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  marginBottom: "40px",
+                  fontSize: "1.125rem",
+                  lineHeight: "1.75rem",
+                }}
+              >
+                <div
+                  style={{
+                    display: "block",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    width: "100%",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <JoinInnerOutlinedIcon />
+                </div>
+                RAG Evaluation (Similarity)
+              </div>
+
+              {rag_similarity_display.map((similarity, i) => (
+                <div
+                  style={{
+                    minWidth: "200px",
+                    backgroundColor: "#F7F7F8",
+                    padding: "15px",
+                    margin: "10px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    lineHeight: "1.25rem",
+                  }}
+                  key={i}
+                >
+                  {similarity}
+                </div>
+              ))}
+            </Grid>
+            <Grid item xs={4}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  marginBottom: "40px",
+                  fontSize: "1.125rem",
+                  lineHeight: "1.75rem",
+                }}
+              >
+                <div
+                  style={{
+                    display: "block",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    width: "100%",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <GradeOutlinedIcon />
+                </div>
+                RAG Evaluation (Rating)
+              </div>
+              {rag_rating_display.map((rating, i) => (
+                <div
+                  style={{
+                    minWidth: "200px",
+                    backgroundColor: "#F7F7F8",
+                    padding: "15px",
+                    margin: "10px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    lineHeight: "1.25rem",
+                  }}
+                  key={i}
+                >
+                  {rating}
+                </div>
+              ))}
+            </Grid>
+            <Grid item xs={4}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  marginBottom: "40px",
+                  fontSize: "1.125rem",
+                  lineHeight: "1.75rem",
+                }}
+              >
+                <div
+                  style={{
+                    display: "block",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    width: "100%",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <TurnSharpRightOutlinedIcon />
+                </div>
+                Multi-turn evaluation
+              </div>
+              {multi_turn_display.map((multi, i) => (
+                <div
+                  style={{
+                    minWidth: "200px",
+                    backgroundColor: "#F7F7F8",
+                    padding: "15px",
+                    margin: "10px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    lineHeight: "1.25rem",
+                  }}
+                  key={i}
+                >
+                  {multi}
+                </div>
+              ))}
+            </Grid>
+          </Grid>
           <Typography
             style={{
-              fontSize: "72px",
+              fontSize: "0.85rem",
               color: "#3B3B3B",
-              margin: "10px",
-              fontWeight: "bold",
-            }}
-          >
-            Welcome to JudgeIt!
-          </Typography>
-          <Typography
-            style={{
-              fontSize: "20px",
-              color: "#3B3B3B",
-              marginLeft: "15%",
-              marginRight: "15%",
+              marginLeft: "10%",
+              marginRight: "10%",
               marginTop: "3%",
-              marginBottom: "75px",
+              marginBottom: "50px",
+              backgroundColor: "#F7F7F8",
+              padding: "15px",
+              borderRadius: "5px"
             }}
           >
             JudgeIt is an automated evaluation framework designed for testing
@@ -60,10 +193,15 @@ export default function Home() {
             inputs by clicking one of the options below!
           </Typography>
           <div
-            style={{ display: "flex", justifyContent: "center", gap: "30px" }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "30px",
+              marginBottom: "20px",
+            }}
           >
             <Button variant="outlined" href="/pages/single">
-              Single Evaluation
+              Single Answer Evaluation
             </Button>
             <Button variant="outlined" href="/pages/batch">
               Batch Evaluation

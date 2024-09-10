@@ -37,7 +37,7 @@ const RatingSimilarityForm = ({
           multiline
           rows={"4"}
         />
-        <Tooltip title="Help me!" sx={{ marginLeft: "5px", cursor: "help" }}>
+        <Tooltip title="The reference or target text provided as the correct answer or expected output. Used to evaluate the quality and accuracy of generated text against an ideal standard." sx={{ marginLeft: "5px", cursor: "help" }}>
           <InfoOutlinedIcon />
         </Tooltip>
       </Box>
@@ -60,7 +60,7 @@ const RatingSimilarityForm = ({
           multiline
           rows={"4"}
         />
-        <Tooltip title="Help me!" sx={{ marginLeft: "5px", cursor: "help"  }}>
+        <Tooltip title="The output produced by the language model. Compared against the golden text to assess coherence, correctness, and alignment with the expected result." sx={{ marginLeft: "5px", cursor: "help"  }}>
           <InfoOutlinedIcon />
         </Tooltip>
       </Box>

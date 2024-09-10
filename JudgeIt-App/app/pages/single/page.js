@@ -149,7 +149,7 @@ const SoloRequestPage = () => {
                     marginBottom: "15px",
                   }}
                 >
-                  Single Evaluation
+                  Single Answer Evaluation
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -280,7 +280,7 @@ const SoloRequestPage = () => {
                                 )}
                               </FormControl>
                               <Tooltip
-                                title="Help me!"
+                                title="LLM Model to judge your input"
                                 sx={{ marginLeft: "5px", cursor: "help" }}
                               >
                                 <InfoOutlinedIcon />
@@ -331,7 +331,7 @@ const SoloRequestPage = () => {
                                 )}
                               </FormControl>
                               <Tooltip
-                                title="Help me!"
+                                title="Select your evaluation type"
                                 sx={{ marginLeft: "5px", cursor: "help", marginTop: "8px" }}
                               >
                                 <InfoOutlinedIcon />

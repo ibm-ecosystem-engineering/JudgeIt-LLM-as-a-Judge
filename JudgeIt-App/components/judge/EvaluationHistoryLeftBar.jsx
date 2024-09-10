@@ -10,6 +10,7 @@ import { fetch_experiment_list_by_type } from "@/services/ManagemenBackendAPI";
 const EvaluationHistoryLeftBar = ({ result, type }) => {
   const { data: session, status } = useSession();
   const hasEffectRun = useRef(false);
+
   const [serverData, setServerData] = useState([]);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
   }, [session.user.email]); // Empty dependency array, runs only once
 
   useEffect(() => {
+    
     if (result) {
       setServerData((prevServerData) => {
         // Create a copy of prevServerData to avoid direct mutation
@@ -49,7 +51,6 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
         // Return the updated data
         return newServerData;
       });
-      console.log("useeffect", serverData);
     }
   }, [result]); // Trigger update when `result` changes
 
@@ -66,7 +67,7 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
     >
       <Box
         display={"flex"}
-        width={"100%"}
+        width={"300px"}
         height={"40px"}
         justifyContent={"center"}
         padding={"10px"}
@@ -75,10 +76,7 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
         History
       </Box>
       <Divider style={{ backgroundColor: "#F7F7F8" }} />
-      <Sidebar
-        rootStyles={{ border: "none", width: "100%" }}
-        style={{ width: "100%" }}
-      >
+      <Sidebar style={{ width: "100%" }} rootStyles={{ border: "none" }}>
         <Menu menuItemStyles={menuItemStyles}>
           {Object.keys(serverData).map((experiment_name) => (
             <SubMenu

@@ -94,7 +94,7 @@ const ExperimentForm = ({
           )}
         </FormControl>
         <Tooltip
-          title="Help me!"
+          title="Experiment keeps all your execution together and you can review and share it later. Select one of the options. If you want to create a new experiment and save your results under it, choose 'New Experiment.' Otherwise, select an 'Existing Experiment.'"
           sx={{ marginLeft: "5px", cursor: "help", marginTop: "8px" }}
         >
           <InfoOutlinedIcon />
@@ -112,7 +112,10 @@ const ExperimentForm = ({
             helperText={touched.new_experiment && errors.new_experiment}
             style={{ width: "100%" }}
           />
-          <Tooltip title="Help me!" sx={{ marginLeft: "5px", cursor: "help" }}>
+          <Tooltip
+            title="Enter the experiment name, you want to save your execution."
+            sx={{ marginLeft: "5px", cursor: "help" }}
+          >
             <InfoOutlinedIcon />
           </Tooltip>
         </Box>
@@ -154,7 +157,7 @@ const ExperimentForm = ({
             )}
           </FormControl>
           <Tooltip
-            title="Help me!"
+            title="Select the experiment name, you want to save your execution."
             sx={{ marginLeft: "5px", cursor: "help", marginTop: "8px" }}
           >
             <InfoOutlinedIcon />

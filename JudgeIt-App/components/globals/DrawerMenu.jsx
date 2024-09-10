@@ -21,7 +21,7 @@ const DrawerMenu = ({
 }) => {
   const list = () => (
     <Box
-      sx={{ width: 250 }}
+      sx={{ width: 300 }}
       role="presentation"
       onClick={handleDrawwerClose}
       onKeyDown={handleDrawwerClose}
@@ -64,7 +64,7 @@ const DrawerMenu = ({
             <ListItemIcon>
               <GavelOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={"Single Evaluation"} />
+            <ListItemText primary={"Single Answer Evaluation"} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

@@ -48,9 +48,9 @@ const FileUploadForm = () => {
   const [gradeData, setGradeData] = useState(null);
   const [newData, setNewData] = useState(null);
 
-  const required_column_rating_similarity = "golden_text, generated_text";
+  const required_column_rating_similarity = "| golden_text | generated_text |";
   const required_column_multi_turn =
-    "previous_question, previous_answer, current_question, golden_rewritten_question, rewritten_question";
+    "| previous_question | previous_answer | current_question | golden_rewritten_question | rewritten_question |";
 
   const create_bar_chart = async (chart_task_id) => {
     try {
@@ -357,7 +357,7 @@ const FileUploadForm = () => {
                         )}
                       </FormControl>
                       <Tooltip
-                        title="Help me!"
+                        title="LLM Model to judge your input"
                         sx={{
                           marginLeft: "5px",
                           cursor: "help",
@@ -408,7 +408,7 @@ const FileUploadForm = () => {
                         )}
                       </FormControl>
                       <Tooltip
-                        title="Help me!"
+                        title="Select your evaluation type"
                         sx={{
                           marginLeft: "5px",
                           cursor: "help",
@@ -421,7 +421,7 @@ const FileUploadForm = () => {
                     <Box lineHeight={"40px"} color={"#3B4151"}>
                       <span style={{ color: "red" }}>**</span>Required columns
                       in csv/xlsx file{" "}
-                      <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
+                      <span style={{color: "blue", fontStyle: "italic" }}>
                         {formik.values.apiType == API_TYPE_MULTITURN
                           ? required_column_multi_turn
                           : required_column_rating_similarity}

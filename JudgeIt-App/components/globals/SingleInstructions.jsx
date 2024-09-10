@@ -15,7 +15,7 @@ function SingleInstructions() {
           }}
         >
           <GavelOutlinedIcon fontSize="30px" style={{ marginRight: "10px"}}/> 
-          Single Evaluation Instructions
+          Single Answer Evaluation Instructions
         </Typography>
 
         <Typography

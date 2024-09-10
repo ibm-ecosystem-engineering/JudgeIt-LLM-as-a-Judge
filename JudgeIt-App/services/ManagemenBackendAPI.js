@@ -8,7 +8,6 @@ export async function create_experiment(payload, type) {
 
   console.log(payload)
   if (payload.experiment_option === "new_experiment") {
-    console.log("I am inside the management api ")
     const headers = {
       accept: "application/json",
       "user-id": payload.user_id,

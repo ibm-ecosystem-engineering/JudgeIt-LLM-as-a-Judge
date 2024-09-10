@@ -2,6 +2,16 @@ export function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+export function generateRandomString(length = 4) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+  return result;
+}
+
 // Function to generate columns dynamically from JSON object keys
 export const generateColumns = (jsonObject) => {
 
