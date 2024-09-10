@@ -24,7 +24,7 @@ import { generateColumns, generateRows } from "@/utils/Helper";
 import { DataGrid } from "@mui/x-data-grid";
 import BarChart from "@/components/globals/BarChart";
 
-const page = () => {
+const ExperimentPage = () => {
   const params = useParams();
   const { experiment_name } = params; // Get the 'id' from the URL
   const { data: session, status } = useSession();
@@ -153,4 +153,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ExperimentPage;

@@ -24,7 +24,7 @@ import { generateColumns, generateRows } from "@/utils/Helper";
 import { DataGrid } from "@mui/x-data-grid";
 import BarChart from "@/components/globals/BarChart";
 
-const page = () => {
+const BatchDocIdPage = () => {
   const params = useParams();
   const { doc_id } = params; // Get the 'id' from the URL
   const { data: session, status } = useSession();
@@ -147,4 +147,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default BatchDocIdPage;
