@@ -1,10 +1,8 @@
 # JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines
 
-When building Generative AI pipelines, accuracy and reliability are paramount. Therefore, it is critical to build robust evaluation frameworks to test these pipelines. Human evaluation often takes a high degree of manual effort and is difficult to scale.
+Accuracy and reliability are paramount when building Generative AI pipelines. Therefore, it is critical to establish robust evaluation frameworks to test these pipelines as they are built. While human evaluation may be accurate, it often takes a high degree of manual effort and is difficult to scale efficiently.
 
-JudgeIt is an automated evaluation framework designed to accurately and efficiently evaluate various Generative AI pipelines such as RAG Evaluation, Multi-Turn Query Rewrite evaluation, Text-to-SQL Evaluation, and more.
-
-This service allows users to run batch evaluations against a variety of Generative AI pipelines. Users can input datasets with generated text and golden text to evaluate against, and JudgeIt will use an LLM as a judge to perform similarity evaluations of these inputs.
+JudgeIt is an automated evaluation framework designed to accurately and efficiently assess various Generative AI pipelines, including RAG, multi-turn query rewriting, text-to-SQL conversion, and more. This service enables users to conduct batch evaluations across these different Generative AI pipelines. Users can input datasets containing generated text along with corresponding golden text. JudgeIt then employs an LLM as a judge to perform similarity evaluations between these inputs, providing an accurate assessment of the AI pipeline's performance.
 
 ## Features
 
