@@ -3,7 +3,7 @@
 <!-- omit in toc -->
 # JudgeIt Application
 
-One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the code for a React-based application that provides a user interface for interacting with the LLM Judge service. It is built on the Next.js framework and integrates with IBM App ID for authentication. There are three types of evaluation currently available:
+One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the code for a React-based application that provides a user interface for interacting with the LLM Judge service. It is built on the Next.js framework. There are three types of evaluation currently available:
 
 1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text
 2. **RAG Evaluation (Rating)**: evaluate generated text against golden text
