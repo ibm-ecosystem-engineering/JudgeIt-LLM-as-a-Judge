@@ -36,6 +36,7 @@ import SoloResult from "@/components/judge/SoloResult";
 import { useSession } from "next-auth/react";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import Footer from "@/components/globals/Footer";
 
 const validationSchema = Yup.object({
   apiType: Yup.string().required("API type is required"),
@@ -133,245 +134,281 @@ const SoloRequestPage = () => {
   return (
     <>
       {session && (
-        <Grid spacing={0} sx={{ flexGrow: 1 }} container>
-          <Grid item xs={2}>
-            <EvaluationHistoryLeftBar result={newData} type={"single"} />
-          </Grid>
-          <Grid item xs={8}>
-            <Grid marginTop={"10px"} spacing={0} sx={{ flexGrow: 1 }} container>
-              <Grid item xs={12}>
-                <Typography
-                  style={{
-                    fontSize: "30px",
-                    marginLeft: "25px",
-                    color: "#3B3B3B",
-                    fontWeight: "bold",
-                    marginBottom: "15px",
-                  }}
+        <Box display={"flex"} flexDirection={"row"}>
+          <Box display={"flex"} height={"100vh"}>
+            <EvaluationHistoryLeftBar type={"single"} result={newData} />
+          </Box>
+          <Box width={"100%"} height={"93vh"} overflow={"scroll"}>
+            <Grid spacing={0} sx={{ flexGrow: 1 }} container>
+              <Grid item xs={11}>
+                <Grid
+                  marginTop={"10px"}
+                  spacing={0}
+                  sx={{ flexGrow: 1 }}
+                  container
                 >
-                  Single Answer Evaluation
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <div style={{ marginLeft: "30px" }}>
-                  {api_error && (
-                    <Alert
-                      severity="error"
-                      sx={{
-                        width: "85%",
-                        marginLeft: "20px",
-                        marginBottom: "10px",
+                  <Grid item xs={12}>
+                    <Typography
+                      style={{
+                        fontSize: "30px",
+                        marginLeft: "25px",
+                        color: "#3B3B3B",
+                        fontWeight: "bold",
+                        marginBottom: "15px",
                       }}
                     >
-                      {api_error}
-                    </Alert>
-                  )}
-                  <Paper elevation={2} sx={{ width: "95%" }}>
-                    <Box
-                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                    >
-                      <Formik
-                        initialValues={{
-                          apiType: API_TYPE_RATING,
-                          /* question: "", */
-                          golden_text: "",
-                          generated_text: "",
-                          model: "meta-llama/llama-3-70b-instruct",
-                          previous_question: "",
-                          previous_answer: "",
-                          current_question: "",
-                          golden_rewritten_question: "",
-                          rewritten_question: "",
-                          experiment_option: "new_experiment",
-                          new_experiment: "",
-                          existing_experiment: "",
-                        }}
-                        validationSchema={validationSchema}
-                        onSubmit={async (values) => {
-                          try {
-                            setApi_error(null);
-                            setCurrent_api_call(values.apiType);
-                            setApi_call_inprogress(true);
-                            values.user_id = session?.user?.email;
-                            const response = await judge_api_solo_call(values);
-                            setResult(response.data);
-                            setNewData(response.query);
-                            setApi_call_inprogress(false);
-                          } catch (error) {
-                            setApi_error(
-                              "Error in making API call. Please try again later."
-                            );
-                            setApi_call_inprogress(false);
-                          }
-                        }}
-                      >
-                        {({
-                          values,
-                          handleChange,
-                          handleBlur,
-                          errors,
-                          touched,
-                        }) => (
-                          <Form>
-                            <Box marginLeft={"20px"} marginRight={"20px"}>
-                              <ExperimentForm
-                                values={values}
-                                handleChange={handleChange}
-                                handleBlur={handleBlur}
-                                errors={errors}
-                                touched={touched}
-                                type={"single"}
-                                created_experiment={newData?.experiment_name}
-                              />
-                            </Box>
-                            {values.apiType === API_TYPE_MULTITURN ? (
-                              <>
-                                <MultiTurnForm
-                                  values={values}
-                                  handleChange={handleChange}
-                                  handleBlur={handleBlur}
-                                  errors={errors}
-                                  touched={touched}
-                                />
-                              </>
-                            ) : (
-                              <>
-                                {current_api_call === API_TYPE_RATING ||
-                                  current_api_call === API_TYPE_SIMILARITY}
-                                <RatingSimilarityForm
-                                  values={values}
-                                  handleChange={handleChange}
-                                  handleBlur={handleBlur}
-                                  errors={errors}
-                                  touched={touched}
-                                />
-                              </>
+                      Single Answer Evaluation
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <div style={{ marginLeft: "30px" }}>
+                      {api_error && (
+                        <Alert
+                          severity="error"
+                          sx={{
+                            width: "85%",
+                            marginLeft: "20px",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          {api_error}
+                        </Alert>
+                      )}
+                      <Box elevation={2} sx={{ width: "95%" }} border={'1px solid grey'} borderRadius={'5px'}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2,
+                          }}
+                        >
+                          <Formik
+                            initialValues={{
+                              apiType: API_TYPE_RATING,
+                              /* question: "", */
+                              golden_text: "",
+                              generated_text: "",
+                              model: "meta-llama/llama-3-70b-instruct",
+                              previous_question: "",
+                              previous_answer: "",
+                              current_question: "",
+                              golden_rewritten_question: "",
+                              rewritten_question: "",
+                              experiment_option: "new_experiment",
+                              new_experiment: "",
+                              existing_experiment: "",
+                            }}
+                            validationSchema={validationSchema}
+                            onSubmit={async (values) => {
+                              try {
+                                setApi_error(null);
+                                setCurrent_api_call(values.apiType);
+                                setApi_call_inprogress(true);
+                                values.user_id = session?.user?.email;
+                                const response = await judge_api_solo_call(
+                                  values
+                                );
+                                setResult(response.data);
+                                setNewData(response.query);
+                                setApi_call_inprogress(false);
+                              } catch (error) {
+                                setApi_error(
+                                  "Error in making API call. Please try again later."
+                                );
+                                setApi_call_inprogress(false);
+                              }
+                            }}
+                          >
+                            {({
+                              values,
+                              handleChange,
+                              handleBlur,
+                              errors,
+                              touched,
+                            }) => (
+                              <Form>
+                                <Box marginLeft={"20px"} marginRight={"20px"}>
+                                  <ExperimentForm
+                                    values={values}
+                                    handleChange={handleChange}
+                                    handleBlur={handleBlur}
+                                    errors={errors}
+                                    touched={touched}
+                                    type={"single"}
+                                    created_experiment={
+                                      newData?.experiment_name
+                                    }
+                                  />
+                                </Box>
+                                {values.apiType === API_TYPE_MULTITURN ? (
+                                  <>
+                                    <MultiTurnForm
+                                      values={values}
+                                      handleChange={handleChange}
+                                      handleBlur={handleBlur}
+                                      errors={errors}
+                                      touched={touched}
+                                    />
+                                  </>
+                                ) : (
+                                  <>
+                                    {current_api_call === API_TYPE_RATING ||
+                                      current_api_call === API_TYPE_SIMILARITY}
+                                    <RatingSimilarityForm
+                                      values={values}
+                                      handleChange={handleChange}
+                                      handleBlur={handleBlur}
+                                      errors={errors}
+                                      touched={touched}
+                                    />
+                                  </>
+                                )}
+                                <Box
+                                  marginBottom={"20px"}
+                                  marginLeft={"20px"}
+                                  marginRight={"20px"}
+                                  display={"flex"}
+                                  flexDirection={"row"}
+                                >
+                                  <FormControl
+                                    error={
+                                      touched.model && Boolean(errors.model)
+                                    }
+                                  >
+                                    <InputLabel id="model-label">
+                                      Model
+                                    </InputLabel>
+                                    <Select
+                                      labelId="model-label"
+                                      id="model"
+                                      name="model"
+                                      value={values.model}
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      label="Model"
+                                    >
+                                      {LLM_MODELS.map((item, index) => (
+                                        <MenuItem
+                                          key={index}
+                                          value={item.value}
+                                        >
+                                          {item.label}
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                    {touched.model && errors.model && (
+                                      <FormHelperText>
+                                        {errors.model}
+                                      </FormHelperText>
+                                    )}
+                                  </FormControl>
+                                  <Tooltip
+                                    title="LLM Model to judge your input"
+                                    sx={{ marginLeft: "5px", cursor: "help" }}
+                                  >
+                                    <InfoOutlinedIcon />
+                                  </Tooltip>
+                                </Box>
+                                <Box
+                                  marginBottom={"20px"}
+                                  marginLeft={"20px"}
+                                  marginRight={"20px"}
+                                  display={"flex"}
+                                  flexDirection={"row"}
+                                >
+                                  <FormControl
+                                    component="fieldset"
+                                    error={
+                                      touched.apiType && Boolean(errors.apiType)
+                                    }
+                                    disabled={api_call_inprogress}
+                                  >
+                                    <RadioGroup
+                                      row
+                                      aria-label="option"
+                                      name={API_TYPE_KEY}
+                                      value={values.apiType}
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                    >
+                                      <FormControlLabel
+                                        value={API_TYPE_RATING}
+                                        control={<Radio />}
+                                        label="RAG Evaluation - Rating"
+                                      />
+                                      <FormControlLabel
+                                        value={API_TYPE_SIMILARITY}
+                                        control={<Radio />}
+                                        label="RAG Evaluation - Similarity"
+                                      />
+                                      <FormControlLabel
+                                        value={API_TYPE_MULTITURN}
+                                        control={<Radio />}
+                                        label="Multi-turn Query Rewrite Evaluation"
+                                      />
+                                    </RadioGroup>
+                                    {touched.apiType && errors.apiType && (
+                                      <FormHelperText>
+                                        {errors.apiType}
+                                      </FormHelperText>
+                                    )}
+                                  </FormControl>
+                                  <Tooltip
+                                    title="Select your evaluation type"
+                                    sx={{
+                                      marginLeft: "5px",
+                                      cursor: "help",
+                                      marginTop: "8px",
+                                    }}
+                                  >
+                                    <InfoOutlinedIcon />
+                                  </Tooltip>
+                                </Box>
+                                <Box
+                                  marginBottom={"20px"}
+                                  marginLeft={"20px"}
+                                  marginRight={"20px"}
+                                >
+                                  <Button
+                                    variant="outlined"
+                                    style={{ width: "200px" }}
+                                    type="submit"
+                                    disabled={api_call_inprogress}
+                                  >
+                                    Submit
+                                  </Button>
+                                </Box>
+                              </Form>
                             )}
-                            <Box
-                              marginBottom={"20px"}
-                              marginLeft={"20px"}
-                              marginRight={"20px"}
-                              display={"flex"}
-                              flexDirection={"row"}
-                            >
-                              <FormControl
-                                error={touched.model && Boolean(errors.model)}
-                              >
-                                <InputLabel id="model-label">Model</InputLabel>
-                                <Select
-                                  labelId="model-label"
-                                  id="model"
-                                  name="model"
-                                  value={values.model}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  label="Model"
-                                >
-                                  {LLM_MODELS.map((item, index) => (
-                                    <MenuItem key={index} value={item.value}>
-                                      {item.label}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                                {touched.model && errors.model && (
-                                  <FormHelperText>
-                                    {errors.model}
-                                  </FormHelperText>
-                                )}
-                              </FormControl>
-                              <Tooltip
-                                title="LLM Model to judge your input"
-                                sx={{ marginLeft: "5px", cursor: "help" }}
-                              >
-                                <InfoOutlinedIcon />
-                              </Tooltip>
-                            </Box>
-                            <Box
-                              marginBottom={"20px"}
-                              marginLeft={"20px"}
-                              marginRight={"20px"}
-                              display={"flex"}
-                              flexDirection={"row"}
-                            >
-                              <FormControl
-                                component="fieldset"
-                                error={
-                                  touched.apiType && Boolean(errors.apiType)
-                                }
-                                disabled={api_call_inprogress}
-                              >
-                                <RadioGroup
-                                  row
-                                  aria-label="option"
-                                  name={API_TYPE_KEY}
-                                  value={values.apiType}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                >
-                                  <FormControlLabel
-                                    value={API_TYPE_RATING}
-                                    control={<Radio />}
-                                    label="RAG Evaluation - Rating"
-                                  />
-                                  <FormControlLabel
-                                    value={API_TYPE_SIMILARITY}
-                                    control={<Radio />}
-                                    label="RAG Evaluation - Similarity"
-                                  />
-                                  <FormControlLabel
-                                    value={API_TYPE_MULTITURN}
-                                    control={<Radio />}
-                                    label="Multi-turn Query Rewrite Evaluation"
-                                  />
-                                </RadioGroup>
-                                {touched.apiType && errors.apiType && (
-                                  <FormHelperText>
-                                    {errors.apiType}
-                                  </FormHelperText>
-                                )}
-                              </FormControl>
-                              <Tooltip
-                                title="Select your evaluation type"
-                                sx={{ marginLeft: "5px", cursor: "help", marginTop: "8px" }}
-                              >
-                                <InfoOutlinedIcon />
-                              </Tooltip>
-                            </Box>
-                            <Box
-                              marginBottom={"20px"}
-                              marginLeft={"20px"}
-                              marginRight={"20px"}
-                            >
-                              <Button
-                                variant="outlined"
-                                style={{ width: "200px" }}
-                                type="submit"
-                                disabled={api_call_inprogress}
-                              >
-                                Submit
-                              </Button>
-                            </Box>
-                          </Form>
+                          </Formik>
+                        </Box>
+                      </Box>
+                      {api_call_inprogress && (
+                        <LinearProgress
+                          color="primary"
+                          sx={{ marginTop: "30px", width: "95%" }}
+                        />
+                      )}
+                      <Box
+                        sx={{ width: "100%", marginTop: 4, marginBottom: 2 }}
+                      >
+                        {result && (
+                          <SoloResult
+                            api_type={current_api_call}
+                            data={result}
+                          />
                         )}
-                      </Formik>
-                    </Box>
-                  </Paper>
-                  {api_call_inprogress && (
-                    <LinearProgress
-                      color="primary"
-                      sx={{ marginTop: "30px", width: "95%" }}
-                    />
-                  )}
-                  <Box sx={{ width: "100%", marginTop: 4, marginBottom: 2 }}>
-                    {result && (
-                      <SoloResult api_type={current_api_call} data={result} />
-                    )}
-                  </Box>
-                </div>
+                      </Box>
+                    </div>
+                  </Grid>
+                  <Grid item xs={12} marginLeft={"25px"}>
+                    <Footer />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       )}
     </>
   );

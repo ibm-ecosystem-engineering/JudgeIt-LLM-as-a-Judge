@@ -13,6 +13,7 @@ import {
 import DisplayRequestHistoryRatingSimilarity from "@/components/judge/DisplayRequestHistoryRatingSimilarity";
 import DisplayRequestHistoryMultiTurn from "@/components/judge/DisplayRequestHistoryMultiTurn";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import Footer from "@/components/globals/Footer";
 
 const ItemPage = () => {
   const params = useParams();
@@ -58,52 +59,65 @@ const ItemPage = () => {
 
   return (
     <>
-      {session && serverData && (
-        <Grid spacing={0} sx={{ flexGrow: 1 }} container>
-          <Grid item xs={2}>
-            <EvaluationHistoryLeftBar type={"single"} />
-          </Grid>
-          <Grid item xs={9}>
-            <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>
-              <Grid item xs={12}>
-                <Box
-                  display={"flex"}
-                  flexDirection={"row"}
-                  justifyContent={"space-between"}
+      <Box display={"flex"} flexDirection={"row"}>
+        <Box display={"flex"} height={"100vh"}>
+          <EvaluationHistoryLeftBar type={"single"} />
+        </Box>
+        <Box width={"100%"} height={"93vh"} overflow={"scroll"}>
+          {session && serverData && (
+            <Grid spacing={0} sx={{ flexGrow: 1 }} container>
+              <Grid item xs={11}>
+                <Grid
+                  marginTop={"30px"}
+                  spacing={0}
+                  sx={{ flexGrow: 1 }}
+                  container
                 >
-                  <Typography
-                    style={{
-                      fontSize: "30px",
-                      marginLeft: "25px",
-                      color: "#3B3B3B",
-                      fontWeight: "bold",
-                      marginBottom: "15px",
-                    }}
-                  >
-                    Single Answer Evaluation {serverData.eval_type}
-                  </Typography>
-                  <Button
-                    size="small"
-                    href="/pages/single"
-                    startIcon={<ArrowBackOutlinedIcon />}
-                  >
-                    Back
-                  </Button>
-                </Box>
+                  <Grid item xs={12}>
+                    <Box
+                      display={"flex"}
+                      flexDirection={"row"}
+                      justifyContent={"space-between"}
+                    >
+                      <Typography
+                        style={{
+                          fontSize: "30px",
+                          marginLeft: "25px",
+                          color: "#3B3B3B",
+                          fontWeight: "bold",
+                          marginBottom: "15px",
+                        }}
+                      >
+                        Single Answer Evaluation {serverData.eval_type}
+                      </Typography>
+                      <Button
+                        size="small"
+                        href="/pages/single"
+                        startIcon={<ArrowBackOutlinedIcon />}
+                      >
+                        Back
+                      </Button>
+                    </Box>
+                  </Grid>
+                  {(API_TYPE_RATING === serverData.eval_type ||
+                    API_TYPE_SIMILARITY === serverData.eval_type) && (
+                    <DisplayRequestHistoryRatingSimilarity
+                      serverData={serverData}
+                    />
+                  )}
+                  {API_TYPE_MULTITURN === serverData.eval_type && (
+                    <DisplayRequestHistoryMultiTurn serverData={serverData} />
+                  )}
+                </Grid>
+                <Grid item xs={12} marginLeft={"25px"} marginTop={'50px'}>
+                  <Footer />
+                </Grid>
               </Grid>
-              {(API_TYPE_RATING === serverData.eval_type ||
-                API_TYPE_SIMILARITY === serverData.eval_type) && (
-                <DisplayRequestHistoryRatingSimilarity
-                  serverData={serverData}
-                />
-              )}
-              {API_TYPE_MULTITURN === serverData.eval_type && (
-                <DisplayRequestHistoryMultiTurn serverData={serverData} />
-              )}
             </Grid>
-          </Grid>
-        </Grid>
-      )}
+          )}
+          
+        </Box>
+      </Box>
     </>
   );
 };

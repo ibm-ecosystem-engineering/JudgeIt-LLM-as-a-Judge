@@ -10,6 +10,7 @@ import {
   rag_rating_display,
   multi_turn_display,
 } from "@/services/Config";
+import Footer from "@/components/globals/Footer";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -220,6 +221,9 @@ export default function Home() {
           <SignIn />
         </div>
       )}
+      <Box marginTop={'50px'}>
+      <Footer />
+      </Box>
     </>
   );
 }

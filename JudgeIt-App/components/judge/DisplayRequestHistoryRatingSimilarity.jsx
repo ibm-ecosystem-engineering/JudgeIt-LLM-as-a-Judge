@@ -1,11 +1,16 @@
 import React from "react";
-import { Grid, Paper, Typography, CircularProgress } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 
-const DisplayRequestHistoryRatingSimilarity = ({serverData}) => {
+const DisplayRequestHistoryRatingSimilarity = ({ serverData }) => {
   return (
     <>
       <Grid item xs={12} marginLeft={"25px"}>
-        <Paper elevation={2} sx={{ padding: "20px" }}>
+        <Box
+          elevation={2}
+          padding={"20px"}
+          border={"1px solid grey"}
+          borderRadius={"5px"}
+        >
           <Grid spacing={2} sx={{ flexGrow: 1 }} container>
             <Grid item xs={3} fontWeight={"bold"}>
               Experiment name:
@@ -41,11 +46,16 @@ const DisplayRequestHistoryRatingSimilarity = ({serverData}) => {
               {serverData.content.query.model}
             </Grid>
           </Grid>
-        </Paper>
+        </Box>
       </Grid>
 
       <Grid item xs={12} marginLeft={"25px"} marginTop={"20px"}>
-        <Paper elevation={2} sx={{ padding: "20px" }}>
+        <Box
+          elevation={2}
+          padding={"20px"}
+          border={"1px solid grey"}
+          borderRadius={"5px"}
+        >
           <Grid spacing={2} sx={{ flexGrow: 1 }} container>
             <Grid item xs={3} fontWeight={"bold"}>
               Grade:
@@ -61,7 +71,7 @@ const DisplayRequestHistoryRatingSimilarity = ({serverData}) => {
               {serverData.content.result.Explanation}
             </Grid>
           </Grid>
-        </Paper>
+        </Box>
       </Grid>
     </>
   );

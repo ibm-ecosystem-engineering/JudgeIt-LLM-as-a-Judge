@@ -13,6 +13,7 @@ import {
   API_TYPE_RATING,
   API_TYPE_SIMILARITY,
 } from "@/services/Config";
+import Footer from "@/components/globals/Footer";
 
 const ExperimentPage = () => {
   const params = useParams();
@@ -72,57 +73,77 @@ const ExperimentPage = () => {
 
   return (
     <>
-      {session && (
-        <Grid spacing={0} sx={{ flexGrow: 1 }} container>
-          <Grid item xs={2}>
-            <EvaluationHistoryLeftBar type={"single"} />
-          </Grid>
-          <Grid item xs={9}>
-            <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>
-              <Grid item xs={12}>
-              <Box
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"space-between"}
-              >
-                <Typography
-                  style={{
-                    fontSize: "30px",
-                    marginLeft: "25px",
-                    color: "#3B3B3B",
-                    fontWeight: "bold",
-                    marginBottom: "15px",
-                  }}
+      <Box display={"flex"} flexDirection={"row"}>
+        <Box display={"flex"} height={"100vh"}>
+          <EvaluationHistoryLeftBar type={"single"} />
+        </Box>
+        <Box width={"100%"} height={"93vh"} overflow={"scroll"}>
+          {session && (
+            <Grid spacing={0}>
+              <Grid item xs={11}>
+                <Grid
+                  marginTop={"30px"}
+                  spacing={0}
+                  sx={{ flexGrow: 1 }}
+                  container
                 >
-                  Single Answer Evaluation - {experiment_name}
-                </Typography>
-                <Button
-                  size="small"
-                  href="/pages/single"
-                  startIcon={<ArrowBackOutlinedIcon />}
-                >
-                  Back
-                </Button>
-              </Box>
-              </Grid>
-              <Grid item xs={12} marginLeft={"25px"}>
-                {serverData && serverData.rating_similarity.length > 0 && (
-                  <RatingSimilarityDataGrid
-                    serverData={serverData.rating_similarity}
-                  />
-                )}
-              </Grid>
-              <Grid item xs={12} marginLeft={"25px"}>
-                {serverData && serverData.multi_turn.length > 0 && (
-                  <DataGridMultiTurn
-                    serverData={serverData.multi_turn}
-                  />
-                )}
+                  <Grid item xs={12}>
+                    <Box
+                      display={"flex"}
+                      flexDirection={"row"}
+                      justifyContent={"space-between"}
+                    >
+                      <Typography
+                        style={{
+                          fontSize: "30px",
+                          marginLeft: "25px",
+                          color: "#3B3B3B",
+                          fontWeight: "bold",
+                          marginBottom: "15px",
+                        }}
+                      >
+                        Single Answer Evaluation - {experiment_name}
+                      </Typography>
+                      <Button
+                        size="small"
+                        href="/pages/single"
+                        startIcon={<ArrowBackOutlinedIcon />}
+                      >
+                        Back
+                      </Button>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} marginLeft={"25px"}>
+                    {serverData && serverData.rating_similarity.length > 0 && (
+                      <>
+                        <Typography fontWeight={"bold"} marginBottom={"20px"}>
+                          Rating/Similarity
+                        </Typography>
+                        <RatingSimilarityDataGrid
+                          serverData={serverData.rating_similarity}
+                        />
+                      </>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} marginLeft={"25px"}>
+                    {serverData && serverData.multi_turn.length > 0 && (
+                      <>
+                        <Typography fontWeight={"bold"} marginBottom={"20px"} marginTop={'30px'}>
+                          Multi-turn
+                        </Typography>
+                        <DataGridMultiTurn serverData={serverData.multi_turn} />
+                      </>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} marginLeft={"25px"}>
+                    <Footer />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      )}
+          )}
+        </Box>
+      </Box>
     </>
   );
 };

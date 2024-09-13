@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { fetch_experiment_list_by_type } from "@/services/ManagemenBackendAPI";
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 
 const EvaluationHistoryLeftBar = ({ result, type }) => {
   const { data: session, status } = useSession();
@@ -61,8 +62,9 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
   };
   return (
     <Box
-      width={"100%"}
+      width={"250px"}
       minHeight={"100vh"}
+      overflow={'hidden'}
       sx={{ backgroundColor: "#202123", color: "#FFFFFF" }}
     >
       <Box
@@ -70,7 +72,7 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
         width={"300px"}
         height={"40px"}
         justifyContent={"center"}
-        padding={"10px"}
+        paddingTop={"10px"}
         fontSize={"20px"}
       >
         History

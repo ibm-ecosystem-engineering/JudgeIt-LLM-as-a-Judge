@@ -8,6 +8,7 @@ import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import React, { useState, useEffect, useRef } from "react";
 import { Grid, Typography, Box, CircularProgress, Button } from "@mui/material";
 import BarChart from "@/components/globals/BarChart";
+import Footer from "@/components/globals/Footer";
 
 const ExperimentPage = () => {
   const params = useParams();
@@ -84,69 +85,87 @@ const ExperimentPage = () => {
 
   return (
     <>
-      <Grid spacing={0} sx={{ flexGrow: 1 }} container>
-        <Grid item xs={2}>
+      <Box display={"flex"} flexDirection={"row"}>
+        <Box display={"flex"} height={"100vh"}>
           <EvaluationHistoryLeftBar type={"batch"} />
-        </Grid>
-        <Grid item xs={9}>
-          <Grid marginTop={"30px"} spacing={0} sx={{ flexGrow: 1 }} container>
-            <Grid item xs={12}>
-              <Box
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"space-between"}
+        </Box>
+        <Box width={"100%"} height={"93vh"} overflow={"scroll"}>
+          <Grid spacing={0} sx={{ flexGrow: 1 }} container>
+            <Grid item xs={11}>
+              <Grid
+                marginTop={"30px"}
+                spacing={0}
+                sx={{ flexGrow: 1 }}
+                container
               >
-                <Typography
-                  style={{
-                    fontSize: "24px",
-                    marginLeft: "25px",
-                    color: "#3B3B3B",
-                    fontWeight: "bold",
-                    marginBottom: "15px",
-                  }}
+                <Grid item xs={12}>
+                  <Box
+                    display={"flex"}
+                    flexDirection={"row"}
+                    justifyContent={"space-between"}
+                  >
+                    <Typography
+                      style={{
+                        fontSize: "24px",
+                        marginLeft: "25px",
+                        color: "#3B3B3B",
+                        fontWeight: "bold",
+                        marginBottom: "15px",
+                      }}
+                    >
+                      Batch Evaluation - {experiment_name}
+                    </Typography>
+                    <Button
+                      size="small"
+                      href="/pages/batch"
+                      startIcon={<ArrowBackOutlinedIcon />}
+                    >
+                      Back
+                    </Button>
+                  </Box>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  marginLeft={"25px"}
+                  spacing={0}
+                  sx={{ flexGrow: 1 }}
+                  container
                 >
-                  Batch Evaluation - {experiment_name}
-                </Typography>
-                <Button
-                  size="small"
-                  href="/pages/batch"
-                  startIcon={<ArrowBackOutlinedIcon />}
-                >
-                  Back
-                </Button>
-              </Box>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              marginLeft={"25px"}
-              spacing={0}
-              sx={{ flexGrow: 1 }}
-              container
-            >
-              {gradeData &&
-                gradeData.map((gdata, index) => (
-                  <Grid item xs={gradeData.length == 1 ? 12 : 6} key={index}>
-                    <Box sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}>
-                      <Typography
-                        style={{
-                          fontSize: "16px",
-                          color: "#3B3B3B",
-                          margin: "10px",
-                          fontWeight: "bold",
-                          textDecoration: "none",
-                        }}
+                  {gradeData &&
+                    gradeData.map((gdata, index) => (
+                      <Grid
+                        item
+                        xs={gradeData.length == 1 ? 12 : 6}
+                        key={index}
                       >
-                        Grade Distribution - {gdata && gdata.name}
-                      </Typography>
-                      {gdata && <BarChart gradeData={gdata.grades} />}
-                    </Box>
-                  </Grid>
-                ))}
+                        <Box
+                          sx={{ width: "90%", marginTop: 4, marginBottom: 2 }}
+                        >
+                          <Typography
+                            style={{
+                              fontSize: "16px",
+                              color: "#3B3B3B",
+                              margin: "10px",
+                              fontWeight: "bold",
+                              textDecoration: "none",
+                            }}
+                          >
+                            Grade Distribution - {gdata && gdata.name}
+                          </Typography>
+                          {gdata && <BarChart gradeData={gdata.grades} />}
+                        </Box>
+                      </Grid>
+                    ))}
+                </Grid>
+                <Grid item xs={12} marginLeft={"25px"} marginTop={"50px"}>
+                  <Footer />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </>
   );
 };

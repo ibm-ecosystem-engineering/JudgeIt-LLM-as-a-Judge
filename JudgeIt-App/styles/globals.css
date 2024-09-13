@@ -9,6 +9,7 @@ body,
   height: 100%;
   width: 100%;
   font-family: 'IBM Plex Sans';
+  overflow: hidden;
 }
 
 .app {

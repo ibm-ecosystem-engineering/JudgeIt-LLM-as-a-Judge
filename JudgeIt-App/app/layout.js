@@ -22,7 +22,6 @@ export default function RootLayout({ children }) {
               </Grid>
             </Grid>
           </div>
-          <Footer />
         </body>
       </html>
     </SessionProviderWrapper>
