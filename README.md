@@ -1,16 +1,8 @@
-<!-- omit in toc -->
 # JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines
 
-JudgeIt is an automated evaluation framework designed for various Generative AI pipelines such as RAG Evaluation, Multi-Turn Query Rewrite evaluation, Text-to-SQL Evaluation, and more. It utilizes an LLM Judge to accurately and efficiently evaluate generated text against a provided golden text.
+Accuracy and reliability are paramount when building Generative AI pipelines. Therefore, it is critical to establish robust evaluation frameworks to test these pipelines as they are built. While human evaluation may be accurate, it often takes a high degree of manual effort and is difficult to scale efficiently.
 
-<!-- omit in toc -->
-## Table of Contents
-
-- [Features](#features)
-- [Reliability Metrics](#reliability-metrics)
-- [Installation](#installation)
-- [Contributors](#contributors)
-- [License](#license)
+JudgeIt is an automated evaluation framework designed to accurately and efficiently assess various Generative AI pipelines, including RAG, multi-turn query rewriting, text-to-SQL conversion, and more. This service enables users to conduct batch evaluations across these different Generative AI pipelines. Users can input datasets containing generated text along with corresponding golden text. JudgeIt then employs an LLM as a judge to perform similarity evaluations between these inputs, providing an accurate assessment of the AI pipeline's performance.
 
 ## Features
 
@@ -18,17 +10,34 @@ JudgeIt is an automated evaluation framework designed for various Generative AI 
 - **Multi-Pipeline Support**: Evaluate different types of LLM pipelines including:
   - **RAG**: evaluate generated text against golden text
   - **Multi-turn query rewritings**: evaluate rewritten queries given a multi-turn conversation
-  - **Text-to-SQL conversions**: evaluate natural language to SQL generations
 - **Customization**: Configure the evaluation process with your datasets, LLM models, and specific parameters.
 
 ## Reliability Metrics
 
 The LLM Judges in this repository have been tested against human evaluation to validate their reliability.
 
-1. Multi-turn Query Rewrite Evaluation
-![Multi-turn Evaluation Reliability](/images/multi-turn-evaluation-reliability.png)
-2. RAG Evaluation
-![RAG Evaluation Reliability](/images/rag-evaluation-reliability.png)
+1. RAG Evaluation (LLM Judge evaluated against human)
+
+   ![RAG Evaluation Reliability](/images/rag-evaluation-reliability.png)
+
+2. Multi-turn Query Rewrite (LLM Judge evaluated against human)
+
+   ![Multi-turn Evaluation Reliability](/images/multi-turn-evaluation-reliability.png)
+
+## Usage
+
+There are three types of LLM judges available in JudgeIt:
+
+1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text and receive a binary score for similarity
+2. **RAG Evaluation (Rating)**: evaluate generated text against golden text and receive a 1/2/3 rating based on degree of similarity
+3. **Multi-turn evaluation**: evaluate rewritten queries given a mult-turn conversation and receive a binary score for similarity
+
+There are two methods for spinning up JudgeIt:
+
+1. Framework
+   1. This repository contains python modules to run evaluations via cli. The Framework method takes input data in the form of excel or csv files for any of these evaluations. View the [Framework Instructions](./Framework/README.md) for more detail.
+2. Service-Oriented Architecture
+   1. This repository contains a REST API backend and NextJS frontend to run evaluations via a UI. The SOA method takes input data in the form of excel/csv files or single inputs for any of these evaluations. View the [REST Service Instructions](./REST-Service/README.md) and [JudgeIt App Instructions](./JudgeIt-App/README.md) for more detail.
 
 ## Installation
 
