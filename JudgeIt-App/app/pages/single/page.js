@@ -174,7 +174,12 @@ const SoloRequestPage = () => {
                           {api_error}
                         </Alert>
                       )}
-                      <Box elevation={2} sx={{ width: "95%" }} border={'1px solid grey'} borderRadius={'5px'}>
+                      <Box
+                        elevation={2}
+                        sx={{ width: "95%" }}
+                        border={"1px solid grey"}
+                        borderRadius={"5px"}
+                      >
                         <Box
                           sx={{
                             display: "flex",
@@ -334,12 +339,12 @@ const SoloRequestPage = () => {
                                       <FormControlLabel
                                         value={API_TYPE_RATING}
                                         control={<Radio />}
-                                        label="RAG Evaluation - Rating"
+                                        label="RAG Evaluation - Answer Rating"
                                       />
                                       <FormControlLabel
                                         value={API_TYPE_SIMILARITY}
                                         control={<Radio />}
-                                        label="RAG Evaluation - Similarity"
+                                        label="RAG Evaluation - Answer Similarity"
                                       />
                                       <FormControlLabel
                                         value={API_TYPE_MULTITURN}

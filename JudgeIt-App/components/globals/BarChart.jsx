@@ -1,27 +1,29 @@
+import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarChart = ({ gradeData }) => {
-
-  const getRandomColor = () => {
-    // Generate a random color
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+  const mapGradeToLabel = (grade) => {
+    const mapping = {
+      0: 'Incorrect',
+      1: Object.keys(gradeData).length === 2 ? 'Correct' : 'Incorrect',
+      2: 'Partially Correct',
+      3: 'Correct'
+    };
+    return mapping[grade] || grade.toString();
   };
 
+  const totalCount = Object.values(gradeData).reduce((sum, count) => sum + count, 0);
+
   const data = {
-    labels: Object.keys(gradeData),
+    labels: Object.keys(gradeData).map(mapGradeToLabel),
     datasets: [
       {
         label: 'Count',
         data: Object.values(gradeData),
-        backgroundColor: Object.keys(gradeData).map(() => getRandomColor()),
+        backgroundColor: 'rgba(144, 202, 249, 0.6)',
         borderColor: 'rgba(144, 202, 249, 1)',
         borderWidth: 1,
       },
@@ -52,6 +54,17 @@ const BarChart = ({ gradeData }) => {
           },
         },
         beginAtZero: true,
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const count = context.raw;
+            const percentage = ((count / totalCount) * 100).toFixed(2);
+            return `Count: ${count} (${percentage}%)`;
+          },
+        },
       },
     },
   };

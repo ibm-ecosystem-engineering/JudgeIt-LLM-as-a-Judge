@@ -44,6 +44,37 @@ export default function Home() {
             marginTop: "70px",
           }}
         >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+              marginLeft: "200px",
+              marginRight: "200px",
+            }}
+          >
+            <Typography
+              style={{
+                fontSize: "0.85rem",
+                color: "#3B3B3B",
+                marginLeft: "10%",
+                marginRight: "10%",
+                marginBottom: "50px",
+                backgroundColor: "#F7F7F8",
+                padding: "15px",
+                borderRadius: "5px",
+              }}
+            >
+              JudgeIt is an automated evaluation framework designed for testing
+              various Generative AI pipelines such as RAG, Multi-Turn Query
+              Rewriting, Text-to-SQL, and more. This service utilizes an LLM
+              Judge to accurately and efficiently evaluate generated text
+              against provided golden text. Try evaluating a single input or a
+              batch of inputs by clicking one of the options below!
+            </Typography>
+          </div>
+
           <Grid spacing={0} sx={{ flexGrow: 1 }} container>
             <Grid item xs={4}>
               <div
@@ -81,6 +112,7 @@ export default function Home() {
                     cursor: "pointer",
                     fontSize: "0.85rem",
                     lineHeight: "1.25rem",
+                    height: "60px",
                   }}
                   key={i}
                 >
@@ -123,6 +155,7 @@ export default function Home() {
                     cursor: "pointer",
                     fontSize: "0.85rem",
                     lineHeight: "1.25rem",
+                    height: "60px",
                   }}
                   key={i}
                 >
@@ -165,6 +198,7 @@ export default function Home() {
                     cursor: "pointer",
                     fontSize: "0.85rem",
                     lineHeight: "1.25rem",
+                    height: "60px",
                   }}
                   key={i}
                 >
@@ -173,32 +207,14 @@ export default function Home() {
               ))}
             </Grid>
           </Grid>
-          <Typography
-            style={{
-              fontSize: "0.85rem",
-              color: "#3B3B3B",
-              marginLeft: "10%",
-              marginRight: "10%",
-              marginTop: "3%",
-              marginBottom: "50px",
-              backgroundColor: "#F7F7F8",
-              padding: "15px",
-              borderRadius: "5px"
-            }}
-          >
-            JudgeIt is an automated evaluation framework designed for testing
-            various Generative AI pipelines such as RAG, Multi-Turn Query
-            Rewriting, Text-to-SQL, and more. This service utilizes an LLM Judge
-            to accurately and efficiently evaluate generated text against
-            provided golden text. Try evaluating a single input or a batch of
-            inputs by clicking one of the options below!
-          </Typography>
+
           <div
             style={{
               display: "flex",
               justifyContent: "center",
               gap: "30px",
               marginBottom: "20px",
+              marginTop: "50px",
             }}
           >
             <Button variant="outlined" href="/pages/single">
@@ -221,8 +237,8 @@ export default function Home() {
           <SignIn />
         </div>
       )}
-      <Box marginTop={'50px'}>
-      <Footer />
+      <Box marginTop={"50px"}>
+        <Footer />
       </Box>
     </>
   );

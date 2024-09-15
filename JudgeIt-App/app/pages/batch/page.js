@@ -401,12 +401,12 @@ const FileUploadForm = () => {
                               <FormControlLabel
                                 value={API_TYPE_RATING}
                                 control={<Radio />}
-                                label="RAG Evaluation - Rating"
+                                label="RAG Evaluation - Answer Rating"
                               />
                               <FormControlLabel
                                 value={API_TYPE_SIMILARITY}
                                 control={<Radio />}
-                                label="RAG Evaluation - Similarity"
+                                label="RAG Evaluation - Answer Similarity"
                               />
                               <FormControlLabel
                                 value={API_TYPE_MULTITURN}
