@@ -61,8 +61,11 @@ def batch_llm_answer_similarity(model_id, input_data):
                             model_id=llm_model_id,
                             params=generate_parameters_1)
 
-    input_data['Grade'] = None
-    input_data['Explanation'] = None
+    grade_col_name = "JudgeIt Score"
+    explanation_col_name = "JudgeIt Reasoning"
+
+    input_data[grade_col_name] = None
+    input_data[explanation_col_name] = None
 
     for index, row in input_data.iterrows():
         input_variables = ['prompt_parameter_1', 'prompt_parameter_2']
@@ -87,11 +90,11 @@ def batch_llm_answer_similarity(model_id, input_data):
             prompt_results = 'Error generating results'
         
         if prompt_results == 'Error generating results':
-                input_data.at[index,'Grade'] = 'Error'
-                input_data.at[index,'Explanation'] = 'Error'
+                input_data.at[index,grade_col_name] = 'Error'
+                input_data.at[index,explanation_col_name] = 'Error'
         else:
-            input_data.at[index,'Grade'] = int(prompt_results['Grade'])
-            input_data.at[index,'Explanation'] = prompt_results['Explanation']
+            input_data.at[index,grade_col_name] = int(prompt_results['Grade'])
+            input_data.at[index,explanation_col_name] = prompt_results['Explanation']
         input_string = f"Golden Text: {prompt_data['prompt_parameter_1']}\n\nGenerated Text: {prompt_data['prompt_parameter_2']}"
         print(f'-------------testing input {index + 1}-------------\n')
         print(f'1) Input:\n\n{input_string}\n\n')

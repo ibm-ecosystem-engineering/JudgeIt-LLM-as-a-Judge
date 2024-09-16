@@ -115,7 +115,9 @@ def batch_llm_multi_turn_eval(model_id, input_data):
                             model_id=llm_model_id,
                             params=generate_parameters_1)
 
-    input_data['Grade'] = None
+    grade_col_name = "JudgeIt Score"
+
+    input_data[grade_col_name] = None
 
     for index, row in input_data.iterrows():
         input_variables = ['prompt_parameter_1', 'prompt_parameter_2', 'prompt_parameter_3', 'prompt_parameter_4', 'prompt_parameter_5']
@@ -144,9 +146,9 @@ def batch_llm_multi_turn_eval(model_id, input_data):
             prompt_results = 'Error generating results'
         
         if prompt_results == 'Error generating results':
-                input_data.at[index,'Grade'] = 'Error'
+                input_data.at[index,grade_col_name] = 'Error'
         else:
-            input_data.at[index,'Grade'] = int(prompt_results['Grade'])
+            input_data.at[index,grade_col_name] = int(prompt_results['Grade'])
 
         input_string = f"Previous Question: {prompt_data['prompt_parameter_1']}\n\nPrevious Answer: {prompt_data['prompt_parameter_2']}\n\nCurrent Question: {prompt_data['prompt_parameter_3']}\n\nGolden Rewritten Question: {prompt_data['prompt_parameter_4']}\n\nRewritten Question: {prompt_data['prompt_parameter_5']}"
         print(f'-------------testing input {index + 1}-------------\n')
