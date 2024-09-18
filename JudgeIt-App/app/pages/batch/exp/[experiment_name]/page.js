@@ -36,9 +36,10 @@ const ExperimentPage = () => {
 
         const grades_list = await Promise.all(
           history_data.map(async (item) => {
-            const data = await get_result_by_task_id(item.content.task_id);
+            //const data = await get_result_by_task_id(item.content.task_id);
+            const data = await item?.content?.batch_result;
 
-            if (data && data.status !== "ERROR") {
+            if (data && data?.status !== "ERROR") {
               const grades = Object.values(data.Grade).filter(
                 (grade) => grade !== undefined
               );

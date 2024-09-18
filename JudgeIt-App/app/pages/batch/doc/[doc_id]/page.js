@@ -49,9 +49,9 @@ const BatchDocIdPage = () => {
 
       setTask_object(task_id_object);
 
-      const data = await get_result_by_task_id(task_id_object.content.task_id);
+      const data = await task_id_object?.content?.batch_result;
 
-      if (data && data.status !== "ERROR") {
+      if (data && data?.status !== "ERROR") {
         setServerData(data);
         const grades = Object.values(data.Grade).filter(
           (grade) => grade !== undefined

@@ -88,6 +88,7 @@ const Topbar = () => {
                   sx={{
                     fontSize: getFontSize(),
                     color: "#3B3B3B",
+                    fontFamily: '"Source Sans Pro", sans-serif',
                     ml: 1,
                   }}
                 >
@@ -105,10 +106,11 @@ const Topbar = () => {
                 fontWeight={"600"}
                 fontSize={"1.8rem"}
                 lineHeight={"2.5rem"}
+                fontFamily={'"Source Sans Pro", sans-serif'}
               >
                 JudgeIt
               </Typography>
-              <Typography variant="h7">LLM as a Judge</Typography>
+              <Typography variant="h7" fontFamily={'"Source Sans Pro", sans-serif'}>LLM as a Judge</Typography>
             </Box>
             <Box
               display="flex"
