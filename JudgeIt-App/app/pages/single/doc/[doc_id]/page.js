@@ -88,7 +88,7 @@ const ItemPage = () => {
                           marginBottom: "15px",
                         }}
                       >
-                        Single Answer Evaluation {serverData.eval_type}
+                        Single Answer Evaluation: {serverData.name}
                       </Typography>
                       <Button
                         size="small"

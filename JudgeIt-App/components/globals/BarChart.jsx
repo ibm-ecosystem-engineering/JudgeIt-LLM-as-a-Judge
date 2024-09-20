@@ -1,8 +1,9 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 const BarChart = ({ gradeData }) => {
   const mapGradeToLabel = (grade) => {
@@ -37,7 +38,7 @@ const BarChart = ({ gradeData }) => {
       x: {
         title: {
           display: true,
-          text: 'Grade',
+          text: 'JudgeIt Score',
           font: {
             size: 14,
             weight: 'bold',
@@ -65,6 +66,16 @@ const BarChart = ({ gradeData }) => {
             return `Count: ${count} (${percentage}%)`;
           },
         },
+      },
+      datalabels: {
+        color: 'black',          // Label color
+        anchor: 'end',           // Positioning of the label
+        align: 'top',            // Align the label at the top
+        font: {
+          weight: 'bold',
+          size: 12,
+        },
+        formatter: (value) => "Count: " + value,  // Format the value as you want
       },
     },
   };

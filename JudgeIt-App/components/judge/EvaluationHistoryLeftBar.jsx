@@ -1,18 +1,98 @@
 "use client";
 import React from "react";
-import { TextField, Box, Typography, Divider } from "@mui/material";
+import { Box, Typography, Divider, Tooltip } from "@mui/material";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { fetch_experiment_list_by_type } from "@/services/ManagemenBackendAPI";
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import {
+  delete_history_by_experiment_name,
+  delete_history_by_id,
+  fetch_experiment_list_by_type,
+} from "@/services/ManagemenBackendAPI";
+import { trimText } from "@/utils/Helper";
+import ScienceOutlinedIcon from "@mui/icons-material/ScienceOutlined";
+import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
+import { useRouter } from "next/navigation";
+
+import {
+  Menu as MaterialMenu,
+  MenuItem as MaterialMenuItem,
+} from "@mui/material";
 
 const EvaluationHistoryLeftBar = ({ result, type }) => {
   const { data: session, status } = useSession();
   const hasEffectRun = useRef(false);
-
+  const router = useRouter();
   const [serverData, setServerData] = useState([]);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleContextMenu = (e, item, type) => {
+    e.preventDefault();
+    setAnchorEl(e.currentTarget);
+    if (type === "exp") {
+      setSelectedItem({
+        name: item,
+        leaf_type: "exp",
+      });
+    } else {
+      setSelectedItem(item);
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSelectedItem(null);
+  };
+
+  const handleMenuItemClick = async (action) => {
+    if (selectedItem) {
+      if (action === "View") {
+        if (selectedItem?.leaf_type === "exp") {
+          router.push("/pages/" + type + "/exp/" + selectedItem.name);
+        } else {
+          router.push("/pages/" + type + "/doc/" + selectedItem._id);
+        }
+      } else if (action === "Delete") {
+        if (selectedItem?.leaf_type === "exp") {
+          const response = await delete_history_by_experiment_name(
+            selectedItem.name,
+            session?.user.email
+          );
+          if (response.status === "success") {
+            deleteTopLevelKey(selectedItem.name);
+          }
+        } else {
+          const response = await delete_history_by_id(
+            selectedItem._id,
+            session?.user.email
+          );
+          if (response.status === "success") {
+            deleteArrayEntry(selectedItem.experiment_name, selectedItem._id);
+          }
+        }
+      }
+    }
+    handleClose();
+  };
+
+  const deleteTopLevelKey = (key) => {
+    const { [key]: _, ...rest } = serverData;
+    setServerData(rest);
+  };
+
+  const deleteArrayEntry = (key, idToRemove) => {
+    const updatedArray = serverData[key].filter(
+      (item) => item._id !== idToRemove
+    );
+    setServerData((prevData) => ({
+      ...prevData,
+      [key]: updatedArray,
+    }));
+  };
 
   useEffect(() => {
     if (hasEffectRun.current) {
@@ -25,6 +105,7 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
         type
       );
       setServerData(data);
+      console.log(data, "history....");
     };
 
     if (session.user.email) {
@@ -34,7 +115,6 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
   }, [session.user.email]); // Empty dependency array, runs only once
 
   useEffect(() => {
-    
     if (result) {
       setServerData((prevServerData) => {
         // Create a copy of prevServerData to avoid direct mutation
@@ -64,7 +144,7 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
     <Box
       width={"250px"}
       minHeight={"100vh"}
-      overflow={'hidden'}
+      overflow={"hidden"}
       sx={{ backgroundColor: "#202123", color: "#FFFFFF" }}
     >
       <Box
@@ -89,6 +169,10 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
               component={
                 <Link href={"/pages/" + type + "/exp/" + experiment_name} />
               }
+              icon={<ScienceOutlinedIcon />}
+              onContextMenu={(e) =>
+                handleContextMenu(e, experiment_name, "exp")
+              }
             >
               {serverData[experiment_name].map((item) => (
                 <MenuItem
@@ -97,14 +181,38 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
                   component={
                     <Link href={"/pages/" + type + "/doc/" + item._id} />
                   }
+                  icon={<BiotechOutlinedIcon />}
+                  onContextMenu={(e) => handleContextMenu(e, item, "leaf")}
                 >
-                  {item.name}
+                  <Tooltip title={item.name}>
+                    <Typography>{trimText(item.name)}</Typography>
+                  </Tooltip>
                 </MenuItem>
               ))}
             </SubMenu>
           ))}
         </Menu>
       </Sidebar>
+      <MaterialMenu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        {selectedItem && (
+          <Typography variant="subtitle1" sx={{ padding: "8px 16px" }}>
+            {`${selectedItem.name}`}
+          </Typography>
+        )}
+        <Divider />
+        <MaterialMenuItem onClick={() => handleMenuItemClick("Delete")}>
+          Delete
+        </MaterialMenuItem>
+        <MaterialMenuItem onClick={() => handleMenuItemClick("View")}>
+          View
+        </MaterialMenuItem>
+      </MaterialMenu>
     </Box>
   );
 };

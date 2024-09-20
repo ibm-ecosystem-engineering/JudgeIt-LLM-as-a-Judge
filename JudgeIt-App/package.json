@@ -16,6 +16,7 @@
     "@mui/x-data-grid": "^7.16.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.4",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "cryptr": "^6.3.0",
     "formik": "^2.4.6",
     "next": "14.2.5",

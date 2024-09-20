@@ -14,6 +14,11 @@ import {
   API_TYPE_SIMILARITY,
 } from "@/services/Config";
 
+import { grade_map_rating, grade_map_similarity, grade_map_multiturn } from "@/services/Config";
+
+const grade_col_name = "JudgeIt Score"
+const explanation_col_name = "JudgeIt Reasoning"
+
 const SoloResult = ({ data, api_type }) => {
   return (
     <Paper
@@ -24,38 +29,38 @@ const SoloResult = ({ data, api_type }) => {
         <TableHead>
           {api_type === API_TYPE_RATING && (
             <TableRow>
-              <TableCell>Grade</TableCell>
-              <TableCell>Explanation</TableCell>
+              <TableCell>{grade_col_name}</TableCell>
+              <TableCell>{explanation_col_name}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_SIMILARITY && (
             <TableRow>
-              <TableCell>Grade</TableCell>
-              <TableCell>Explanation</TableCell>
+              <TableCell>{grade_col_name}</TableCell>
+              <TableCell>{explanation_col_name}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_MULTITURN && (
             <TableRow>
-              <TableCell>Grade</TableCell>
+              <TableCell>{grade_col_name}</TableCell>
             </TableRow>
           )}
         </TableHead>
         <TableBody>
           {api_type === API_TYPE_RATING && (
             <TableRow>
-              <TableCell>{data.Grade}</TableCell>
+              <TableCell>{grade_map_rating[data.Grade]}</TableCell>
               <TableCell>{data.Explanation}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_SIMILARITY && (
             <TableRow>
-              <TableCell>{data.Grade}</TableCell>
+              <TableCell>{grade_map_similarity[data.Grade]}</TableCell>
               <TableCell>{data.Explanation}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_MULTITURN && (
             <TableRow>
-              <TableCell>{data.Grade}</TableCell>
+              <TableCell>{grade_map_multiturn[data.Grade]}</TableCell>
             </TableRow>
           )}
         </TableBody>

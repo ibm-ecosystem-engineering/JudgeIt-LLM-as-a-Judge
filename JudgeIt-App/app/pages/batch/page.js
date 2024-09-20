@@ -83,7 +83,7 @@ const FileUploadForm = () => {
 
         // Extract and process the 'Grade' column
         const grades = jsonData
-          .map((row) => row.Grade)
+          .map((row) => row?.Grade || row?.judgeit_score)
           .filter((grade) => grade !== undefined);
         const gradeDistribution = grades.reduce((acc, grade) => {
           acc[grade] = (acc[grade] || 0) + 1;
@@ -147,10 +147,11 @@ const FileUploadForm = () => {
         then: (schema) =>
           schema
             .matches(
-              /^[a-zA-Z0-9-]*$/,
-              "No spaces or special characters allowed"
+              /^[a-zA-Z0-9- ]*$/,
+              "No special characters allowed"
             )
-            .required("Experiment name is required"),
+            .required("Experiment name is required")
+            .min(4, "Must be at least 4 characters long"),
         otherwise: (schema) => schema,
       }),
 
@@ -292,11 +293,10 @@ const FileUploadForm = () => {
     <>
       {session && (
         <Box display={"flex"} flexDirection={"row"}>
-          { console.log(gradeData)}
           <Box display={"flex"} height={"100vh"}>
             <EvaluationHistoryLeftBar type={"batch"} result={newData} />
           </Box>
-          <Box width={"100%"} height={"93vh"} overflow={"scroll"}>
+          <Box width={"100%"} height={"93vh"} sx={{ overflowY: 'scroll'}}>
             <Grid spacing={0} sx={{ flexGrow: 1 }} container>
               {
                 console.log("newData",newData)

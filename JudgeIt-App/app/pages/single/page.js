@@ -7,15 +7,11 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   LinearProgress,
   Grid,
   Alert,
   Typography,
   CircularProgress,
-  FormLabel,
   Tooltip,
 } from "@mui/material";
 import * as Yup from "yup";
@@ -47,8 +43,9 @@ const validationSchema = Yup.object({
     is: "new_experiment",
     then: (schema) =>
       schema
-        .matches(/^[a-zA-Z0-9-]*$/, "No spaces or special characters allowed")
-        .required("Experiment name is required"),
+        .matches(/^[a-zA-Z0-9- ]*$/, "No special characters allowed")
+        .required("Experiment name is required")
+        .min(4, "Must be at least 4 characters long"),
     otherwise: (schema) => schema,
   }),
 

@@ -2,6 +2,7 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import DataGridToolbar from "@/components/globals/DataGridToolbar";
+import { API_TYPE_RATING, grade_map_rating, grade_map_similarity } from "@/services/Config";
 
 const RatingSimilarityDataGrid = ({ serverData }) => {
   const columns = [
@@ -36,12 +37,12 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
     },
     {
       field: "Grade",
-      headerName: "Grade",
+      headerName: "JudgeIt Score",
       width: 100,
     },
     {
       field: "Explanation",
-      headerName: "Explanation",
+      headerName: "JudgeIt Reasoning",
       width: "400",
     },
   ];
@@ -60,7 +61,7 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
               model: item.content.query.model,
               golden_text: item.content.query.golden_text,
               generated_text: item.content.query.generated_text,
-              Grade: item.content.result.Grade,
+              Grade: (item.eval_type === API_TYPE_RATING) ? grade_map_rating[item.content.result.Grade] : grade_map_similarity[item.content.result.Grade],
               Explanation: item.content.result.Explanation,
             };
           }),
