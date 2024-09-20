@@ -60,21 +60,21 @@ class ManagementService:
         insertion = self.history_collection.insert_one(input)
         return str(insertion.inserted_id)
     
-    def delete_experiment(self, doc_id: str):
+    def delete_experiment(self, doc_id: str, user_id):
         object_id = ObjectId(doc_id)
-        result = self.experiment_collection.delete_one({"_id": object_id})
+        result = self.experiment_collection.delete_one({"_id": object_id, "user_id": user_id})
         return result.deleted_count
     
-    def delete_experiment_by_name(self, experiment_name):
+    def delete_experiment_by_name(self, experiment_name, user_id):
         ## Delete all document under experiment name in request history collection
-        self.history_collection.delete_many({"experiment_name": experiment_name})
+        self.history_collection.delete_many({"experiment_name": experiment_name, "user_id": user_id})
         ## Delete from experiment collections
-        result = self.experiment_collection.delete_one({"name": experiment_name})
+        result = self.experiment_collection.delete_one({"name": experiment_name, "user_id": user_id})
         return result.deleted_count
     
-    def delete_history(self, doc_id: str):
+    def delete_history(self, doc_id: str, user_id:str):
         object_id = ObjectId(doc_id)
-        result = self.history_collection.delete_one({"_id": object_id})
+        result = self.history_collection.delete_one({"_id": object_id, "user_id": user_id})
         return result.deleted_count
 
     # Function to convert BSON document to a dictionary
