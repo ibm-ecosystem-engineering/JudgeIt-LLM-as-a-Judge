@@ -29,19 +29,19 @@ const SoloResult = ({ data, api_type }) => {
         <TableHead>
           {api_type === API_TYPE_RATING && (
             <TableRow>
-              <TableCell>{grade_col_name}</TableCell>
-              <TableCell>{explanation_col_name}</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{grade_col_name}</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{explanation_col_name}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_SIMILARITY && (
             <TableRow>
-              <TableCell>{grade_col_name}</TableCell>
-              <TableCell>{explanation_col_name}</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{grade_col_name}</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{explanation_col_name}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_MULTITURN && (
             <TableRow>
-              <TableCell>{grade_col_name}</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{grade_col_name}</TableCell>
             </TableRow>
           )}
         </TableHead>

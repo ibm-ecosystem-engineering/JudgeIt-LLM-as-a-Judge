@@ -2,11 +2,10 @@
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { fetch_request_history_by_id } from "@/services/ManagemenBackendAPI";
-import { get_result_by_task_id } from "@/services/JudgeBackendAPIBatch";
 import DataGridToolbar from "@/components/globals/DataGridToolbar";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-
+import { app_labels_and_config } from "@/services/Config";
 import React, { useState, useEffect, useRef } from "react";
 import { Grid, Typography, Box, CircularProgress, Button } from "@mui/material";
 import { generateColumns, generateRows } from "@/utils/Helper";
@@ -37,8 +36,6 @@ const BatchDocIdPage = () => {
       setTask_object(task_id_object);
 
       const data = await task_id_object?.content?.batch_result;
-
-      console.log(data, "server data")
 
       if (data && data?.status !== "ERROR") {
         setServerData(data);
@@ -131,7 +128,7 @@ const BatchDocIdPage = () => {
                             textDecoration: "none",
                           }}
                         >
-                          Grade Distribution
+                          {app_labels_and_config.pages.graph_title}
                         </Typography>
                         <BarChart gradeData={gradeData} />
                       </Box>

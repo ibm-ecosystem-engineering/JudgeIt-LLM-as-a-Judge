@@ -11,7 +11,8 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { signOut } from "next-auth/react";
 import GavelOutlinedIcon from "@mui/icons-material/GavelOutlined";
 import BatchPredictionOutlinedIcon from "@mui/icons-material/BatchPredictionOutlined";
-import HelpCenterOutlinedIcon from '@mui/icons-material/HelpCenterOutlined';
+import HelpCenterOutlinedIcon from "@mui/icons-material/HelpCenterOutlined";
+import { app_labels_and_config } from "@/services/Config";
 
 const DrawerMenu = ({
   open,
@@ -27,25 +28,23 @@ const DrawerMenu = ({
       onKeyDown={handleDrawwerClose}
     >
       <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              width="100%"
-              
-              sx={{ textDecoration: "none" }}
-            >
-            
-                <Typography 
-                  style={{ 
-                    fontSize: "24px", 
-                    color: '#3B3B3B', 
-                    margin: '10px', 
-                    fontWeight: 'bold',
-                  }}
-                >
-                  JudgeIt App
-                </Typography>
-            </Box>
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        sx={{ textDecoration: "none" }}
+      >
+        <Typography
+          style={{
+            fontSize: "24px",
+            color: "#3B3B3B",
+            margin: "10px",
+            fontWeight: "bold",
+          }}
+        >
+          {app_labels_and_config.app_title}
+        </Typography>
+      </Box>
       <Divider />
       <List>
         <ListItem disablePadding>
@@ -64,7 +63,9 @@ const DrawerMenu = ({
             <ListItemIcon>
               <GavelOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={"Single Answer Evaluation"} />
+            <ListItemText
+              primary={app_labels_and_config.buttons.single_page_action}
+            />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -72,7 +73,9 @@ const DrawerMenu = ({
             <ListItemIcon>
               <BatchPredictionOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={"Batch Evaluation"} />
+            <ListItemText
+              primary={app_labels_and_config.buttons.batch_page_action}
+            />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

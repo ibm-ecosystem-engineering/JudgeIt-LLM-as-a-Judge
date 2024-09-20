@@ -125,7 +125,6 @@ async function similarity_api_call(payload) {
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);
-    console.log(payload);
 
     return {
       query: savedObject,
@@ -144,7 +143,6 @@ async function multiturn_api_call(payload) {
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);
-    console.log(payload);
 
     return {
       query: savedObject,

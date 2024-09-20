@@ -1,5 +1,11 @@
 import React from "react";
 import { Grid, Box } from "@mui/material";
+import {
+  API_TYPE_RATING,
+  API_TYPE_SIMILARITY,
+  grade_map_rating,
+  grade_map_similarity,
+} from "@/services/Config";
 
 const DisplayRequestHistoryRatingSimilarity = ({ serverData }) => {
   return (
@@ -25,7 +31,12 @@ const DisplayRequestHistoryRatingSimilarity = ({ serverData }) => {
             <Grid item xs={9}>
               {serverData.eval_type}
             </Grid>
-
+            <Grid item xs={3} fontWeight={"bold"}>
+              Question:
+            </Grid>
+            <Grid item xs={9}>
+              {serverData.content.query.question}
+            </Grid>
             <Grid item xs={3} fontWeight={"bold"}>
               Golden Text:
             </Grid>
@@ -58,14 +69,21 @@ const DisplayRequestHistoryRatingSimilarity = ({ serverData }) => {
         >
           <Grid spacing={2} sx={{ flexGrow: 1 }} container>
             <Grid item xs={3} fontWeight={"bold"}>
-              Grade:
+              JudgeIt Score:
             </Grid>
-            <Grid item xs={9}>
-              {serverData.content.result.Grade}
-            </Grid>
+            {API_TYPE_RATING === serverData.eval_type && (
+              <Grid item xs={9}>
+                {grade_map_rating[serverData.content.result.Grade]}
+              </Grid>
+            )}
+            {API_TYPE_SIMILARITY === serverData.eval_type && (
+              <Grid item xs={9}>
+                {grade_map_similarity[serverData.content.result.Grade]}
+              </Grid>
+            )}
 
             <Grid item xs={3} fontWeight={"bold"}>
-              Explanation:
+              JudgeIt Reasoning:
             </Grid>
             <Grid item xs={9}>
               {serverData.content.result.Explanation}

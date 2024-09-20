@@ -105,7 +105,6 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
         type
       );
       setServerData(data);
-      console.log(data, "history....");
     };
 
     if (session.user.email) {

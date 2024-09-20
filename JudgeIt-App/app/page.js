@@ -9,6 +9,7 @@ import {
   rag_similarity_display,
   rag_rating_display,
   multi_turn_display,
+  app_labels_and_config,
 } from "@/services/Config";
 import Footer from "@/components/globals/Footer";
 
@@ -66,12 +67,7 @@ export default function Home() {
                 borderRadius: "5px",
               }}
             >
-              JudgeIt is an automated evaluation framework designed for testing
-              various Generative AI pipelines such as RAG, Multi-Turn Query
-              Rewriting, Text-to-SQL, and more. This service utilizes an LLM
-              Judge to accurately and efficiently evaluate generated text
-              against provided golden text. Try evaluating a single input or a
-              batch of inputs by clicking one of the options below!
+              {app_labels_and_config.home_page_panel_title.home_page_intro}
             </Typography>
           </div>
 
@@ -98,7 +94,7 @@ export default function Home() {
                 >
                   <JoinInnerOutlinedIcon />
                 </div>
-                RAG Evaluation (Similarity)
+               {app_labels_and_config.home_page_panel_title.similarity_panel}
               </div>
 
               {rag_similarity_display.map((similarity, i) => (
@@ -109,7 +105,6 @@ export default function Home() {
                     padding: "15px",
                     margin: "10px",
                     borderRadius: "5px",
-                    cursor: "pointer",
                     fontSize: "0.85rem",
                     lineHeight: "1.25rem",
                     height: "60px",
@@ -142,7 +137,7 @@ export default function Home() {
                 >
                   <GradeOutlinedIcon />
                 </div>
-                RAG Evaluation (Rating)
+                {app_labels_and_config.home_page_panel_title.rating_panel}
               </div>
               {rag_rating_display.map((rating, i) => (
                 <div
@@ -152,7 +147,6 @@ export default function Home() {
                     padding: "15px",
                     margin: "10px",
                     borderRadius: "5px",
-                    cursor: "pointer",
                     fontSize: "0.85rem",
                     lineHeight: "1.25rem",
                     height: "60px",
@@ -185,7 +179,7 @@ export default function Home() {
                 >
                   <TurnSharpRightOutlinedIcon />
                 </div>
-                Multi-turn evaluation
+                {app_labels_and_config.home_page_panel_title.multiturn_panel}
               </div>
               {multi_turn_display.map((multi, i) => (
                 <div
@@ -195,7 +189,6 @@ export default function Home() {
                     padding: "15px",
                     margin: "10px",
                     borderRadius: "5px",
-                    cursor: "pointer",
                     fontSize: "0.85rem",
                     lineHeight: "1.25rem",
                     height: "60px",
@@ -218,10 +211,10 @@ export default function Home() {
             }}
           >
             <Button variant="outlined" href="/pages/single">
-              Single Answer Evaluation
+              {app_labels_and_config.buttons.single_page_action}
             </Button>
             <Button variant="outlined" href="/pages/batch">
-              Batch Evaluation
+              {app_labels_and_config.buttons.batch_page_action}
             </Button>
           </div>
         </div>

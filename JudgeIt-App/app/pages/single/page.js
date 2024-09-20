@@ -26,6 +26,7 @@ import {
   API_TYPE_SIMILARITY,
   API_TYPE_KEY,
   LLM_MODELS,
+  app_labels_and_config,
 } from "@/services/Config";
 import { useState } from "react";
 import SoloResult from "@/components/judge/SoloResult";
@@ -153,7 +154,7 @@ const SoloRequestPage = () => {
                         marginBottom: "15px",
                       }}
                     >
-                      Single Answer Evaluation
+                      {app_labels_and_config.pages.single_evaluation_page_title}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>

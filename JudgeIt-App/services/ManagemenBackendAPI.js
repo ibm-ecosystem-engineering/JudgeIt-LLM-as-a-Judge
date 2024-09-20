@@ -5,7 +5,6 @@ import {
 } from "./Config";
 
 export async function create_experiment(payload, type) {
-  console.log(payload);
   if (payload.experiment_option === "new_experiment") {
     const headers = {
       accept: "application/json",

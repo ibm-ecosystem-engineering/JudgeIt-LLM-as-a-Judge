@@ -33,7 +33,6 @@ const ItemPage = () => {
         doc_id
       );
       setServerData(data);
-      console.log("history", data);
     };
 
     if (session?.user.email) {

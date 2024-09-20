@@ -27,8 +27,13 @@ import {
   LLM_JUDGE_BATCH_EVENT_URL,
   LLM_JUDGE_DOWNLOAD_EVALUATION_URL,
   LLM_JUDGE_API_KEY_SECRET,
+  app_labels_and_config,
 } from "@/services/Config";
-import { get_result_by_task_id, judge_api_batch_call, save_request_history } from "@/services/JudgeBackendAPIBatch";
+import {
+  get_result_by_task_id,
+  judge_api_batch_call,
+  save_request_history,
+} from "@/services/JudgeBackendAPIBatch";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
 import { useSession } from "next-auth/react";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -47,7 +52,8 @@ const FileUploadForm = () => {
   const [gradeData, setGradeData] = useState(null);
   const [newData, setNewData] = useState(null);
 
-  const required_column_rating_similarity = "| question | golden_text | generated_text |";
+  const required_column_rating_similarity =
+    "| question | golden_text | generated_text |";
   const required_column_multi_turn =
     "| previous_question | previous_answer | current_question | golden_rewritten_question | rewritten_question |";
 
@@ -146,10 +152,7 @@ const FileUploadForm = () => {
         is: "new_experiment",
         then: (schema) =>
           schema
-            .matches(
-              /^[a-zA-Z0-9- ]*$/,
-              "No special characters allowed"
-            )
+            .matches(/^[a-zA-Z0-9- ]*$/, "No special characters allowed")
             .required("Experiment name is required")
             .min(4, "Must be at least 4 characters long"),
         otherwise: (schema) => schema,
@@ -197,7 +200,6 @@ const FileUploadForm = () => {
         const returned_task_id = response.data.task_id;
         /** if returned task id is valid then make an event source call to get continuous update */
         setTask_id(returned_task_id);
-       
 
         const eventSource = new EventSource(
           LLM_JUDGE_BATCH_EVENT_URL + returned_task_id
@@ -213,9 +215,11 @@ const FileUploadForm = () => {
 
             // Get the result from redis and save it to mongodb
             const result = await get_result_by_task_id(returned_task_id);
-            const new_data = await save_request_history(experiment_payload, result);
+            const new_data = await save_request_history(
+              experiment_payload,
+              result
+            );
             setNewData(new_data);
-
           } else if (
             parsedData.status === "PROGRESS" ||
             parsedData.status === "PENDING"
@@ -261,7 +265,6 @@ const FileUploadForm = () => {
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     setFile(file);
-    console.log(file, "file name");
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -296,11 +299,8 @@ const FileUploadForm = () => {
           <Box display={"flex"} height={"100vh"}>
             <EvaluationHistoryLeftBar type={"batch"} result={newData} />
           </Box>
-          <Box width={"100%"} height={"93vh"} sx={{ overflowY: 'scroll'}}>
+          <Box width={"100%"} height={"93vh"} sx={{ overflowY: "scroll" }}>
             <Grid spacing={0} sx={{ flexGrow: 1 }} container>
-              {
-                console.log("newData",newData)
-              }
               <Grid item xs={11}>
                 <Grid item xs={12} marginTop={"10px"}>
                   <Typography
@@ -312,7 +312,7 @@ const FileUploadForm = () => {
                       marginBottom: "15px",
                     }}
                   >
-                    Batch Evaluation
+                    {app_labels_and_config.pages.batch_evaluation_page_title}
                   </Typography>
                 </Grid>
 
@@ -344,7 +344,11 @@ const FileUploadForm = () => {
                             created_experiment={newData?.experiment_name}
                           />
                         </Box>
-                        <Box display={"flex"} flexDirection={"row"} marginTop={'20px'}>
+                        <Box
+                          display={"flex"}
+                          flexDirection={"row"}
+                          marginTop={"20px"}
+                        >
                           <EvaluationTypeComponent
                             values={formik.values}
                             handleChange={formik.handleChange}
@@ -378,7 +382,7 @@ const FileUploadForm = () => {
                             sx={{ fontSize: 40, color: "#aaa" }}
                           />
                           <Typography variant="body1">
-                            Drag & Drop a to Upload CSV/Excel File, or Click to
+                            Drag & Drop to Upload CSV/Excel File, or Click to
                             Browse
                           </Typography>
                         </Box>
@@ -388,7 +392,7 @@ const FileUploadForm = () => {
                           </Typography>
                         )}
 
-<Box display={"flex"} flexDirection={"row"}>
+                        <Box display={"flex"} flexDirection={"row"}>
                           <FormControl
                             error={
                               formik.touched.model &&
@@ -476,7 +480,7 @@ const FileUploadForm = () => {
                               textDecoration: "none",
                             }}
                           >
-                            Grade Distribution
+                            {app_labels_and_config.pages.graph_title}
                           </Typography>
                           <BarChart gradeData={gradeData} />
                         </Box>

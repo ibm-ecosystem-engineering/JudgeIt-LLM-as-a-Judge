@@ -1,7 +1,6 @@
 "use client";
 import { Box, Typography, Button } from "@mui/material";
 import GavelOutlinedIcon from "@mui/icons-material/GavelOutlined";
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 
 function SingleInstructions() {
   return (

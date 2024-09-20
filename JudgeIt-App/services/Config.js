@@ -54,17 +54,43 @@ export const multi_turn_display = [
 ];
 
 export const grade_map_rating = {
-  1 : "Incorrect",
-  2 : "Partially correct",
-  3 : "Correct"
-}
+  1: "Incorrect",
+  2: "Partially correct",
+  3: "Correct",
+};
 
 export const grade_map_similarity = {
-  0 : "Incorrect",
-  1 : "Correct"
-}
+  0: "Incorrect",
+  1: "Correct",
+};
 
 export const grade_map_multiturn = {
-  0 : "Incorrect",
-  1 : "Correct"
-}
+  0: "Incorrect",
+  1: "Correct",
+};
+
+export const app_labels_and_config = {
+  app_version: "Alpha-1.0 version",
+  app_title: "JudgeIt",
+  app_subtitle: "LLM as a Judge",
+  logo_text: "Ecosystem Engineering",
+  buttons: {
+    single_page_action: "Single answer evaluation",
+    batch_page_action: "Batch evaluation",
+  },
+  home_page_panel_title: {
+    similarity_panel: "RAG Evaluation (Similarity)",
+    rating_panel: "RAG Evaluation (Rating)",
+    multiturn_panel: "Multi-turn evaluation",
+    home_page_intro:
+      "JudgeIt is an automated evaluation framework designed for testing various Generative AI pipelines such as RAG, Multi-Turn Query Rewriting, Text-to-SQL, and more. This service utilizes an LLM Judge to accurately and efficiently evaluate generated text against provided golden text. Try evaluating a single input or a batch of inputs by clicking one of the options below!",
+  },
+  pages: {
+    batch_evaluation_page_title: "Batch Evaluation",
+    single_evaluation_page_title: "Single Answer Evaluation",
+    graph_title: "Grade Distribution",
+  },
+  github: "https://github.com/ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge",
+  github_issues:
+    "https://github.com/ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge/issues",
+};
