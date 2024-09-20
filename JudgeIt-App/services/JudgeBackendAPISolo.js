@@ -72,6 +72,7 @@ async function save_request_history(payload, result) {
   } else {
     query = {
       model: payload.model,
+      question: payload.question,
       golden_text: payload.golden_text,
       generated_text: payload.generated_text,
     };

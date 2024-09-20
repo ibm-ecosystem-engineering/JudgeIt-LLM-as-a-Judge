@@ -52,3 +52,19 @@ export const multi_turn_display = [
   "Evaluate rewritten queries given a mult-turn conversation and receive a binary score for similarity",
   "The LLM Judge will output a Grade. A grade of 0 means the golden rewritten question and rewritten question are dissimilar, while a grade of 1 means the questions are similar.",
 ];
+
+export const grade_map_rating = {
+  1 : "Incorrect",
+  2 : "Partially correct",
+  3 : "Correct"
+}
+
+export const grade_map_similarity = {
+  0 : "Incorrect",
+  1 : "Correct"
+}
+
+export const grade_map_multiturn = {
+  0 : "Incorrect",
+  1 : "Correct"
+}

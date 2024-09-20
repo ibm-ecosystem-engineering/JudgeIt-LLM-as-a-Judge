@@ -32,7 +32,7 @@ const config = {
  * @param {*} task_id
  * @returns
  */
-async function save_request_history(payload, task_id) {
+export async function save_request_history(payload, batch_result) {
   const headers = {
     accept: "application/json",
     "Content-Type": "application/json",
@@ -47,10 +47,10 @@ async function save_request_history(payload, task_id) {
       ? payload.new_experiment
       : payload.existing_experiment;
 
-  let name = "batch-" + payload.filename;
+  let name = "batch-" + payload.apiType + "-" + payload.filename;
 
   const content = {
-    task_id: task_id,
+    batch_result: batch_result,
     file_name: payload.filename,
   };
   const data = {
@@ -117,14 +117,7 @@ async function rating_batch_api_call(formData, payload) {
     config
   );
   await create_experiment(payload, "batch");
-  const savedObject = await save_request_history(
-    payload,
-    response.data.task_id
-  );
-  return {
-    query: savedObject,
-    data: response.data,
-  };
+  return response;
 }
 
 async function similarity_batch_api_call(formData, payload) {
@@ -134,25 +127,11 @@ async function similarity_batch_api_call(formData, payload) {
     config
   );
   await create_experiment(payload, "batch");
-  const savedObject = await save_request_history(
-    payload,
-    response.data.task_id
-  );
-  return {
-    query: savedObject,
-    data: response.data,
-  };
+  return response;
 }
 
 async function multiturn_batch_api_call(formData, payload) {
   const response = await axios.post(API_MULTITURN_BATCH_URL, formData, config);
   await create_experiment(payload, "batch");
-  const savedObject = await save_request_history(
-    payload,
-    response.data.task_id
-  );
-  return {
-    query: savedObject,
-    data: response.data,
-  };
+  return response;
 }
