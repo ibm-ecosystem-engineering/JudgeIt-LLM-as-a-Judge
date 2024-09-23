@@ -23,7 +23,9 @@ export async function create_experiment(payload, type) {
 
     try {
       await axios.post(url, data, { headers });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

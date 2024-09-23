@@ -214,9 +214,13 @@ const SoloRequestPage = () => {
                                 setNewData(response.query);
                                 setApi_call_inprogress(false);
                               } catch (error) {
-                                setApi_error(
-                                  "Error in making API call. Please try again later."
-                                );
+                                if (error?.response?.data?.detail) {
+                                  setApi_error(error?.response?.data?.detail);
+                                } else {
+                                  setApi_error(
+                                    "Error in making API call. Please try again later."
+                                  );
+                                }
                                 setApi_call_inprogress(false);
                               }
                             }}

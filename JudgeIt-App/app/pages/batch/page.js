@@ -258,7 +258,7 @@ const FileUploadForm = () => {
           console.error(error);
           setErrorStatus(
             "Error in processing request, please try again later."
-          );
+          );          
         }
       }
     },
@@ -324,7 +324,7 @@ const FileUploadForm = () => {
                       <Alert
                         variant="outlined"
                         severity="error"
-                        sx={{ width: "100%", marginBottom: "20px" }}
+                        sx={{ width: "98%", marginBottom: "20px" }}
                       >
                         {errorStatus}
                       </Alert>
