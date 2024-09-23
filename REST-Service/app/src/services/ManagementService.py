@@ -22,6 +22,12 @@ class ManagementService:
         experiments = [self.bson_to_dict(doc) for doc in cursor]
         return experiments
     
+    def get_experiment_by_name(self, user_id: str, name: str):
+        cursor = self.experiment_collection.find_one({ "user_id": user_id, "name": name })
+        if cursor is not None:
+            return self.bson_to_dict(cursor)
+        return None
+    
     def get_history_by_id(self, user_id: str, doc_id: str):
         object_id = ObjectId(doc_id)
         cursor = self.history_collection.find_one({"user_id": user_id, "_id": object_id})

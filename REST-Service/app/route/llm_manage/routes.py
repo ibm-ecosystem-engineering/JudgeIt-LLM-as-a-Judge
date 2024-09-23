@@ -5,7 +5,7 @@ from app.celery.celery_worker import multi_turn_batch_task, rating_batch_task, s
 from app.src.models.Experiment import Experiment
 from app.src.models.RequestHistory import RequestHistory
 from app.src.services.ManagementService import ManagementService
-from starlette.status import HTTP_403_FORBIDDEN, HTTP_500_INTERNAL_SERVER_ERROR
+from starlette.status import HTTP_403_FORBIDDEN, HTTP_500_INTERNAL_SERVER_ERROR, HTTP_409_CONFLICT
 import os
 from app.src.services.MongoService import MongoService
 from fastapi.responses import JSONResponse
@@ -49,11 +49,19 @@ def get_experiment_list_by_type(type: str, user_id: str = Header(...), api_key: 
     return JSONResponse(content=experiments)
 
 @judge_management_api_route.post(path='/experiment', description="Add a new experiment")
-def add_new_experiment(experiment_input: Experiment, api_key: str = Security(get_api_key)):
-    insert_id = management_service.add_experiment(experiment_input)
-    return JSONResponse(content={
-        "insert_id": insert_id
-    })
+def add_new_experiment(experiment_input: Experiment, user_id: str = Header(...), api_key: str = Security(get_api_key)):
+    
+    experiment_exist = management_service.get_experiment_by_name(user_id, experiment_input.name)
+
+    if experiment_exist is None:
+        insert_id = management_service.add_experiment(experiment_input)
+        return JSONResponse(content={
+            "insert_id": insert_id
+        })
+    
+    raise HTTPException(
+            status_code=HTTP_409_CONFLICT, detail="Experiment name is already exist."
+        )
 
 @judge_management_api_route.delete(path='/experiment/{doc_id}', description="Delete an experiment by id")
 def delete_experiment(doc_id: str, api_key: str = Security(get_api_key), user_id: str = Header(...)):
