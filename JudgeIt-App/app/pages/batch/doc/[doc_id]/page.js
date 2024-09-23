@@ -2,26 +2,12 @@
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { fetch_request_history_by_id } from "@/services/ManagemenBackendAPI";
-import { get_result_by_task_id } from "@/services/JudgeBackendAPIBatch";
 import DataGridToolbar from "@/components/globals/DataGridToolbar";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-
+import { app_labels_and_config } from "@/services/Config";
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Grid,
-  Typography,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Alert,
-  Box,
-  CircularProgress,
-  Button,
-} from "@mui/material";
+import { Grid, Typography, Box, CircularProgress, Button } from "@mui/material";
 import { generateColumns, generateRows } from "@/utils/Helper";
 import { DataGrid } from "@mui/x-data-grid";
 import BarChart from "@/components/globals/BarChart";
@@ -49,13 +35,13 @@ const BatchDocIdPage = () => {
 
       setTask_object(task_id_object);
 
-      const data = await get_result_by_task_id(task_id_object.content.task_id);
+      const data = await task_id_object?.content?.batch_result;
 
-      if (data && data.status !== "ERROR") {
+      if (data && data?.status !== "ERROR") {
         setServerData(data);
-        const grades = Object.values(data.Grade).filter(
-          (grade) => grade !== undefined
-        );
+        const grades = data.Grade
+          ? Object.values(data.Grade).filter((grade) => grade !== undefined)
+          : Object.values(data.judgeit_score).filter((score) => score !== undefined);
 
         const gradeDistribution = grades.reduce((acc, grade) => {
           acc[grade] = (acc[grade] || 0) + 1;
@@ -117,8 +103,9 @@ const BatchDocIdPage = () => {
                           marginBottom: "15px",
                         }}
                       >
-                        Batch Evaluation{" "}
-                        {task_object && " - " + task_object.eval_type}
+                        Batch Evaluation:{" "}
+                        {task_object &&
+                          task_object.name + " - " + task_object.eval_type}
                       </Typography>
                       <Button
                         size="small"
@@ -141,7 +128,7 @@ const BatchDocIdPage = () => {
                             textDecoration: "none",
                           }}
                         >
-                          Grade Distribution
+                          {app_labels_and_config.pages.graph_title}
                         </Typography>
                         <BarChart gradeData={gradeData} />
                       </Box>
@@ -150,7 +137,7 @@ const BatchDocIdPage = () => {
                   <Grid item xs={12} marginLeft={"25px"}>
                     {serverData && (
                       <DataGrid
-                        rows={generateRows(serverData)}
+                        rows={generateRows(serverData, task_object.eval_type)}
                         columns={generateColumns(serverData)}
                         pageSize={5}
                         rowsPerPageOptions={[5]}

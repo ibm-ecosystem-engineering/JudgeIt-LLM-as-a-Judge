@@ -79,7 +79,7 @@ const DisplayRequestHistoryMultiTurn = ({ serverData }) => {
               Grade:
             </Grid>
             <Grid item xs={9}>
-              {serverData.content.result.Grade}
+              {serverData.content.result.Grade || serverData.content.result.judgeit_score}
             </Grid>
           </Grid>
         </Box>

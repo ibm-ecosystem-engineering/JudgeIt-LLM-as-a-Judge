@@ -76,9 +76,9 @@ rating_batch_file_format = """
 
 ## This is the execl/csv data format. Please make sure, files have these column name with correct case.
 
-| golden_text   | generated_text      | 
-| ------------- | -----------------   | 
-| Golen text 1  | generated text 1    |
+| question      |  golden_text   | generated_text      | 
+| ------------- | -------------  | -----------------   | 
+| question 1    |  Golen text 1  | generated text 1    |
 
 """
 
@@ -142,9 +142,9 @@ similarity_batch_file_format = """
 
 ## This is the execl/csv data format. Please make sure, files have these column name with correct case.
 
-| golden_text   | generated_text      | 
-| ------------- | -----------------   | 
-| Golen text 1  | generated text 1    |
+| question      |  golden_text   | generated_text      | 
+| ------------- | -------------  | -----------------   | 
+| question 1    |  Golen text 1  | generated text 1    |
 
 """
 

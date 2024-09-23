@@ -39,7 +39,6 @@ const ExperimentForm = ({
     const fetch_data = async () => {
       const data = await get_experiment_list(session.user.email, type);
       setServerData(data);
-      console.log(data);
     };
 
     if (session?.user.email) {
@@ -54,7 +53,6 @@ const ExperimentForm = ({
         name: created_experiment,
       };
       setServerData((prevData) => [...prevData, newData]);
-      console.log("useeffect", serverData);
     }
   }, [created_experiment]); // Trigger update when `result` changes
 

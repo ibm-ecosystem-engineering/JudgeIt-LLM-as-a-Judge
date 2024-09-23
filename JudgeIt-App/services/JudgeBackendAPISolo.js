@@ -72,6 +72,7 @@ async function save_request_history(payload, result) {
   } else {
     query = {
       model: payload.model,
+      question: payload.question,
       golden_text: payload.golden_text,
       generated_text: payload.generated_text,
     };
@@ -124,7 +125,6 @@ async function similarity_api_call(payload) {
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);
-    console.log(payload);
 
     return {
       query: savedObject,
@@ -143,7 +143,6 @@ async function multiturn_api_call(payload) {
 
     // save the request
     const savedObject = await save_request_history(payload, response.data);
-    console.log(payload);
 
     return {
       query: savedObject,

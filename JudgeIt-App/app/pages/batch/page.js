@@ -14,9 +14,6 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   Alert,
   CircularProgress,
   Tooltip,
@@ -30,14 +27,20 @@ import {
   LLM_JUDGE_BATCH_EVENT_URL,
   LLM_JUDGE_DOWNLOAD_EVALUATION_URL,
   LLM_JUDGE_API_KEY_SECRET,
+  app_labels_and_config,
 } from "@/services/Config";
-import { judge_api_batch_call } from "@/services/JudgeBackendAPIBatch";
+import {
+  get_result_by_task_id,
+  judge_api_batch_call,
+  save_request_history,
+} from "@/services/JudgeBackendAPIBatch";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
 import { useSession } from "next-auth/react";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import * as XLSX from "xlsx";
 import BarChart from "@/components/globals/BarChart";
 import Footer from "@/components/globals/Footer";
+import EvaluationTypeComponent from "@/components/judge/EvaluationTypeComponent";
 
 const FileUploadForm = () => {
   const [file, setFile] = useState(null);
@@ -50,7 +53,8 @@ const FileUploadForm = () => {
   const [newData, setNewData] = useState(null);
   const [gradeType, setGradeType] = useState(null);
 
-  const required_column_rating_similarity = "| golden_text | generated_text |";
+  const required_column_rating_similarity =
+    "| question | golden_text | generated_text |";
   const required_column_multi_turn =
     "| previous_question | previous_answer | current_question | golden_rewritten_question | rewritten_question |";
 
@@ -86,13 +90,12 @@ const FileUploadForm = () => {
 
         // Extract and process the 'Grade' column
         const grades = jsonData
-          .map((row) => row.Grade)
+          .map((row) => row?.Grade || row?.judgeit_score)
           .filter((grade) => grade !== undefined);
         const gradeDistribution = grades.reduce((acc, grade) => {
           acc[grade] = (acc[grade] || 0) + 1;
           return acc;
         }, {});
-
         setGradeData(gradeDistribution);
       };
       reader.readAsArrayBuffer(blob);
@@ -150,11 +153,9 @@ const FileUploadForm = () => {
         is: "new_experiment",
         then: (schema) =>
           schema
-            .matches(
-              /^[a-zA-Z0-9-]*$/,
-              "No spaces or special characters allowed"
-            )
-            .required("Experiment name is required"),
+            .matches(/^[a-zA-Z0-9- ]*$/, "No special characters allowed")
+            .required("Experiment name is required")
+            .min(4, "Must be at least 4 characters long"),
         otherwise: (schema) => schema,
       }),
 
@@ -201,19 +202,26 @@ const FileUploadForm = () => {
         const returned_task_id = response.data.task_id;
         /** if returned task id is valid then make an event source call to get continuous update */
         setTask_id(returned_task_id);
-        setNewData(response.query);
 
         const eventSource = new EventSource(
           LLM_JUDGE_BATCH_EVENT_URL + returned_task_id
         );
 
-        eventSource.onmessage = (event) => {
+        eventSource.onmessage = async (event) => {
           const parsedData = JSON.parse(event.data);
           setProgress(parsedData.status);
 
           if (parsedData.status === "SUCCESS") {
             setProgressVal(100);
             create_bar_chart(returned_task_id);
+
+            // Get the result from redis and save it to mongodb
+            const result = await get_result_by_task_id(returned_task_id);
+            const new_data = await save_request_history(
+              experiment_payload,
+              result
+            );
+            setNewData(new_data);
           } else if (
             parsedData.status === "PROGRESS" ||
             parsedData.status === "PENDING"
@@ -259,7 +267,6 @@ const FileUploadForm = () => {
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     setFile(file);
-    console.log(file, "file name");
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -294,7 +301,7 @@ const FileUploadForm = () => {
           <Box display={"flex"} height={"100vh"}>
             <EvaluationHistoryLeftBar type={"batch"} result={newData} />
           </Box>
-          <Box width={"100%"} height={"93vh"} overflow={"scroll"}>
+          <Box width={"100%"} height={"93vh"} sx={{ overflowY: "scroll" }}>
             <Grid spacing={0} sx={{ flexGrow: 1 }} container>
               <Grid item xs={11}>
                 <Grid item xs={12} marginTop={"10px"}>
@@ -307,7 +314,7 @@ const FileUploadForm = () => {
                       marginBottom: "15px",
                     }}
                   >
-                    Batch Evaluation
+                    {app_labels_and_config.pages.batch_evaluation_page_title}
                   </Typography>
                 </Grid>
 
@@ -339,6 +346,54 @@ const FileUploadForm = () => {
                             created_experiment={newData?.experiment_name}
                           />
                         </Box>
+                        <Box
+                          display={"flex"}
+                          flexDirection={"row"}
+                          marginTop={"20px"}
+                        >
+                          <EvaluationTypeComponent
+                            values={formik.values}
+                            handleChange={formik.handleChange}
+                            handleBlur={formik.handleBlur}
+                            errors={formik.errors}
+                            touched={formik.touched}
+                            api_call_inprogress={false}
+                          />
+                        </Box>
+                        <Box lineHeight={"40px"} color={"#3B4151"}>
+                          <span style={{ color: "red" }}>**</span>Required
+                          columns in csv/xlsx file{" "}
+                          <span style={{ color: "blue", fontStyle: "italic" }}>
+                            {formik.values.apiType == API_TYPE_MULTITURN
+                              ? required_column_multi_turn
+                              : required_column_rating_similarity}
+                          </span>
+                        </Box>
+                        <Box
+                          {...getRootProps()}
+                          sx={{
+                            border: "2px dashed #ccc",
+                            p: 2,
+                            textAlign: "center",
+                            my: 2,
+                            width: "90%",
+                          }}
+                        >
+                          <input {...getInputProps()} />
+                          <CloudUploadIcon
+                            sx={{ fontSize: 40, color: "#aaa" }}
+                          />
+                          <Typography variant="body1">
+                            Drag & Drop to Upload CSV/Excel File, or Click to
+                            Browse
+                          </Typography>
+                        </Box>
+                        {file && (
+                          <Typography variant="body2" marginBottom={"20px"}>
+                            Selected file: {file.name}
+                          </Typography>
+                        )}
+
                         <Box display={"flex"} flexDirection={"row"}>
                           <FormControl
                             error={
@@ -379,95 +434,6 @@ const FileUploadForm = () => {
                             <InfoOutlinedIcon />
                           </Tooltip>
                         </Box>
-
-                        <Box display={"flex"} flexDirection={"row"}>
-                          <FormControl
-                            component="fieldset"
-                            error={
-                              formik.touched.apiType &&
-                              Boolean(formik.errors.apiType)
-                            }
-                          >
-                            <RadioGroup
-                              row
-                              aria-label="option"
-                              name="apiType"
-                              value={formik.values.apiType}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              style={{
-                                marginTop: "15px",
-                                marginBottom: "15px",
-                              }}
-                            >
-                              <FormControlLabel
-                                value={API_TYPE_RATING}
-                                control={<Radio />}
-                                label="RAG Evaluation - Answer Rating"
-                              />
-                              <FormControlLabel
-                                value={API_TYPE_SIMILARITY}
-                                control={<Radio />}
-                                label="RAG Evaluation - Answer Similarity"
-                              />
-                              <FormControlLabel
-                                value={API_TYPE_MULTITURN}
-                                control={<Radio />}
-                                label="Multi-turn Query Rewrite Evaluation"
-                              />
-                            </RadioGroup>
-                            {formik.touched.apiType &&
-                              formik.errors.apiType && (
-                                <FormHelperText>
-                                  {formik.errors.apiType}
-                                </FormHelperText>
-                              )}
-                          </FormControl>
-                          <Tooltip
-                            title="Select your evaluation type"
-                            sx={{
-                              marginLeft: "5px",
-                              cursor: "help",
-                              marginTop: "20px",
-                            }}
-                          >
-                            <InfoOutlinedIcon />
-                          </Tooltip>
-                        </Box>
-                        <Box lineHeight={"40px"} color={"#3B4151"}>
-                          <span style={{ color: "red" }}>**</span>Required
-                          columns in csv/xlsx file{" "}
-                          <span style={{ color: "blue", fontStyle: "italic" }}>
-                            {formik.values.apiType == API_TYPE_MULTITURN
-                              ? required_column_multi_turn
-                              : required_column_rating_similarity}
-                          </span>
-                        </Box>
-                        <Box
-                          {...getRootProps()}
-                          sx={{
-                            border: "2px dashed #ccc",
-                            p: 2,
-                            textAlign: "center",
-                            my: 2,
-                            width: "90%",
-                          }}
-                        >
-                          <input {...getInputProps()} />
-                          <CloudUploadIcon
-                            sx={{ fontSize: 40, color: "#aaa" }}
-                          />
-                          <Typography variant="body1">
-                            Drag & Drop a to Upload CSV/Excel File, or Click to
-                            Browse
-                          </Typography>
-                        </Box>
-                        {file && (
-                          <Typography variant="body2" marginBottom={"20px"}>
-                            Selected file: {file.name}
-                          </Typography>
-                        )}
-
                         <Button
                           disabled={
                             progress === "PROGRESS" || progress === "PENDING"
@@ -516,7 +482,7 @@ const FileUploadForm = () => {
                               textDecoration: "none",
                             }}
                           >
-                            Grade Distribution
+                            {app_labels_and_config.pages.graph_title}
                           </Typography>
                           <BarChart
                             gradeData={gradeData}

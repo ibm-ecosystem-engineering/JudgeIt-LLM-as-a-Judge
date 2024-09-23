@@ -5,8 +5,6 @@ import {
 } from "./Config";
 
 export async function create_experiment(payload, type) {
-
-  console.log(payload)
   if (payload.experiment_option === "new_experiment") {
     const headers = {
       accept: "application/json",
@@ -104,7 +102,10 @@ export const fetch_request_history_by_name_and_type = async (
     const data = response.data;
     return data;
   } catch (error) {
-    console.error("Error fetching fetch_request_history_by_name_and_type :", error); // Handle any errors
+    console.error(
+      "Error fetching fetch_request_history_by_name_and_type :",
+      error
+    ); // Handle any errors
     throw error;
   }
 };
@@ -125,5 +126,56 @@ export const get_experiment_list = async (user_id, type) => {
   } catch (error) {
     console.error("Error fetching get_experiment_list :", error); // Handle any errors
     throw error;
+  }
+};
+
+export const delete_history_by_id = async (history_id, user_id) => {
+  const headers = {
+    accept: "application/json",
+    "user-id": user_id,
+    LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const response = await axios.delete(
+      LLM_JUDGE_MANAGEMENT_API_URL + "history/" + history_id,
+      {
+        headers: headers,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error:",
+      error.response ? error.response.data : error.message
+    );
+  }
+};
+
+export const delete_history_by_experiment_name = async (
+  experiment_name,
+  user_id
+) => {
+  const headers = {
+    accept: "application/json",
+    "user-id": user_id,
+    LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const response = await axios.delete(
+      LLM_JUDGE_MANAGEMENT_API_URL + "experiment/name/" + experiment_name,
+      {
+        headers: headers,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error:",
+      error.response ? error.response.data : error.message
+    );
   }
 };

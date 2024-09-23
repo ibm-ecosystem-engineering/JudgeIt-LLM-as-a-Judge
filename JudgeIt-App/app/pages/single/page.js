@@ -7,12 +7,8 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   LinearProgress,
   Grid,
-  Paper,
   Alert,
   Typography,
   CircularProgress,
@@ -30,11 +26,13 @@ import {
   API_TYPE_SIMILARITY,
   API_TYPE_KEY,
   LLM_MODELS,
+  app_labels_and_config,
 } from "@/services/Config";
 import { useState } from "react";
 import SoloResult from "@/components/judge/SoloResult";
 import { useSession } from "next-auth/react";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
+import EvaluationTypeComponent from "@/components/judge/EvaluationTypeComponent";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Footer from "@/components/globals/Footer";
 
@@ -46,8 +44,9 @@ const validationSchema = Yup.object({
     is: "new_experiment",
     then: (schema) =>
       schema
-        .matches(/^[a-zA-Z0-9-]*$/, "No spaces or special characters allowed")
-        .required("Experiment name is required"),
+        .matches(/^[a-zA-Z0-9- ]*$/, "No special characters allowed")
+        .required("Experiment name is required")
+        .min(4, "Must be at least 4 characters long"),
     otherwise: (schema) => schema,
   }),
 
@@ -86,13 +85,11 @@ const validationSchema = Yup.object({
     otherwise: (schema) => schema,
   }),
 
-  /*
   question: Yup.string().when(API_TYPE_KEY, {
     is: (value) => value === API_TYPE_RATING || value === API_TYPE_SIMILARITY,
     then: (schema) => schema.required("Question is required"),
     otherwise: (schema) => schema,
   }),
-  */
 
   golden_text: Yup.string().when(API_TYPE_KEY, {
     is: (value) => value === API_TYPE_RATING || value === API_TYPE_SIMILARITY,
@@ -157,7 +154,7 @@ const SoloRequestPage = () => {
                         marginBottom: "15px",
                       }}
                     >
-                      Single Answer Evaluation
+                      {app_labels_and_config.pages.single_evaluation_page_title}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
@@ -190,7 +187,7 @@ const SoloRequestPage = () => {
                           <Formik
                             initialValues={{
                               apiType: API_TYPE_RATING,
-                              /* question: "", */
+                              question: "",
                               golden_text: "",
                               generated_text: "",
                               model: "meta-llama/llama-3-70b-instruct",
@@ -243,6 +240,21 @@ const SoloRequestPage = () => {
                                     created_experiment={
                                       newData?.experiment_name
                                     }
+                                  />
+                                </Box>
+                                <Box
+                                  marginLeft={"20px"}
+                                  marginRight={"20px"}
+                                  display={"flex"}
+                                  flexDirection={"row"}
+                                >
+                                  <EvaluationTypeComponent
+                                    values={values}
+                                    handleChange={handleChange}
+                                    handleBlur={handleBlur}
+                                    errors={errors}
+                                    touched={touched}
+                                    api_call_inprogress={api_call_inprogress}
                                   />
                                 </Box>
                                 {values.apiType === API_TYPE_MULTITURN ? (
@@ -310,61 +322,6 @@ const SoloRequestPage = () => {
                                   <Tooltip
                                     title="LLM Model to judge your input"
                                     sx={{ marginLeft: "5px", cursor: "help" }}
-                                  >
-                                    <InfoOutlinedIcon />
-                                  </Tooltip>
-                                </Box>
-                                <Box
-                                  marginBottom={"20px"}
-                                  marginLeft={"20px"}
-                                  marginRight={"20px"}
-                                  display={"flex"}
-                                  flexDirection={"row"}
-                                >
-                                  <FormControl
-                                    component="fieldset"
-                                    error={
-                                      touched.apiType && Boolean(errors.apiType)
-                                    }
-                                    disabled={api_call_inprogress}
-                                  >
-                                    <RadioGroup
-                                      row
-                                      aria-label="option"
-                                      name={API_TYPE_KEY}
-                                      value={values.apiType}
-                                      onChange={handleChange}
-                                      onBlur={handleBlur}
-                                    >
-                                      <FormControlLabel
-                                        value={API_TYPE_RATING}
-                                        control={<Radio />}
-                                        label="RAG Evaluation - Answer Rating"
-                                      />
-                                      <FormControlLabel
-                                        value={API_TYPE_SIMILARITY}
-                                        control={<Radio />}
-                                        label="RAG Evaluation - Answer Similarity"
-                                      />
-                                      <FormControlLabel
-                                        value={API_TYPE_MULTITURN}
-                                        control={<Radio />}
-                                        label="Multi-turn Query Rewrite Evaluation"
-                                      />
-                                    </RadioGroup>
-                                    {touched.apiType && errors.apiType && (
-                                      <FormHelperText>
-                                        {errors.apiType}
-                                      </FormHelperText>
-                                    )}
-                                  </FormControl>
-                                  <Tooltip
-                                    title="Select your evaluation type"
-                                    sx={{
-                                      marginLeft: "5px",
-                                      cursor: "help",
-                                      marginTop: "8px",
-                                    }}
                                   >
                                     <InfoOutlinedIcon />
                                   </Tooltip>

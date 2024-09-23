@@ -12,7 +12,7 @@ const RatingSimilarityForm = ({
 }) => {
   return (
     <div>
-      {/* <Box margin={"20px"}>
+      <Box margin={"20px"} display={"flex"} flexDirection={"row"}>
         <TextField
           label="Question"
           name="question"
@@ -23,7 +23,10 @@ const RatingSimilarityForm = ({
           helperText={touched.question && errors.question}
           style={{ width: "100%" }}
         />
-      </Box> */}
+        <Tooltip title="LLM Query." sx={{ marginLeft: "5px", cursor: "help" }}>
+          <InfoOutlinedIcon />
+        </Tooltip>
+      </Box>
       <Box margin={"20px"} display={"flex"} flexDirection={"row"}>
         <TextField
           label="Golden Text"
@@ -37,7 +40,10 @@ const RatingSimilarityForm = ({
           multiline
           rows={"4"}
         />
-        <Tooltip title="The reference or target text provided as the correct answer or expected output. Used to evaluate the quality and accuracy of generated text against an ideal standard." sx={{ marginLeft: "5px", cursor: "help" }}>
+        <Tooltip
+          title="The reference or target text provided as the correct answer or expected output. Used to evaluate the quality and accuracy of generated text against an ideal standard."
+          sx={{ marginLeft: "5px", cursor: "help" }}
+        >
           <InfoOutlinedIcon />
         </Tooltip>
       </Box>
@@ -60,7 +66,10 @@ const RatingSimilarityForm = ({
           multiline
           rows={"4"}
         />
-        <Tooltip title="The output produced by the language model. Compared against the golden text to assess coherence, correctness, and alignment with the expected result." sx={{ marginLeft: "5px", cursor: "help"  }}>
+        <Tooltip
+          title="The output produced by the language model. Compared against the golden text to assess coherence, correctness, and alignment with the expected result."
+          sx={{ marginLeft: "5px", cursor: "help" }}
+        >
           <InfoOutlinedIcon />
         </Tooltip>
       </Box>

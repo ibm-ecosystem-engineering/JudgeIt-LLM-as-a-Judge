@@ -19,6 +19,8 @@ celery.conf.result_backend = os.environ.get("CELERY_RESULT_BACKEND")
 IBM_CLOUD_API_KEY = os.environ.get("IBM_CLOUD_API_KEY")
 WX_PROJECT_ID = os.environ.get("WX_PROJECT_ID")
 
+grade_col_name = "judgeit_score"
+explanation_col_name = "judgeit_reasoning"
 @celery.task(bind=True, name="rating_batch_task")
 def rating_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-instruct"):
 
@@ -53,12 +55,12 @@ def rating_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-instruct
             except Exception as e:
                 print(f"error in generating ratings, {str(e)}")
         
-            data_df.loc[index,"Grade"] = prompt_results["Grade"]
+            data_df.loc[index,grade_col_name] = prompt_results["Grade"]
 
             if 'Explanation' in prompt_results:
-                data_df.loc[index,"Explanation"] = prompt_results["Explanation"]
+                data_df.loc[index,explanation_col_name] = prompt_results["Explanation"]
             else:
-                data_df.loc[index,"Explanation"] = None
+                data_df.loc[index,explanation_col_name] = None
 
         #self.update_state(state='SUCCESS', meta={'current': tatal_record, 'total': tatal_record})
         return data_df.to_json()
@@ -105,12 +107,12 @@ def similarity_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-inst
             except Exception as e:
                 print(f"error in generating ratings, {str(e)}")
             
-            data_df.loc[index,"Grade"] = prompt_results["Grade"]
+            data_df.loc[index,grade_col_name] = prompt_results["Grade"]
 
             if 'Explanation' in prompt_results:
-                data_df.loc[index,"Explanation"] = prompt_results["Explanation"]
+                data_df.loc[index,explanation_col_name] = prompt_results["Explanation"]
             else:
-                data_df.loc[index,"Explanation"] = None
+                data_df.loc[index,explanation_col_name] = None
                 
         return data_df.to_json()
     except Exception as e:
@@ -148,7 +150,7 @@ def multi_turn_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-inst
             except:
                 prompt_results = 'Error generating grade'
             # Update the DataFrame with the extracted values
-            data_df.loc[index,"Grade"] = prompt_results
+            data_df.loc[index,grade_col_name] = prompt_results
 
         return data_df.to_json()
         

@@ -16,9 +16,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import {
-  GITHUB_SOURCE_CODE,
-  GITHUB_REPORT_ISSUE,
-  APP_VERSION,
+  app_labels_and_config,
 } from "@/services/Config";
 
 const Topbar = () => {
@@ -34,14 +32,9 @@ const Topbar = () => {
     return "20px";
   };
 
-  const getLogoText = () => {
-    return "Ecosystem Engineering";
-  };
-
   const handleDrawerOpen = () => {
     if (drawerOpen) setDrawerOpen(false);
     else setDrawerOpen(true);
-    console.log("act");
   };
 
   const handleDrawerClose = (event) => {
@@ -88,10 +81,11 @@ const Topbar = () => {
                   sx={{
                     fontSize: getFontSize(),
                     color: "#3B3B3B",
+                    fontFamily: '"Source Sans Pro", sans-serif',
                     ml: 1,
                   }}
                 >
-                  {getLogoText()}
+                  {app_labels_and_config.logo_text}
                 </Typography>
               </Link>
             </Box>
@@ -105,10 +99,16 @@ const Topbar = () => {
                 fontWeight={"600"}
                 fontSize={"1.8rem"}
                 lineHeight={"2.5rem"}
+                fontFamily={'"Source Sans Pro", sans-serif'}
               >
-                JudgeIt
+                {app_labels_and_config.app_title}
               </Typography>
-              <Typography variant="h7">LLM as a Judge</Typography>
+              <Typography
+                variant="h7"
+                fontFamily={'"Source Sans Pro", sans-serif'}
+              >
+                {app_labels_and_config.app_subtitle}
+              </Typography>
             </Box>
             <Box
               display="flex"
@@ -126,10 +126,7 @@ const Topbar = () => {
                 Logged in as {session.user.email}
               </Typography>
               <Tooltip title="Source code">
-                <IconButton
-                  href={GITHUB_SOURCE_CODE}
-                  target="_blank"
-                >
+                <IconButton href={app_labels_and_config.github} target="_blank">
                   <GitHubIcon />
                 </IconButton>
               </Tooltip>
@@ -140,10 +137,10 @@ const Topbar = () => {
                 marginRight={"10px"}
               >
                 <Typography alignSelf={"end"} fontSize={"11px"}>
-                  {APP_VERSION}
+                  {app_labels_and_config.app_version}
                 </Typography>
                 <Link
-                  href={GITHUB_REPORT_ISSUE}
+                  href={app_labels_and_config.github_issues}
                   underline="none"
                   alignSelf={"end"}
                   target="_blank"

@@ -25,6 +25,9 @@ class Helper:
 
     def validate_multi_turn_fields(self, data_df: pd.DataFrame):
         
+        # Normalize the column names to lowercase
+        data_df.columns = map(str.lower, data_df.columns)
+        
         required_columns = ["previous_question", "previous_answer", "current_question", "golden_rewritten_question", "rewritten_question"]
 
         if all(column in data_df.columns for column in required_columns):
@@ -35,15 +38,20 @@ class Helper:
         raise Exception("Required columns are missing, valid columns are ## " + columns) 
     
     def validate_rating_and_similarity_fields(self, data_df: pd.DataFrame):
-        
-        required_columns = ["golden_text", "generated_text"]
+        # Normalize the column names to lowercase
+        data_df.columns = map(str.lower, data_df.columns)
 
+        # Define required columns in lowercase
+        required_columns = ["question", "golden_text", "generated_text"]
+
+        # Check if all required columns are present (case-insensitive)
         if all(column in data_df.columns for column in required_columns):
             return True
-        
+
         columns = ", ".join(required_columns)
 
-        raise Exception("Required columns are missing, valid columns are ## " + columns) 
+        raise Exception("Required columns are missing, valid columns are ## " + columns)
+
 
     def is_valid_file(file: UploadFile):
         filename = file.filename

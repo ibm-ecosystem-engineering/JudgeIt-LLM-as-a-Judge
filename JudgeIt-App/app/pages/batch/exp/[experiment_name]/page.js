@@ -2,13 +2,13 @@
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { fetch_request_history_by_name_and_type } from "@/services/ManagemenBackendAPI";
-import { get_result_by_task_id } from "@/services/JudgeBackendAPIBatch";
 import EvaluationHistoryLeftBar from "@/components/judge/EvaluationHistoryLeftBar";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import React, { useState, useEffect, useRef } from "react";
 import { Grid, Typography, Box, CircularProgress, Button } from "@mui/material";
 import BarChart from "@/components/globals/BarChart";
 import Footer from "@/components/globals/Footer";
+import { app_labels_and_config } from "@/services/Config";
 
 const ExperimentPage = () => {
   const params = useParams();
@@ -36,12 +36,17 @@ const ExperimentPage = () => {
 
         const grades_list = await Promise.all(
           history_data.map(async (item) => {
-            const data = await get_result_by_task_id(item.content.task_id);
+            //const data = await get_result_by_task_id(item.content.task_id);
+            const data = await item?.content?.batch_result;
 
-            if (data && data.status !== "ERROR") {
-              const grades = Object.values(data.Grade).filter(
-                (grade) => grade !== undefined
-              );
+            if (data && data?.status !== "ERROR") {
+              const grades = data.Grade
+                ? Object.values(data.Grade).filter(
+                    (grade) => grade !== undefined
+                  )
+                : Object.values(data.judgeit_score).filter(
+                    (score) => score !== undefined
+                  );
 
               const gradeDistribution = grades.reduce((acc, grade) => {
                 acc[grade] = (acc[grade] || 0) + 1;
@@ -151,7 +156,7 @@ const ExperimentPage = () => {
                               textDecoration: "none",
                             }}
                           >
-                            Grade Distribution - {gdata && gdata.name}
+                            {app_labels_and_config.pages.graph_title} - {gdata && gdata.name}
                           </Typography>
                           {gdata && <BarChart gradeData={gdata.grades} />}
                         </Box>

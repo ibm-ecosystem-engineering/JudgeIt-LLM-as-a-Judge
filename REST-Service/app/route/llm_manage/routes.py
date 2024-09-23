@@ -56,7 +56,7 @@ def add_new_experiment(experiment_input: Experiment, api_key: str = Security(get
     })
 
 @judge_management_api_route.delete(path='/experiment/{doc_id}', description="Delete an experiment by id")
-def delete_experiment(doc_id: str, api_key: str = Security(get_api_key)):
+def delete_experiment(doc_id: str, api_key: str = Security(get_api_key), user_id: str = Header(...)):
     del_count = management_service.delete_experiment(doc_id)
     res = "success" if del_count > 0 else "failed"
     return JSONResponse(content={
@@ -64,8 +64,8 @@ def delete_experiment(doc_id: str, api_key: str = Security(get_api_key)):
     })    
 
 @judge_management_api_route.delete(path='/experiment/name/{experiment_name}', description="Delete an experiment by experiment name")
-def delete_experiment_by_experiment_name(experiment_name: str, api_key: str = Security(get_api_key)):
-    del_count =  management_service.delete_experiment_by_name(experiment_name)
+def delete_experiment_by_experiment_name(experiment_name: str, api_key: str = Security(get_api_key), user_id: str = Header(...)):
+    del_count =  management_service.delete_experiment_by_name(experiment_name, user_id)
     res = "success" if del_count > 0 else "failed"
     return JSONResponse(content={
         "status": res
@@ -106,8 +106,8 @@ def add_new_request_history(history_input: RequestHistory, api_key: str = Securi
     })
 
 @judge_management_api_route.delete(path='/history/{doc_id}', description="Delete a request history by document id")
-def delete_request_history(doc_id: str, api_key: str = Security(get_api_key)):
-    del_count = management_service.delete_history(doc_id)
+def delete_request_history(doc_id: str, api_key: str = Security(get_api_key), user_id: str = Header(...)):
+    del_count = management_service.delete_history(doc_id, user_id)
     res = "success" if del_count > 0 else "failed"
     return JSONResponse(content={
         "status": res
