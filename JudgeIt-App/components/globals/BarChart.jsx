@@ -1,24 +1,35 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { API_TYPE_RATING, API_TYPE_SIMILARITY, API_TYPE_MULTITURN } from "@/services/Config";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const BarChart = ({ gradeData }) => {
-  const mapGradeToLabel = (grade) => {
-    const mapping = {
-      0: 'Incorrect',
-      1: Object.keys(gradeData).length === 2 ? 'Correct' : 'Incorrect',
-      2: 'Partially Correct',
-      3: 'Correct'
-    };
-    return mapping[grade] || grade.toString();
-  };
-
+const BarChart = ({ gradeData, gradeType }) => {
   const totalCount = Object.values(gradeData).reduce((sum, count) => sum + count, 0);
 
+  const mapGradeLabels = (label) => {
+    const labelMaps = {
+      [API_TYPE_RATING]: {
+        '1': 'Incorrect',
+        '2': 'Partially Correct',
+        '3': 'Correct'
+      },
+      [API_TYPE_SIMILARITY]: {
+        '0': 'Incorrect',
+        '1': 'Correct'
+      },
+      [API_TYPE_MULTITURN]: {
+        '0': 'Incorrect',
+        '1': 'Correct'
+      }
+    };
+
+    return labelMaps[gradeType]?.[label] || label;
+  };
+
   const data = {
-    labels: Object.keys(gradeData).map(mapGradeToLabel),
+    labels: Object.keys(gradeData).map(mapGradeLabels),
     datasets: [
       {
         label: 'Count',

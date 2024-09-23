@@ -48,6 +48,7 @@ const FileUploadForm = () => {
   const { data: session, status } = useSession();
   const [gradeData, setGradeData] = useState(null);
   const [newData, setNewData] = useState(null);
+  const [gradeType, setGradeType] = useState(null);
 
   const required_column_rating_similarity = "| golden_text | generated_text |";
   const required_column_multi_turn =
@@ -176,6 +177,7 @@ const FileUploadForm = () => {
         setTask_id(null);
         setProgressVal(0);
         /** ====================== */
+        setGradeType(values.apiType);
 
         const formData = new FormData();
         formData.append("model", values.model);
@@ -516,7 +518,10 @@ const FileUploadForm = () => {
                           >
                             Grade Distribution
                           </Typography>
-                          <BarChart gradeData={gradeData} />
+                          <BarChart
+                            gradeData={gradeData}
+                            gradeType={gradeType}
+                          />
                         </Box>
                       )}
                     </form>
