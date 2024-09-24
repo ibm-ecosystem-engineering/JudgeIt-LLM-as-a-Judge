@@ -4,6 +4,8 @@ Accuracy and reliability are paramount when building Generative AI pipelines. Th
 
 JudgeIt is an automated evaluation framework designed to accurately and efficiently assess various Generative AI pipelines, including RAG, multi-turn query rewriting, text-to-SQL conversion, and more. This service enables users to conduct batch evaluations across these different Generative AI pipelines. Users can input datasets containing generated text along with corresponding golden text. JudgeIt then employs an LLM as a judge to perform similarity evaluations between these inputs, providing an accurate assessment of the AI pipeline's performance.
 
+![JudgeIt Flow](/images/flow-diagram.png)
+
 ## Features
 
 - **Automated Evaluation**: JudgeIt automates batch evaluation processes, resulting in more efficient evaluation compared to human testers.
@@ -14,17 +16,21 @@ JudgeIt is an automated evaluation framework designed to accurately and efficien
 
 ## Reliability Metrics
 
-The LLM Judges in this repository have been tested against human evaluation to validate their reliability.
+To ensure reliability, JudgeIt has been tested against human evaluation for each RAG pipeline that it offers a judge for. For RAG evaluation, this process involved building a dataset of user queries, golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics:
 
-1. RAG Evaluation (LLM Judge evaluated against human)
+- Accuracy: 90%
+- Precision: 100%
+- Recall: 90%
+- F1 Score: 95%
 
-   ![RAG Evaluation Reliability](/images/rag-evaluation-reliability.png)
+For Multi-turn evaluation, this process involved building a dataset of user queries, conversation history including a previous question and previous answer, golden rewritten queries, generated rewritten queries, and human evaluations of the similarity between the generated rewritten queries and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics:
 
-2. Multi-turn Query Rewrite (LLM Judge evaluated against human)
+- Accuracy: 92%
+- Precision: 96%
+- Recall: 93%
+- F1 Score: 95%
 
-   ![Multi-turn Evaluation Reliability](/images/multi-turn-evaluation-reliability.png)
-
-## Usage
+## What's Available?
 
 There are three types of LLM judges available in JudgeIt:
 
