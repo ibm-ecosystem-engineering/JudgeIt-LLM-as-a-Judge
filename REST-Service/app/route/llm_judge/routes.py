@@ -25,6 +25,7 @@ judge_api_route = APIRouter(
 ### Environmental variables
 IBM_CLOUD_API_KEY = os.environ.get("IBM_CLOUD_API_KEY")
 WX_PROJECT_ID = os.environ.get("WX_PROJECT_ID")
+platform: str  = os.environ.get("WX_PLATFORM")
 
 # RAG APP Security
 API_KEY_NAME = "LLM_JUDGE_API_KEY"
@@ -56,7 +57,8 @@ def rating(llm_input :LLMInput, api_key: str = Security(get_api_key)):
     watsonx_service = WatsonXService(
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model
+            llm_model_id=llm_model,
+            platform=platform
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
@@ -123,7 +125,8 @@ def similarity(llm_input :LLMInput, api_key: str = Security(get_api_key)):
     watsonx_service = WatsonXService(
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model
+            llm_model_id=llm_model,
+            platform=platform
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
@@ -200,7 +203,8 @@ def query_multi_turn_solo(llm_input :QueryRewriteInput, api_key: str = Security(
     watsonx_service = WatsonXService(
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model
+            llm_model_id=llm_model,
+            platform=platform
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
