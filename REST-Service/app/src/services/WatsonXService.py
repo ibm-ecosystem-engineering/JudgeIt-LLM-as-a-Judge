@@ -1,20 +1,24 @@
+import os
+from dotenv import load_dotenv
 from ibm_watson_machine_learning.foundation_models import Model
 from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenParams
-
 from ibm_watsonx_ai.foundation_models import Model
 from langchain_ibm import WatsonxLLM
 from langchain_core.prompts import PromptTemplate
+load_dotenv()
 
 class WatsonXService:
 
     def __init__(self,
                  api_key, 
                  project_id, 
-                 llm_model_id) -> None:
+                 llm_model_id,
+                 platform) -> None:
         self.api_key        = api_key  
         self.ibm_cloud_url  = 'https://us-south.ml.cloud.ibm.com'
         self.project_id     = project_id
         self.llm_model_id   = llm_model_id
+        self.platform: str  = platform
 
     def get_wml_llm_services(self,
             decoding_method="greedy",
@@ -33,12 +37,24 @@ class WatsonXService:
         }
 
         # instatiate llm
-        llm_model = WatsonxLLM(apikey=self.api_key,
+        if self.platform == "saas":
+            return WatsonxLLM(apikey=self.api_key,
                             url=self.ibm_cloud_url,
                             project_id=self.project_id,
                             model_id=self.llm_model_id,
                             params=generate_parameters)
-        return llm_model
+            return llm_model
+        elif self.platform == "onprem":
+            return WatsonxLLM(apikey=self.api_key,
+                            url=self.ibm_cloud_url,
+                            project_id=self.project_id,
+                            model_id=self.llm_model_id,
+                            username=os.environ.get("WX_USER"),
+                            instance_id='openshift',
+                            version="5.0",
+                            params=generate_parameters)
+        else:
+            raise Exception("Please set a correct environment variable for WX_PLATFORM, correct values are `onpremise` or `saas` ")
 
     ## using watsonx machine learning api
     def send_to_watsonxai(
@@ -61,6 +77,23 @@ class WatsonXService:
             GenParams.TEMPERATURE: temperature,
             GenParams.REPETITION_PENALTY: repetition_penalty,
         }
+
+        if self.platform == "saas":
+            wml_credentials = {
+                "url": self.ibm_cloud_url,
+                "apikey": self.api_key,
+                "project_id": self.project_id
+            }
+        elif self.platform == "onpremise":
+            wml_credentials={
+                "apikey": self.api_key,
+                "url": self.ibm_cloud_url,
+                "username": os.environ.get("WX_USER"),
+                "instance_id": "openshift",
+                "version" : "5.0"
+            }
+        else:
+            raise Exception("Please set a correct environment variable for WX_PLATFORM, correct values are `onpremise` or `saas` ")
 
         model = Model(
             model_id=model_id,
