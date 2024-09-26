@@ -108,12 +108,26 @@ def batch_llm_multi_turn_eval(model_id, input_data):
         "stop_sequences": ['}']
     }
 
-    # instatiate llm
-    llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
+    platform = config['WML_CRED']['platform']
+    if platform == "saas":
+        # instatiate llm
+        llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
+                                url=wml_credentials['url'],
+                                project_id=project_id,
+                                model_id=llm_model_id,
+                                params=generate_parameters_1)
+    elif platform == "onpremise":
+        wml_user = config['WML_CRED']['wml_user']
+        llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
                             url=wml_credentials['url'],
-                            project_id=project_id,
                             model_id=llm_model_id,
+                            username=wml_user,
+                            instance_id='openshift',
+                            project_id=project_id,
+                            version="5.0",
                             params=generate_parameters_1)
+    else:
+        raise Exception("Please set a correct environment variable for WX_PLATFORM, correct values are `onpremise` or `saas` ")
 
     input_data['Grade'] = None
 
