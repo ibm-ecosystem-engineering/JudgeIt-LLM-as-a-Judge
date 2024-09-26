@@ -1,0 +1,32 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: llm-judge-backend
+  labels:
+    app: llm-judge-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm-judge-backend
+  template:
+    metadata:
+      labels:
+        app: llm-judge-backend
+        deployment: llm-judge-backend
+    spec:
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: llm-judge-backend
+          ports:
+            - containerPort: 3001
+              protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: llm-judge-secret
+          image: backend-image-name:latest
+

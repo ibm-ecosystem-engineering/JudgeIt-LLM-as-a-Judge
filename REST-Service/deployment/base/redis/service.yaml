@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  ports:
+    - name: 6379-tcp
+      protocol: TCP
+      port: 6379
+      targetPort: 6379
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  selector:
+    app: redis
+    deployment: redis
+

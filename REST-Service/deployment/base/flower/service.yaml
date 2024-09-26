@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: flower-app
+  labels:
+    app: flower-app 
+spec:
+  ports:
+    - name: 3001-tcp
+      protocol: TCP
+      port: 3001
+      targetPort: 3001
+    - name: 5555-tcp
+      protocol: TCP
+      port: 5555
+      targetPort: 5555
+  type: ClusterIP
+  selector:
+    app: flower-app
+    deployment: flower-app
