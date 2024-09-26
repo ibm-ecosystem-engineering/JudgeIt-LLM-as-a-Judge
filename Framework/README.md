@@ -43,11 +43,11 @@ The following prerequisites are required to run the tester:
    cd JudgeIt-LLM-as-a-Judge/Framework
    ```
 
-2. Configure your parameters in config.ini. Below is a sample config file
+2. Configure your parameters in config.ini. This repository contains the below sample_config.ini that you can paste and edit:
 
    ```bash
    [Default]
-   home_dir = /<home_directory>/JudgeIt-LLM-as-a-Judge/
+   home_dir = /home_directory/JudgeIt-LLM-as-a-Judge/
    model_id = meta-llama/llama-3-70b-instruct
    input_file_name = Framework/data/input/sample_rag_answer_similarity_input.xlsx
    output_file_name = Framework/data/output/sample_rag_answer_similarity_output.xlsx
@@ -55,16 +55,17 @@ The following prerequisites are required to run the tester:
 
    [WML_CRED]
    wml_url = https://us-south.ml.cloud.ibm.com
-   api_key = <ibm_cloud_api_key>
-   project_id = <watsonx.ai_project_id>
+   api_key = ibm_cloud_api_key
+   project_id = watsonx.ai_project_id
    ```
 
    1. `home_dir`: the path to the folder where you have downloaded the repository
-   2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge
+   2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge. We recommend `meta-llama/llama-3-70b-instruct`
    3. `input_file_name`:
-      1. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/Framework/data/input](./data/input)
-      2. see [Configuring Your Input File](#configuring-your-input-file) for more details
-   4. `output_file_name`: specify the name of your output file
+      1. specify the path and name of your inputfile
+      2. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/Framework/data/input](./data/input)
+      3. see [Configuring Your Input File](#configuring-your-input-file) for more details
+   4. `output_file_name`: specify the path and name of your output file
    5. `judge_type`: specify the LLM Judge type. Possible values:
       1. `rag_eval_answer_similarity`
       2. `rag_eval_answer_rating`

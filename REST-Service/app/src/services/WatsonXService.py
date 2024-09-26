@@ -1,9 +1,8 @@
-import os
-from ibm_watson_machine_learning.foundation_models import Model
-from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenParams
+from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as GenParams
 from ibm_watsonx_ai.foundation_models import Model
 from langchain_ibm import WatsonxLLM
 from langchain_core.prompts import PromptTemplate
+import os
 
 class WatsonXService:
 
