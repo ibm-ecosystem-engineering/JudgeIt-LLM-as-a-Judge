@@ -91,7 +91,7 @@ def batch_llm_multi_turn_eval(model_id, input_data):
 
     # instantiate wml connection
     wml_credentials = {
-        "url": "https://us-south.ml.cloud.ibm.com",
+        "url": config['WML_CRED']['wml_url'],
         "apikey": config['WML_CRED']['api_key']
     }
 

@@ -37,7 +37,7 @@ def batch_llm_answer_similarity(model_id, input_data):
 
     # instantiate wml connection
     wml_credentials = {
-        "url": "https://us-south.ml.cloud.ibm.com",
+        "url": config['WML_CRED']['wml_url'],
         "apikey": config['WML_CRED']['api_key']
     }
 
