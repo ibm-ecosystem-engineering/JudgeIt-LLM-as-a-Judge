@@ -10,7 +10,6 @@ import os
 from app.src.config.TimeoutMiddleware import TimeoutMiddleware
 
 load_dotenv()
-platform = os.environ.get("PLATFORM")
 server_url = os.environ.get("SERVER_URL", default="http://localhost:3001")
 
 app = FastAPI(
