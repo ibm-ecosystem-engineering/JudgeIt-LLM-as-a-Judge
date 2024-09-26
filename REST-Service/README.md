@@ -203,7 +203,7 @@ You can now move on to spinning up the [JudgeIt NextJS App](../JudgeIt-App/READM
 
 ## Openshift deployment
 
-For openshift deployment please follow [this](deployment/reamde.md)
+For openshift deployment please follow [the instruction here](deployment/readme.md)
 
 ## Configuring your Input File
 
