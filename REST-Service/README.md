@@ -62,7 +62,7 @@ It monitors the Celery cluster in real-time, offering a web-based interface to t
 
 The following prerequisites are required to run the tester:
 
-1. podman and podman-compose are installed
+1. podman and podman-compose are installed. If you're using Docker and Docker Compose, you can skip this step. Simply use the `docker` command in place of `podman` and `docker-compose` instead of `podman-compose`.
     - **macOS:** use the following commands to install Podman and Podman Compose
 
     ```sh
