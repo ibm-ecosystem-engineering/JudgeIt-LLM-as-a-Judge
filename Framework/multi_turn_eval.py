@@ -127,7 +127,7 @@ def batch_llm_multi_turn_eval(model_id, input_data):
                             version="5.0",
                             params=generate_parameters_1)
     else:
-        raise Exception("Please set a correct environment variable for WX_PLATFORM, correct values are `onpremise` or `saas` ")
+        raise Exception("Please set a correct value in config.ini [WML_CRED][wml_platform], correct values are `onpremise` or `saas` ")
 
     input_data['Grade'] = None
 
