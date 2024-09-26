@@ -6,7 +6,6 @@ click==8.1.7
 ibm-cos-sdk==2.13.5
 ibm-cos-sdk-core==2.13.5
 ibm-cos-sdk-s3transfer==2.13.5
-ibm_watson_machine_learning==1.0.359
 ibm_watsonx_ai==1.0.10
 idna==3.7
 importlib_metadata==8.0.0
