@@ -1,8 +1,8 @@
 kind: Kustomization
 images:
   - name: backend-image-name
-    newName: my-registry/my-app-image
-    newTag: v2.0
+    newName: image-registry.openshift-image-registry.svc:5000/llm-judge-dev/backend
+    newTag: v1.0
 secretGenerator:
 - name: llm-judge-secret
   literals:
@@ -14,8 +14,9 @@ secretGenerator:
     - WX_USER=
     - CELERY_BROKER_URL=redis://redis:6379/0
     - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    - SERVER_URL=
 resources:
-  - redis
-  - celery-worker
-  - flower
-  - rest-app
+  - redis/
+  - celery-worker/
+  - flower/
+  - rest-app/
