@@ -4,7 +4,7 @@
 
 Step 1: Login to openshift console and copy login command
 
-![image](https://media.github.ibm.com/user/381271/files/d29aff0d-34f1-4d8c-85dd-d84005fb08cf)
+<img width="652" alt="image" src="https://github.com/user-attachments/assets/8c8a174e-4a9f-4c82-abdf-c9adc3f6e410">
 
 Login with the token or user user and password in the command line
 
