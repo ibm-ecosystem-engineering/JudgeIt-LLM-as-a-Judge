@@ -90,3 +90,9 @@ Copy the url from the command executed below and paste it in the browser.
 ```sh
 oc get routes/llm-judge-backend -o jsonpath='https://{.spec.host}/docs{"\n"}'
 ```
+
+- Clean up
+
+```sh
+oc delete -k base/
+```
