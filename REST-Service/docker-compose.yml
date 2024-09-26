@@ -10,6 +10,7 @@ services:
       - WATSONX_URL=https://us-south.ml.cloud.ibm.com
       - WX_PROJECT_ID=
       - IBM_CLOUD_API_KEY=
+      - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
       - WX_PLATFORM=
       - WX_USER=
       - CELERY_BROKER_URL=redis://redis:6379/0
