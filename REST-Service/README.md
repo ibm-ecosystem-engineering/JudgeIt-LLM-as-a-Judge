@@ -90,7 +90,7 @@ The following prerequisites are required to run the tester:
 1. Change directory into the JudgeIt REST-Service
 
    ```bash
-   cd JudgeIt-LLM-as-a-Judge/REST-Service
+   git clone git@github.com:ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge.git && cd JudgeIt-LLM-as-a-Judge/REST-Service
    ```
 
 2. In the `docker-compose.yml` file, update the following variables:
@@ -99,9 +99,10 @@ The following prerequisites are required to run the tester:
     3. **IBM_CLOUD_API_KEY**: IBM Cloud/Watsonx api key
     4. **WX_PROJECT_ID**: your watsonx.ai project id
     5. **WX_USER**: watsonx user is required when you choose the platform `onpremise`
+    6. **SERVER_URL:** Server url where the service will be deployed. It helps to navigate swagger ui.
 
 ```yaml
-   services:
+services:
   fastapi_app:
     container_name: fastapi_app
     build: .
@@ -118,6 +119,7 @@ The following prerequisites are required to run the tester:
       - WX_USER=
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - SERVER_URL='http://localhost:3001'
     restart: always
 
   redis:
@@ -198,6 +200,10 @@ The following prerequisites are required to run the tester:
 ## JudgeIt App
 
 You can now move on to spinning up the [JudgeIt NextJS App](../JudgeIt-App/README.md)
+
+## Openshift deployment
+
+For openshift deployment please follow [the instruction here](deployment/readme.md)
 
 ## Configuring your Input File
 

@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: celery-worker
+  labels:
+    app: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+        deployment: celery-worker
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+    spec:
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: celery-worker
+          command:
+            - celery
+            - '-A'
+            - app.celery.celery_worker.celery
+            - worker
+            - '--loglevel=info'
+          ports:
+            - containerPort: 3001
+              protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+          envFrom:
+            - secretRef:
+                name: llm-judge-secret
+          image: backend-image-name:latest
+     

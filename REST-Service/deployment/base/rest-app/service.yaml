@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: llm-judge-backend
+  labels:
+    app: llm-judge-backend
+spec:
+  ports:
+    - name: 3001-tcp
+      protocol: TCP
+      port: 3001
+      targetPort: 3001
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+  selector:
+    app: llm-judge-backend
+    deployment: llm-judge-backend

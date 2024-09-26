@@ -1,0 +1,38 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: flower-app
+  labels:
+    app: flower-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flower-app
+  template:
+    metadata:
+      labels:
+        app: flower-app
+        deployment: flower-app
+    spec:
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: flower-app
+          command:
+            - celery
+            - '--broker=redis://redis:6379/0'
+            - flower
+            - '--port=5555'
+          ports:
+            - containerPort: 5555
+              protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+          envFrom:
+            - secretRef:
+                name: llm-judge-secret
+          image: backend-image-name:latest
+      

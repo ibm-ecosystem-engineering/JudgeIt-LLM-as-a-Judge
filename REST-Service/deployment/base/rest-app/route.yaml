@@ -1,0 +1,17 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: llm-judge-backend
+  labels:
+    app: llm-judge-backend
+spec:
+  to:
+    kind: Service
+    name: llm-judge-backend
+    weight: 100
+  port:
+    targetPort: 3001-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
