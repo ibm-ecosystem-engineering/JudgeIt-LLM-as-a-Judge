@@ -108,7 +108,7 @@ def batch_llm_multi_turn_eval(model_id, input_data):
         "stop_sequences": ['}']
     }
 
-    platform = config['WML_CRED']['platform']
+    platform = config['WML_CRED']['wml_platform']
     if platform == "saas":
         # instatiate llm
         llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
