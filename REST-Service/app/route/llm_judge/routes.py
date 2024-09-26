@@ -24,8 +24,12 @@ judge_api_route = APIRouter(
 
 ### Environmental variables
 IBM_CLOUD_API_KEY = os.environ.get("IBM_CLOUD_API_KEY")
+WX_URL = os.environ.get("WATSONX_URL")
 WX_PROJECT_ID = os.environ.get("WX_PROJECT_ID")
+wx_platform: str  = os.environ.get("WX_PLATFORM")
+wx_user_onpremise = os.environ.get("WX_USER")
 
+print("Platform", wx_platform)
 # RAG APP Security
 API_KEY_NAME = "LLM_JUDGE_API_KEY"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
@@ -54,9 +58,12 @@ def rating(llm_input :LLMInput, api_key: str = Security(get_api_key)):
     
     ## Create langchain watsonx LLM service
     watsonx_service = WatsonXService(
+            ibm_cloud_url=WX_URL,
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model
+            llm_model_id=llm_model, 
+            platform=wx_platform,           
+            wx_user_onpremise=wx_user_onpremise
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
@@ -121,9 +128,12 @@ def similarity(llm_input :LLMInput, api_key: str = Security(get_api_key)):
 
     ## Create langchain watsonx LLM service
     watsonx_service = WatsonXService(
+            ibm_cloud_url=WX_URL,
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model
+            llm_model_id=llm_model,
+            platform=wx_platform,
+            wx_user_onpremise=wx_user_onpremise
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
@@ -198,9 +208,12 @@ def query_multi_turn_solo(llm_input :QueryRewriteInput, api_key: str = Security(
 
     ## Create langchain watsonx LLM service
     watsonx_service = WatsonXService(
+            ibm_cloud_url=WX_URL,
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model
+            llm_model_id=llm_model,
+            platform=wx_platform,
+            wx_user_onpremise=wx_user_onpremise
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service

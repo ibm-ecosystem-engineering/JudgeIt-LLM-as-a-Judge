@@ -10,6 +10,8 @@ services:
       - WATSONX_URL=https://us-south.ml.cloud.ibm.com
       - WX_PROJECT_ID=
       - IBM_CLOUD_API_KEY=
+      - WX_PLATFORM=
+      - WX_USER=
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     restart: always
@@ -28,6 +30,8 @@ services:
     environment:
       - WATSONX_URL=https://us-south.ml.cloud.ibm.com
       - WX_PROJECT_ID=
+      - WX_PLATFORM=
+      - WX_USER=
       - IBM_CLOUD_API_KEY=
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0

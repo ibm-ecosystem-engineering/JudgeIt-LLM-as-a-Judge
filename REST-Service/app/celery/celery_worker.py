@@ -18,6 +18,9 @@ celery.conf.result_backend = os.environ.get("CELERY_RESULT_BACKEND")
 ### Environmental variables
 IBM_CLOUD_API_KEY = os.environ.get("IBM_CLOUD_API_KEY")
 WX_PROJECT_ID = os.environ.get("WX_PROJECT_ID")
+WX_URL = os.environ.get("WATSONX_URL")
+wx_platform: str  = os.environ.get("WX_PLATFORM")
+wx_user_onpremise = os.environ.get("WX_USER")
 
 @celery.task(bind=True, name="rating_batch_task")
 def rating_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-instruct"):
@@ -25,9 +28,12 @@ def rating_batch_task(self, json_data, model_id="meta-llama/llama-3-70b-instruct
     try:
         ## Create langchain watsonx LLM service
         watsonx_service = WatsonXService(
+                ibm_cloud_url=WX_URL,
                 api_key=IBM_CLOUD_API_KEY,
                 project_id=WX_PROJECT_ID,
-                llm_model_id=model_id
+                llm_model_id=model_id,
+                platform=wx_platform,
+                wx_user_onpremise=wx_user_onpremise
             )
         
         llm_model = watsonx_service.get_wml_llm_services()
