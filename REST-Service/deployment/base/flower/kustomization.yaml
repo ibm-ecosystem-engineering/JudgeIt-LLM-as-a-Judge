@@ -3,7 +3,3 @@ resources:
   - deployment.yaml
   - service.yaml
   - route.yaml
-images:
-  - name: backend-image-name            # The current image name
-    newName: my-registry/my-app-image   # The new image name
-    newTag: v2.0                        # The new image tag
