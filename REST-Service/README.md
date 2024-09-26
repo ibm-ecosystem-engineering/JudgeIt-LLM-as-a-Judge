@@ -94,58 +94,70 @@ The following prerequisites are required to run the tester:
    ```
 
 2. In the `docker-compose.yml` file, update the following variables:
-   1. IBM_CLOUD_API_KEY (your IBM Cloud api key)
-   2. WX_PROJECT_ID (your watsonx.ai project id)
+    1. **WX_PLATFORM**: There are two options available: `saas` or `onpremise`. If you're using the IBM Watsonx platform, choose `saas`, but if you're using the on-premise Watsonx platform on CP4D, select 'onpremise'.
+    2. **WATSONX_URL**: Please provide watsonx url e.g. `https://us-south.ml.cloud.ibm.com`
+    3. **IBM_CLOUD_API_KEY**: IBM Cloud/Watsonx api key
+    4. **WX_PROJECT_ID**: your watsonx.ai project id
+    5. **WX_USER**: watsonx user is required when you choose the platform `onpremise`
 
-   ```yaml
-    services:
-        fastapi_app:
-        container_name: fastapi_app
-        build: .
-        ports:
-            - 3001:3001
-        environment:
-            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
-            - WX_PROJECT_ID=
-            - IBM_CLOUD_API_KEY=
-            - CELERY_BROKER_URL=redis://redis:6379/0
-            - CELERY_RESULT_BACKEND=redis://redis:6379/0
-            - LLM_JUDGE_API_KEY=LLM-JUDGE-SECRET-PASS
-        restart: always
-        redis:
-        container_name: redis
-        image: redis:7.2.5-alpine
-        restart: always
-        celery_worker:
-        container_name: celery_worker
-        build: .
-        #volumes:
-        #  - ./app:/app
-        command: celery -A app.celery.celery_worker.celery worker --loglevel=info
-        environment:
-            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
-            - WX_PROJECT_ID=
-            - IBM_CLOUD_API_KEY=
-            - CELERY_BROKER_URL=redis://redis:6379/0
-            - CELERY_RESULT_BACKEND=redis://redis:6379/0
-        depends_on:
-            - fastapi_app
-            - redis
-        restart: always
-        flower:
-        container_name: flower
-        build: .
-        command: celery --broker=redis://redis:6379/0 flower --port=5555
-        ports:
-            - 5556:5555
-        environment:
-            - CELERY_BROKER_URL=redis://redis:6379/0
-            - CELERY_RESULT_BACKEND=redis://redis:6379/0
-        depends_on:
-            - fastapi_app
-            - redis
-            - celery_worker
-        restart: always
+```yaml
+   services:
+  fastapi_app:
+    container_name: fastapi_app
+    build: .
+    #volumes:
+    #  - ./app:/app
+    ports:
+      - 3001:3001
+    environment:
+      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
+      - WX_PROJECT_ID=
+      - IBM_CLOUD_API_KEY=
+      - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
+      - WX_PLATFORM=
+      - WX_USER=
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis:7.2.5-alpine
+    restart: always
+
+  celery_worker:
+    container_name: celery_worker
+    build: .
+    #volumes:
+    #  - ./app:/app
+    command: celery -A app.celery.celery_worker.celery worker --loglevel=info
+    environment:
+      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
+      - WX_PROJECT_ID=
+      - WX_PLATFORM=
+      - WX_USER=
+      - IBM_CLOUD_API_KEY=
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - fastapi_app
+      - redis
+    restart: always
+
+  flower:
+    container_name: flower
+    build: .
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    ports:
+      - 5556:5555
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - fastapi_app
+      - redis
+      - celery_worker
+    restart: always
    ```
 
 3. Build
