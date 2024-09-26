@@ -37,7 +37,7 @@ def batch_llm_answer_similarity(model_id, input_data):
 
     # instantiate wml connection
     wml_credentials = {
-        "url": "https://us-south.ml.cloud.ibm.com",
+        "url": config['WML_CRED']['wml_url'],
         "apikey": config['WML_CRED']['api_key']
     }
 
@@ -54,13 +54,27 @@ def batch_llm_answer_similarity(model_id, input_data):
         "stop_sequences": ['}']
     }
 
-    # instatiate llm
-    llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
+    platform = config['WML_CRED']['wml_platform']
+    if platform == "saas":
+        # instatiate llm
+        llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
+                                url=wml_credentials['url'],
+                                project_id=project_id,
+                                model_id=llm_model_id,
+                                params=generate_parameters_1)
+    elif platform == "onpremise":
+        wml_user = config['WML_CRED']['wml_user']
+        llm_model = WatsonxLLM(apikey=wml_credentials['apikey'],
                             url=wml_credentials['url'],
-                            project_id=project_id,
                             model_id=llm_model_id,
+                            username=wml_user,
+                            instance_id='openshift',
+                            project_id=project_id,
+                            version="5.0",
                             params=generate_parameters_1)
-
+    else:
+        raise Exception("Please set a correct value in config.ini [WML_CRED][wml_platform], correct values are `onpremise` or `saas` ")
+        
     input_data['Grade'] = None
     input_data['Explanation'] = None
 
