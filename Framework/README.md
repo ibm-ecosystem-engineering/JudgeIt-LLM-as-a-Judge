@@ -54,6 +54,8 @@ The following prerequisites are required to run the tester:
    judge_type = rag_eval_answer_similarity
 
    [WML_CRED]
+   wml_platform = saas
+   wml_user = ''
    wml_url = https://us-south.ml.cloud.ibm.com
    api_key = ibm_cloud_api_key
    project_id = watsonx.ai_project_id
@@ -70,9 +72,11 @@ The following prerequisites are required to run the tester:
       1. `rag_eval_answer_similarity`
       2. `rag_eval_answer_rating`
       3. `multi_turn_eval`
-   6. `wml_url`: you watsonx.ai url: https://<your_region>.ml.cloud.ibm.com
-   7. `api_key`: your IBM Cloud apikey: <https://cloud.ibm.com/iam/apikeys>
-   8. `project_id`: you watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+   6. `wml_platform`: There are two options available: `saas` or `onpremise`. If you're using the IBM Watsonx platform, choose `saas`, but if you're using the on-premise Watsonx platform on CP4D, select `onpremise`.
+   7. `wml_url`: you watsonx.ai url: https://<your_region>.ml.cloud.ibm.com
+   8. `wml_user`: wml user is required when you choose the platform `onpremise`
+   9. `api_key`: your IBM Cloud apikey: <https://cloud.ibm.com/iam/apikeys>
+   10. `project_id`: you watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
 
 3. Run the following to evaluate.
 
