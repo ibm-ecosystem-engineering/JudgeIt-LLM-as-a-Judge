@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: celery-worker
+  labels:
+    app: celery-worker
+spec:
+  ports:
+    - name: 3001-tcp
+      protocol: TCP
+      port: 3001
+      targetPort: 3001
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: celery-worker
+    deployment: celery-worker

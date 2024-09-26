@@ -1,0 +1,22 @@
+kind: Kustomization
+images:
+  - name: backend-image-name
+    newName: image-registry.openshift-image-registry.svc:5000/llm-judge-dev/backend
+    newTag: v1.0
+secretGenerator:
+- name: llm-judge-secret
+  literals:
+    - WATSONX_URL=
+    - WX_PROJECT_ID=
+    - IBM_CLOUD_API_KEY=
+    - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
+    - WX_PLATFORM=
+    - WX_USER=
+    - CELERY_BROKER_URL=redis://redis:6379/0
+    - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    - SERVER_URL=
+resources:
+  - redis/
+  - celery-worker/
+  - flower/
+  - rest-app/
