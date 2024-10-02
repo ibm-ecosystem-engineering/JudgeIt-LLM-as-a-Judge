@@ -16,12 +16,10 @@ JudgeIt is an automated evaluation framework designed to accurately and efficien
 
 ## Reliability Metrics
 
-To ensure reliability, JudgeIt has been tested against human evaluation for each RAG pipeline that it offers a judge for. For RAG evaluation, this process involved building a dataset of user queries, golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics:
+To ensure reliability, JudgeIt has been tested against human evaluation for each RAG pipeline that it offers a judge for. For RAG evaluation, this process involved building a dataset of user queries, golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics across different RAG pipeline evaluations compared to human evaluations.
 
-- Accuracy: 90%
-- Precision: 100%
-- Recall: 90%
-- F1 Score: 95%
+![RAG Reliability scores](/images/RAG-reliability-testing.png)
+
 
 For Multi-turn evaluation, this process involved building a dataset of user queries, conversation history including a previous question and previous answer, golden rewritten queries, generated rewritten queries, and human evaluations of the similarity between the generated rewritten queries and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics:
 
@@ -32,18 +30,22 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
 
 ## What's Available?
 
-There are three types of LLM judges available in JudgeIt:
+### Types of Evaluation:
 
 1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text and receive a binary score for similarity
 2. **RAG Evaluation (Rating)**: evaluate generated text against golden text and receive a 1/2/3 rating based on degree of similarity
 3. **Multi-turn evaluation**: evaluate rewritten queries given a mult-turn conversation and receive a binary score for similarity
 
-There are two methods for spinning up JudgeIt:
+### Methods of using JudgeIt:
 
-1. Framework
-   1. This repository contains python modules to run evaluations via cli. The Framework method takes input data in the form of excel or csv files for any of these evaluations. View the [Framework Instructions](./Framework/README.md) for more detail.
-2. Service-Oriented Architecture
-   1. This repository contains a REST API backend and NextJS frontend to run evaluations via a UI. The SOA method takes input data in the form of excel/csv files or single inputs for any of these evaluations. View the [REST Service Instructions](./REST-Service/README.md) and [JudgeIt App Instructions](./JudgeIt-App/README.md) for more detail.
+1. **Framework**: JudgeIt framework contains python modules to run evaluations and supports cli execution. The Framework method takes input data in the form of excel or csv files for any of these evaluations. View the [Framework Instructions](./Framework/README.md) for more detail.
+2. **Service-Oriented Architecture (SOA)**: JudgeIt SOA contains a REST API backend and NextJS frontend to run evaluations via a UI. The SOA method takes input data in the form of excel/csv files or single inputs for any of these evaluations. View the [REST Service Instructions](./REST-Service/README.md) and [JudgeIt App Instructions](./JudgeIt-App/README.md) for more detail.
+
+### Deployment Options:
+
+1. **SaaS**: If you are using SaaS based LLM service (watsonx.ai), you can set the value of `wml_platform` as `saas` in the [Config](./Framework/config.ini) file.
+
+2. **On Prem**: If you have an LLM deployed on premise on CP4D, you can set the value of `wml_platform` as `onpremise` in the [Config](./Framework/config.ini) file.
 
 ## Installation
 
