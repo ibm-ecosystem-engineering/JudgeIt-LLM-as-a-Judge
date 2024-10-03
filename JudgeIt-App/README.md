@@ -11,7 +11,16 @@ One method of using JudgeIt is through a Service-Oriented Architecture (SOA). Th
 
 The JudgeIt framework takes input data in the form of excel or csv files for any of these evaluations.
 
-![LLM-Judges](/images/flow-diagram.png)
+## Deployment Options:
+
+1. **SaaS**: When you are using SaaS based LLM service (watsonx.ai)
+
+![Ass SaaS](/images/llm-judge-app-saas.png)
+
+2. **On Prem**: When you have an LLM deployed on premise on CP4D
+![App OnPremise](/images/llm-judge-app-onpremise.png)
+
+<!-- ![LLM-Judges](/images/flow-diagram.png) -->
 
 
 
