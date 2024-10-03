@@ -4,7 +4,9 @@ Accuracy and reliability are paramount when building Generative AI pipelines. Th
 
 JudgeIt is an automated evaluation framework designed to accurately and efficiently assess various Generative AI pipelines, including RAG, multi-turn query rewriting, text-to-SQL conversion, and more. This service enables users to conduct batch evaluations across these different Generative AI pipelines. Users can input datasets containing generated text along with corresponding golden text. JudgeIt then employs an LLM as a judge to perform similarity evaluations between these inputs, providing an accurate assessment of the AI pipeline's performance.
 
-![JudgeIt Flow](/images/flow-diagram.png)
+<!-- ![JudgeIt Flow](/images/flow-diagram.png) -->
+![Multiturn app batch](/images/multiturn-app-batch.gif)
+
 
 ## Features
 
@@ -36,9 +38,6 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
 2. **RAG Evaluation (Rating)**: evaluate generated text against golden text and receive a 1/2/3 rating based on degree of similarity
 3. **Multi-turn evaluation**: evaluate rewritten queries given a mult-turn conversation and receive a binary score for similarity
 
-## Usage Example
-
-![Multiturn app batch](/images/multiturn-app-batch.gif)
 
 ### Methods of using JudgeIt:
 
@@ -49,7 +48,11 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
 
 1. **SaaS**: If you are using SaaS based LLM service (watsonx.ai), you can set the value of `wml_platform` as `saas` in the [Config](./Framework/config.ini) file.
 
+![Framework SaaS](/images/LLM-judge-framework-saas.png)
+
 2. **On Prem**: If you have an LLM deployed on premise on CP4D, you can set the value of `wml_platform` as `onpremise` in the [Config](./Framework/config.ini) file.
+
+![Framework OnPremise](/images/LLM-judge-framework-onpremise.png)
 
 ## Installation
 

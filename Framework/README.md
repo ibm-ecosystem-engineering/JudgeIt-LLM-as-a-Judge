@@ -16,6 +16,7 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 <!-- omit in toc -->
 ## Table of Contents
 
+- [Deployment Option](#deployment-options)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -24,6 +25,16 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 - [Understanding the Results](#understanding-the-results)
 
 <!-- GETTING STARTED -->
+
+## Deployment Options:
+
+1. **SaaS**: If you are using SaaS based LLM service (watsonx.ai), you can set the value of `wml_platform` as `saas` in the [Config](./Framework/config.ini) file.
+
+![Framework SaaS](/images/LLM-judge-framework-saas.png)
+
+2. **On Prem**: If you have an LLM deployed on premise on CP4D, you can set the value of `wml_platform` as `onpremise` in the [Config](./Framework/config.ini) file.
+
+![Framework OnPremise](/images/LLM-judge-framework-onpremise.png)
 
 ## Getting Started
 
