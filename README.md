@@ -52,7 +52,7 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
 
 2. **On Prem**: If you have an LLM deployed on premise on CP4D, you can set the value of `wml_platform` as `onpremise` in the [Config](./Framework/config.ini) file.
 
-![Framework OnPremise](/images/LLM-judge-framework-onpremise.png)
+![Framework OnPremise](/images/llm-judge-framework-onpremise.png)
 
 ## Installation
 
