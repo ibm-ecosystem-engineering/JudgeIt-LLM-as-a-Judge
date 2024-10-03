@@ -13,12 +13,15 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 
 ![LLM-Judges](/images/flow-diagram.png)
 
+
+
 <!-- omit in toc -->
 ## Table of Contents
 
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+- [Usage Example](#usage-example)
 - [Configuring your Input File](#configuring-your-input-file)
 - [Understanding the Results](#understanding-the-results)
 
@@ -62,6 +65,9 @@ The following prerequisites are required to run the tester:
    ```
 
 6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Usage Example
+![Multiturn app batch](/images/multiturn-app-batch.gif)
 
 ## Configuring your Input File
 

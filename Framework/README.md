@@ -19,6 +19,7 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+- [Usage Example](#usage-example)
 - [Configuring your Input File](#configuring-your-input-file)
 - [Understanding the Results](#understanding-the-results)
 
@@ -90,6 +91,9 @@ The following prerequisites are required to run the tester:
    ```bash
    deactivate
    ```
+
+## Usage Example
+![Multi-turn framework](/images/multiturn-framework.gif)
 
 ## Configuring your Input File
 
