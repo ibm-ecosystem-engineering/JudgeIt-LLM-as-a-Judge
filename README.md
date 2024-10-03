@@ -36,6 +36,10 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
 2. **RAG Evaluation (Rating)**: evaluate generated text against golden text and receive a 1/2/3 rating based on degree of similarity
 3. **Multi-turn evaluation**: evaluate rewritten queries given a mult-turn conversation and receive a binary score for similarity
 
+## Usage Example
+
+![Multiturn app batch](/images/multiturn-app-batch.gif)
+
 ### Methods of using JudgeIt:
 
 1. **Framework**: JudgeIt framework contains python modules to run evaluations and supports cli execution. The Framework method takes input data in the form of excel or csv files for any of these evaluations. View the [Framework Instructions](./Framework/README.md) for more detail.
