@@ -19,7 +19,7 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 
 2. **On Prem**: When you have an LLM deployed on premise on CP4D
 
-![App OnPremise](/images/LLM-judge-app-onpremise.png)
+![App OnPremise](/images/LLM-Judge-app-onpremise.png)
 
 <!-- ![LLM-Judges](/images/flow-diagram.png) -->
 
