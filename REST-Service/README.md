@@ -5,7 +5,15 @@
 
 One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the RESTful service code that interfaces with the JudgeIt framework. It offers endpoints for initiating evaluations, retrieving results, and configuring evaluation parameters.
 
-![Architecture diagram](/images/LLM-Judge-Architecture-Backend.png)
+## Architecture Diagram:
+
+- **SaaS**: If you are using SaaS based LLM service (watsonx.ai), you can set the value of **WX_PLATFORM** as saas in the environment variable.
+  
+![llm-judge-app-saas](https://github.com/user-attachments/assets/24d8819f-a621-4c41-9a39-119c342ffbc9)
+
+- **On Prem**: If you have an LLM deployed on premise on CP4D, you can set the value of **WX_PLATFORM** as onpremise in the environment variable.
+
+![LLM-Judge-app-onpremise](https://github.com/user-attachments/assets/0589ed54-5a93-4ec2-9ebb-96bfc202b223)
 
 <!-- omit in toc -->
 ## Table of Contents
