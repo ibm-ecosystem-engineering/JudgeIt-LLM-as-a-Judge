@@ -1,4 +1,4 @@
-# JudgeIt - An Auto Evaluation Framework for Generative AI Pipelines
+# JudgeIt - An Auto Eval Framework for Scaling Gen AI Pipelines
 
 Accuracy and reliability are paramount when building Generative AI pipelines. Therefore, it is critical to establish robust evaluation frameworks to test these pipelines as they are built. While human evaluation may be accurate, it often takes a high degree of manual effort and is difficult to scale efficiently.
 
