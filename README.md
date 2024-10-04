@@ -77,14 +77,23 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
       1. [REST Service Instructions](./REST-Service/README.md)
       2. [JudgeIt App Instructions](./JudgeIt-App/README.md)
 
-## Contributors
+## Created & Architected By
 
-- Kunal Sawarkar, Chief Data Scientist
-- Shivam Solanki, Senior Advisory Data Scientist
-- Anand Das, Technology Engineer
-- Himadri Talukder, Senior Software Engineer
-- Abhilasha Mangal, Senior Data Scientist
-- Kevin Huang, Sr. ML-Ops Engineer
+    Kunal Sawarkar, Distinguished Engineer- GenAI & Chief Data Scientist
+
+### Builders
+
+    Shivam Solanki, Senior Advisory Data Scientist
+    Kevin Huang, Sr. ML-Ops Engineer
+    Abhilasha Mangal, Senior Data Scientist
+    Himadri Talukder - Senior Software Engineer
+    Anand Das- AI Engineer
+
+Disclaimer
+
+This framework as part of SuperKnowa project is developed by Build Lab, IBM Ecosystem. Please note that this content is made available to foster Embeddable AI technology adoption and serve ecosystem partners. SuperKnowa is not a product but a framework built on the top of IBM watsonx along with other products like LLAMA models from Meta. Using SuperKnowa implicitly requires agreeing to the Terms and conditions of those models. This framework is made available on an as-is basis to accelerate Enterprise GenAI applications development. In case of any questions, please reach out to kunal@ibm.com.
+
+Copyright @ 2023 IBM Corporation.
 
 ## License
 
