@@ -77,14 +77,16 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
       1. [REST Service Instructions](./REST-Service/README.md)
       2. [JudgeIt App Instructions](./JudgeIt-App/README.md)
 
-## Created & Architected By
+## Team
+
+### Created & Architected By
 
     Kunal Sawarkar, Distinguished Engineer- GenAI & Chief Data Scientist
 
 ### Builders
 
     Shivam Solanki, Senior Advisory Data Scientist
-    Kevin Huang, Sr. ML-Ops Engineer
+    Kevin Huang, Sr.- ML-Ops Engineer
     Abhilasha Mangal, Senior Data Scientist
     Himadri Talukder - Senior Software Engineer
     Anand Das- AI Engineer
