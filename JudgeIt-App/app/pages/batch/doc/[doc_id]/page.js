@@ -76,7 +76,7 @@ const BatchDocIdPage = () => {
     <>
       {session && (
         <Box display={"flex"} flexDirection={"row"}>
-          <Box display={"flex"} height={"100vh"}>
+          <Box display={"flex"} height={"100vh"} sx={{overflowY: 'auto'}}>
             <EvaluationHistoryLeftBar type={"batch"} />
           </Box>
           <Box width={"100%"} height={"93vh"} overflow={"scroll"}>

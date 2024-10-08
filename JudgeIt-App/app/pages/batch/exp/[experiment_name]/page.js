@@ -9,6 +9,7 @@ import { Grid, Typography, Box, CircularProgress, Button } from "@mui/material";
 import BarChart from "@/components/globals/BarChart";
 import Footer from "@/components/globals/Footer";
 import { app_labels_and_config } from "@/services/Config";
+import RatingSimilarityDataGrid from "@/components/judge/RatingSimilarityDataGrid";
 
 const ExperimentPage = () => {
   const params = useParams();
@@ -32,13 +33,13 @@ const ExperimentPage = () => {
       );
 
       if (history_data) {
-        setServerData(history_data);
 
+        const contents = []
         const grades_list = await Promise.all(
           history_data.map(async (item) => {
             //const data = await get_result_by_task_id(item.content.task_id);
             const data = await item?.content?.batch_result;
-
+            contents.push(data)
             if (data && data?.status !== "ERROR") {
               const grades = data.Grade
                 ? Object.values(data.Grade).filter(
@@ -64,6 +65,7 @@ const ExperimentPage = () => {
           })
         );
         setGradeData(grades_list);
+        setServerData(contents);
       }
     };
 
@@ -91,7 +93,7 @@ const ExperimentPage = () => {
   return (
     <>
       <Box display={"flex"} flexDirection={"row"}>
-        <Box display={"flex"} height={"100vh"}>
+        <Box display={"flex"} height={"100vh"} sx={{ overflowY: "auto" }}>
           <EvaluationHistoryLeftBar type={"batch"} />
         </Box>
         <Box width={"100%"} height={"93vh"} overflow={"scroll"}>
@@ -137,6 +139,16 @@ const ExperimentPage = () => {
                   sx={{ flexGrow: 1 }}
                   container
                 >
+                  {serverData &&
+                    serverData.map((sdata, index) => (
+                      <Grid
+                        item
+                        xs={12}
+                        key={index}
+                      >
+                        <RatingSimilarityDataGrid serverData={sdata?.content?.batch_result} />
+                      </Grid>
+                    ))}
                   {gradeData &&
                     gradeData.map((gdata, index) => (
                       <Grid
@@ -156,7 +168,8 @@ const ExperimentPage = () => {
                               textDecoration: "none",
                             }}
                           >
-                            {app_labels_and_config.pages.graph_title} - {gdata && gdata.name}
+                            {app_labels_and_config.pages.graph_title} -{" "}
+                            {gdata && gdata.name}
                           </Typography>
                           {gdata && <BarChart gradeData={gdata.grades} />}
                         </Box>

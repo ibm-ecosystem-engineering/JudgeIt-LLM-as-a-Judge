@@ -140,21 +140,15 @@ const EvaluationHistoryLeftBar = ({ result, type }) => {
     },
   };
   return (
-    <Box
-      width={"250px"}
-      minHeight={"100vh"}
-      overflow={"hidden"}
-      sx={{ backgroundColor: "#202123", color: "#FFFFFF" }}
-    >
+    <Box width={"300px"} sx={{ backgroundColor: "#202123", color: "#FFFFFF" }}>
       <Box
-        display={"flex"}
-        width={"300px"}
+        width={"250px"}
         height={"40px"}
-        justifyContent={"center"}
-        paddingTop={"10px"}
-        fontSize={"20px"}
+        display={"flex"} // Use flexbox layout
+        justifyContent={"center"} // Center horizontally
+        alignItems={"center"} // Center vertically
       >
-        History
+        <Typography fontSize={"20px"}>History</Typography>
       </Box>
       <Divider style={{ backgroundColor: "#F7F7F8" }} />
       <Sidebar style={{ width: "100%" }} rootStyles={{ border: "none" }}>
