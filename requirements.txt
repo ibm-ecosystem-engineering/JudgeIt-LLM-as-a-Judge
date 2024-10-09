@@ -12,7 +12,7 @@ jmespath==1.0.1
 joblib==1.4.2
 langchain-ibm==0.1.12
 lomond==0.3.3
-nltk==3.8.1
+nltk==3.9
 numpy==1.26.4
 openpyxl==3.1.5
 packaging==24.1
