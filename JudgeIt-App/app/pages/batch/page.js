@@ -28,10 +28,12 @@ import {
   LLM_JUDGE_DOWNLOAD_EVALUATION_URL,
   LLM_JUDGE_API_KEY_SECRET,
 } from "@/services/Config";
-import { judge_api_batch_call } from "@/services/JudgeBackendAPIBatch";
+import {
+  judge_api_batch_call,
+  batch_process_status,
+} from "@/services/JudgeBackendAPIBatch";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
 
-import * as XLSX from "xlsx";
 import BarChart from "@/components/globals/BarChart";
 import { create } from "@mui/material/styles/createTransitions";
 import BatchInstructions from "@/components/globals/BatchInstructions";
@@ -51,46 +53,20 @@ const FileUploadForm = () => {
   const create_bar_chart = async (chart_task_id) => {
     try {
       setErrorStatus(null);
-      const response = await fetch(
-        LLM_JUDGE_DOWNLOAD_EVALUATION_URL + chart_task_id,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
-          },
-        }
-      );
+      const status_data = await batch_process_status(chart_task_id);
+      const jsonData =JSON.parse(status_data.result);
 
-      if (!response.ok) {
-        setErrorStatus("Network response was not ok");
-        throw new Error("Network response was not ok");
-      }
+      // Extract and process the 'Grade' column
+      const grades =Object.values(jsonData.Grade).filter((grade) => grade !== undefined);
 
-      const blob = await response.blob();
+      const gradeDistribution = grades.reduce((acc, grade) => {
+        acc[grade] = (acc[grade] || 0) + 1;
+        return acc;
+      }, {});
 
-      // Parse the Excel file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-        // Extract and process the 'Grade' column
-        const grades = jsonData
-          .map((row) => row.Grade)
-          .filter((grade) => grade !== undefined);
-        const gradeDistribution = grades.reduce((acc, grade) => {
-          acc[grade] = (acc[grade] || 0) + 1;
-          return acc;
-        }, {});
-
-        setGradeData(gradeDistribution);
-      };
-      reader.readAsArrayBuffer(blob);
+      setGradeData(gradeDistribution);
     } catch (error) {
+      console.error(error)
       setErrorStatus("Failed to set grade values");
     }
   };
