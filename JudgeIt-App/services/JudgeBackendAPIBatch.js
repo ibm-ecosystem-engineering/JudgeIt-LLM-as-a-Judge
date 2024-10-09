@@ -68,3 +68,17 @@ async function multiturn_batch_api_call(formData) {
   );
   return response;
 }
+
+export async function batch_process_status(task_id) {
+
+  const response = await axios.get(
+    LLM_JUDGE_BASE_URL + '/api/v1/judge/status/' + task_id,
+    {
+      headers: { 
+        'accept': 'application/json', 
+        'LLM_JUDGE_API_KEY': LLM_JUDGE_API_KEY_SECRET
+      }
+    }
+  );
+  return response.data
+}
