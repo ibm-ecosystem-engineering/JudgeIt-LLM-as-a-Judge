@@ -60,7 +60,7 @@ The following prerequisites are required to run the tester:
    ```bash
    [Default]
    home_dir = /home_directory/JudgeIt-LLM-as-a-Judge/
-   model_id = meta-llama/llama-3-70b-instruct
+   model_id = meta-llama/llama-3-1-70b-instruct
    input_file_name = Framework/data/input/sample_rag_answer_similarity_input.xlsx
    output_file_name = Framework/data/output/sample_rag_answer_similarity_output.xlsx
    judge_type = rag_eval_answer_similarity
@@ -74,7 +74,7 @@ The following prerequisites are required to run the tester:
    ```
 
    1. `home_dir`: the path to the folder where you have downloaded the repository
-   2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge. We recommend `meta-llama/llama-3-70b-instruct`
+   2. `model_id`: the watsonx.ai model id that will be used for your LLM Judge. We recommend `meta-llama/llama-3-1-70b-instruct`
    3. `input_file_name`:
       1. specify the path and name of your inputfile
       2. a sample input file for each evaluation type is located in [JudgeIt-LLM-as-a-Judge/Framework/data/input](./data/input)
