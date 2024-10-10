@@ -77,6 +77,16 @@ Output:
 {{"Grade": "0"}}
 
 Input:
+Previous Query: What is the paydex and ser for 12-081-4733
+Previous Answer: For the company with D-U-N-S¬Æ number 120814733, also known as OLD BREWERY TAVERN, the Paydex Score is not available as the summary object in the businessTrading section is empty. The Supplier Evaluation Risk (SER) Score is 8. This score is a predictor of the likelihood that the risk defined by the Score Model Code will occur. It is based on a scale of 1 to 9, where 1 represents the lowest risk level and 9 represents the highest risk level. The score date for this SER Score is November 28, 2022. The SER Score is derived from the Failure Score. The description for the SER Score indicates that there are limited payment experiences reported, limited business activity signals reported in the past 12 months, limited time in business, and the business belongs to an industry with above average risk of ceasing operations or becoming inactive.
+New Query: is duns 82-690-7354 out of business
+Golden Rewritten Query: is duns 82-690-7354 out of business
+Rewritten New Query: Is the company with D-U-N-S number 82-690-7354 out of business?
+
+Output:
+{{"Grade": "1"}}
+
+Input:
 Previous Query: {prompt_parameter_1}
 Previous Answer: {prompt_parameter_2}
 New Query: {prompt_parameter_3}
