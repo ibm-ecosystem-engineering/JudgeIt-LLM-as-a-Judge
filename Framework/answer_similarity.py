@@ -89,12 +89,8 @@ def batch_llm_answer_similarity(model_id, input_data):
         except KeyError as e:
             print(f"Error: Missing required column - {e}")
             print("Input file requires the following columns:")
-            print("1) previous_question")
-            print("2) previous_answer")
-            print("3) current_question")
-            print("4) golden_rewritten_question")
-            print("5) rewritten_question")
-            sys.exit(1)
+            print("1) golden_text")
+            print("2) generated_text")
         try:
             prompt_results = json.loads(llm_chain.invoke(prompt_data))
         except:
