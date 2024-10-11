@@ -1,4 +1,4 @@
-# JudgeIt (From SuperKnowa)- Automatic Eval Framework for Gen AI Pipelines
+![Picture1](https://github.com/user-attachments/assets/798573ca-9e0a-429d-be28-e132e6e04d54)# JudgeIt (From SuperKnowa)- Automatic Eval Framework for Gen AI Pipelines
 
 The single biggest challenge in scaling any GenAI solution (such as RAG, multi-turn conversations, or query rewriting) from PoC to production is the last-mile problem of evaluation. Statistical metrics (like BLEU, ROUGE, or METEOR) have proven ineffective at accurately judging the quality of GenAI solutions, leaving human evaluation as the only reliable option for Enterprises. However, human evaluation is slow and expensive, making it impossible to scale quickly. This is where 'JudgeIt' comes in—a framework designed to mimic human judgment with equally high precision and recall.
 
@@ -30,17 +30,18 @@ So just how reliable is this framework compared to humans?"
 To ensure reliability, the JudgeIt framework has been rigorously tested against human evaluations across various RAG pipelines and multi-turn query rewrite tasks. The framework is designed to be conservative, favoring false negatives over false positives. This approach means that the actual accuracy, as observed in numerous experiments, tends to be slightly higher than the accuracy predicted by the framework.
 
 #### RAG Evalution Reliability Metrics
-For RAG evaluation, this process involved building a dataset of thousands of real-life Q&A pairs in Enterprise setting, then collected golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics across different RAG pipeline evaluations compared to human evaluations with huge diversity of underlying pairs. 
 
 ![RAG Reliability scores](/images/RAG-reliability-testing.png)
+For RAG evaluation, this process involved building a dataset of thousands of real-life Q&A pairs in Enterprise setting, then collected golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to show consistely above 90% F1 scores across different RAG pipeline evaluations compared to human evaluations with 20+ enterprise Q&A tasks. 
 
 #### Query-Rewrite Evaluation Reliability Metrics (2 Turn)
-For Multi-turn evaluation, this process involved building a dataset of user queries, conversation memory history including a previous question and previous answer, golden rewritten queries, generated rewritten queries, and human evaluations of the similarity between the generated rewritten queries and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics:
 
-- Accuracy: 92%
-- Precision: 96%
-- Recall: 93%
-- F1 Score: 95%
+![Uploading Screenshot 2024-10-11 at 12.51.04 AM.png…]()
+
+
+
+For Multi-turn evaluation, this process involved building a dataset of user queries, conversation memory history including a previous question and previous answer, golden rewritten queries, generated rewritten queries, and human evaluations of the similarity between the generated rewritten queries and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the near 100% precision.
+
 
 ## Using JudgIt Framework
 
