@@ -103,8 +103,11 @@ Using JudgeIt framework is simple, just pick what is the task you want to evalua
 - [ ] Text2Sql Task support
 - [ ] Liberal vs Conservative Judge Options for verbose vs crisp RAG comparison
 - [ ] Query-Rewrite support for More-than 2 turn
+- [ ] Specific support for differnt LLM generated text formats (Like Anthropic etc.) 
 
-**Known-Limitation** : We found that the framework sometimes becomes extremely conservative when there is a large gap between the size of the golden text and the generated text. For RAG comparisons, if the golden text is one page long and the generated text is just a few lines, it tends to treat them as dissimilar. We are currently working on a more 'liberal' version of this judge, which will be released soon.
+**Known-Limitation** :
+1. Verbose vs Crisp RAG Answers - We found that the framework sometimes becomes extremely conservative when there is a large gap between the size of the golden text and the generated text. For RAG comparisons, if the golden text is one page long and the generated text is just a few lines, it tends to treat them as dissimilar. We are currently working on a more 'liberal' version of this judge, which will be released soon.
+2. Comparing outputs for two LLMs.- We found that some LLM's preface their answers with some text, which can throw Judge off. When comparing two LLM try to avoid standard text like "I am just an average Language Model...etc". We are working on next version which will do this automatically.
 
 ## SuperKnowa
 JudgeIt is the latest framework from the SuperKnowa project. Do check out our other repos for building RAG pipelines. text2sql etc. here. 
