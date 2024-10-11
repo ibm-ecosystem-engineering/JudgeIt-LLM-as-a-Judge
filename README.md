@@ -121,12 +121,12 @@ JudgeIt is the latest framework from the SuperKnowa project. Do check out our ot
 
 ### Builders
 
-  Shivam Solanki, Senior Advisory Data Scientist
-  Himadri Talukder - Senior Software Engineer
-  Anand Das- AI Engineer
-  Kevin Huang, Sr.- ML-Ops Engineer
-  Abhilasha Mangal, Senior Data Scientist
-  Josefina Casanova- Data Scientist
+  - Shivam Solanki, Senior Advisory Data Scientist
+  - Himadri Talukder - Senior Software Engineer
+  - Anand Das- AI Engineer
+  -  Kevin Huang, Sr.- ML-Ops Engineer
+  -  Abhilasha Mangal, Senior Data Scientist
+  -  Josefina Casanova- Data Scientist
   
 
 
