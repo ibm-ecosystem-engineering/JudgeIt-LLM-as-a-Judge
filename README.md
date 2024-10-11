@@ -25,16 +25,16 @@ JudgeIt automates evaluation processes so that it can be run in batch mode and o
 
 ## Reliability Testing
 
-So just how reliable is this framework compared to humans?
+So just how reliable is this framework compared to humans?"
 
-To ensure reliability, JudgeIt has been battle tested numerous times against human evaluation for each RAG pipelines & Multi-turn query rewrite tasks that it offers a judge for. We have designed this JudgeIt Framework to be conservative, meaning it will prefer false negatives over false positives. In other words it means that actual accuracy (as we have found in numerous experiments) is little bit higher than predicted by our framework. 
+To ensure reliability, the JudgeIt framework has been rigorously tested against human evaluations across various RAG pipelines and multi-turn query rewrite tasks. The framework is designed to be conservative, favoring false negatives over false positives. This approach means that the actual accuracy, as observed in numerous experiments, tends to be slightly higher than the accuracy predicted by the framework.
 
-#### RAG Eval Reliability Metrics
+#### RAG Evalution Reliability Metrics
 For RAG evaluation, this process involved building a dataset of thousands of real-life Q&A pairs in Enterprise setting, then collected golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics across different RAG pipeline evaluations compared to human evaluations with huge diversity of underlying pairs. 
 
 ![RAG Reliability scores](/images/RAG-reliability-testing.png)
 
-#### Query-Rewrite Reliability Metrics (2 Turn)
+#### Query-Rewrite Evaluation Reliability Metrics (2 Turn)
 For Multi-turn evaluation, this process involved building a dataset of user queries, conversation memory history including a previous question and previous answer, golden rewritten queries, generated rewritten queries, and human evaluations of the similarity between the generated rewritten queries and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics:
 
 - Accuracy: 92%
