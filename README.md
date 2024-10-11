@@ -1,4 +1,4 @@
-# JudgeIt - Automatic Eval Framework for Gen AI Pipelines
+# JudgeIt (From SuperKnowa)- Automatic Eval Framework for Gen AI Pipelines
 
 The single biggest challenge in scaling any GenAI solution (such as RAG, multi-turn conversations, or query rewriting) from PoC to production is the last-mile problem of evaluation. Statistical metrics (like BLEU, ROUGE, or METEOR) have proven ineffective at accurately judging the quality of GenAI solutions, leaving human evaluation as the final step. However, human evaluation is slow and expensive, making it difficult to scale quickly. This is where 'JudgeIt' comes in—a framework designed to mimic human judgment with equally high precision and recall.
 
@@ -103,6 +103,9 @@ Using JudgeIt framework is simple, just pick what is the task you want to evalua
 - [ ] Query-Rewrite support for More-than 2 turn
 
 **Known-Limitation** : We found that the framework sometimes becomes extremely conservative when there is a large gap between the size of the golden text and the generated text. For RAG comparisons, if the golden text is one page long and the generated text is just a few lines, it tends to treat them as dissimilar. We are currently working on a more 'liberal' version of this judge, which will be released soon.
+
+## SuperKnowa
+JudgeIt is the latest framework from the SuperKnowa project. Do check out our other repos for building RAG pipelines. text2sql etc. here. 
 
 
 ## Team
