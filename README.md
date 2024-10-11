@@ -1,6 +1,6 @@
 # JudgeIt - Automatic Eval Framework for Gen AI Pipelines
 
-The single biggest challenge in scaling any GenAI solution (like RAG, multi-turn conversations, or query rewriting) from PoC to production is the last-mile problem of evaluation. Statistical metrics (such as BLEU, ROUGE, or METEOR) have proven ineffective at accurately judging the quality of GenAI solutions, leaving human evaluation as the final step. However, human evaluation is slow and expensive, making it difficult to scale quickly. This is where 'JudgeIt' comes in—a framework designed to mimic human judgment with high precision and recall
+The single biggest challenge in scaling any GenAI solution (like RAG, multi-turn conversations, or query rewriting) from PoC to production is the last-mile problem of evaluation. Statistical metrics (such as BLEU, ROUGE, or METEOR) have proven ineffective at accurately judging the quality of GenAI solutions, leaving human evaluation as the final step. However, human evaluation is slow and expensive, making it difficult to scale quickly. This is where 'JudgeIt' comes in—A framework designed to mimic human judgment with as good as precision and recall.
 
 
 JudgeIt is an automated evaluation framework designed to accurately and efficiently assess various Generative AI pipelines, including RAG, multi-turn query rewriting (conversation memory), text-to-SQL conversion, and more. This service enables users to conduct batch evaluations across these different Generative AI pipelines. Users can input datasets containing generated text along with corresponding golden text. JudgeIt then employs an LLM-as-a-judge to perform similarity evaluations as a human would do, between these inputs, providing an accurate assessment of the Gen AI pipeline's performance.
@@ -11,15 +11,18 @@ JudgeIt is an automated evaluation framework designed to accurately and efficien
 
 ## Features
 
-- **Automated Evaluation**: JudgeIt automates batch evaluation processes, resulting in more efficient evaluation compared to human testers.
-- **Multi-Pipeline Support**: Evaluate different types of LLM pipelines including:
-  - **RAG**: evaluate generated text against golden text
+JudgeIt automates evaluation processes so that it can be run in batch mode and over thousands of Q&A pairs, resulting in more efficient evaluation compared to human testers.
+- **Multi-Pipeline Support**: Evaluate different types of GenAI pipelines including:
+  - **RAG**: evaluate LLM generated text against golden text /expected text
   - **Multi-turn query rewritings**: evaluate rewritten queries given a multi-turn conversation
 - **Customization**: Configure the evaluation process with your datasets, LLM models, and specific parameters.
+- **Embeddable**: Easily embed framework in your env either as python based job or consume as user application
+- **Run-Anywhere**: Open architecture to deploy anywhere, be it on Cloud, Hybrid Cloud or On-prem in airgap env.
+- **Expandable**: Preset for Llama models and IBM watsonx platform and open source which can be easily extended to any model from HuggingFace.
 
 ## Reliability Metrics
 
-To ensure reliability, JudgeIt has been tested against human evaluation for each RAG pipeline that it offers a judge for. For RAG evaluation, this process involved building a dataset of user queries, golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics across different RAG pipeline evaluations compared to human evaluations.
+To ensure reliability, JudgeIt has been battle tested numerous times against human evaluation for each RAG pipeline that it offers a judge for. For RAG evaluation, this process involved building a dataset of user queries, with thoussands of Q&A pairs of golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the following accuracy metrics across different RAG pipeline evaluations compared to human evaluations.
 
 ![RAG Reliability scores](/images/RAG-reliability-testing.png)
 
@@ -78,11 +81,19 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
       1. [REST Service Instructions](./REST-Service/README.md)
       2. [JudgeIt App Instructions](./JudgeIt-App/README.md)
 
+### Coming Soon (Product Backlog)
+- [x] Llama 3.0 -70B as Judge model
+- [ ] Llama 3.1 -70B as Judge model
+- [ ] Mixtral-Large as Judge Model
+- [ ] Text2Sql Task support
+- [ ] Query-Rewrite support for More-than 2 turn
+
+
 ## Team
 
 ### Created & Architected By
 
-    Kunal Sawarkar, Distinguished Engineer- GenAI & Chief Data Scientist
+  Kunal Sawarkar, Distinguished Engineer- GenAI & Chief Data Scientist
 
 ### Builders
 
@@ -94,7 +105,7 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
 
 Disclaimer
 
-This framework as part of SuperKnowa project is developed by Build Lab, IBM Ecosystem. Please note that this content is made available to foster Embeddable AI technology adoption and serve ecosystem partners. SuperKnowa is not a product but a framework built on the top of IBM watsonx along with other products like LLAMA models from Meta. Using SuperKnowa implicitly requires agreeing to the Terms and conditions of those models. This framework is made available on an as-is basis to accelerate Enterprise GenAI applications development. In case of any questions, please reach out to kunal@ibm.com.
+This framework as part of SuperKnowa project is developed by Build Lab, IBM Ecosystem. Please note that this content is made available to foster Embeddable AI technology adoption and serve ecosystem partners. SuperKnowa is not a product but a framework built on the top of IBM watsonx along with other products like LLAMA models from Meta. Using SuperKnowa implicitly requires agreeing to the Terms and conditions of those models. This framework is made available on an as-is basis to accelerate Enterprise GenAI applications development with any liability for support. In case of any questions, please reach out to kunal@ibm.com.
 
 Copyright @ 2023 IBM Corporation.
 
