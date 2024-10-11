@@ -4,7 +4,7 @@ The single biggest challenge in scaling any GenAI solution (such as RAG, multi-t
 
 JudgeIt is an automated evaluation framework built to accurately and efficiently assess various Generative AI pipelines, including RAG, multi-turn query rewriting (conversation memory), text-to-SQL conversion, and more. This service allows users to conduct batch evaluations across these different Generative AI pipelines. Users can input datasets containing generated text along with corresponding golden text. JudgeIt then employs an LLM-as-a-judge to perform similarity evaluations between these inputs, mimicking human evaluation and providing an accurate assessment of the GenAI pipeline's performance.
 
-his results in saving 30 times the time spent on manual testing for each RAG pipeline version, allowing AI engineers to run 10 times more experiments and achieve the desired accuracy much faster.
+This results in saving 30 times the time spent on manual testing for each RAG pipeline version, allowing AI engineers to run 10 times more experiments and achieve the desired accuracy much faster.
 
 
 <!-- ![JudgeIt Flow](/images/flow-diagram.png) -->
@@ -102,8 +102,8 @@ Using JudgeIt framework is simple, just pick what is the task you want to evalua
 - [ ] Mixtral-Large as Judge Model
 - [ ] Text2Sql Task support
 - [ ] Liberal vs Conservative Judge Options for verbose vs crisp RAG comparison
-- [ ] Query-Rewrite support for More-than 2 turn
-- [ ] Specific support for differnt LLM generated text formats (Like Anthropic etc.) 
+- [ ] Query-Rewrite support for More-than 2-turn
+- [ ] Specific support for multiple LLM generated text formats (Like Anthropic etc.) 
 
 **Known-Limitation** :
 1. Verbose vs Crisp RAG Answers - We found that the framework sometimes becomes extremely conservative when there is a large gap between the size of the golden text and the generated text. For RAG comparisons, if the golden text is one page long and the generated text is just a few lines, it tends to treat them as dissimilar. We are currently working on a more 'liberal' version of this judge, which will be released soon.
