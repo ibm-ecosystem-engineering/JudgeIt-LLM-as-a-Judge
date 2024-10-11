@@ -54,8 +54,11 @@ Using JudgeIt framework is simple, just pick what is the task you want to evalua
 
 ### Two Flavors of using JudgeIt:
 
-1. **Python-Framework**: JudgeIt framework contains python modules to run evaluations and supports CLI execution. The Framework method takes input data in the form of excel or csv files for any of these evaluations. View the [Framework Instructions](./Framework/README.md) for more detail.
-2. **GUI-Application**: JudgeIt SOA based application contains a REST API backend and NextJS frontend to run evaluations via a UI. The SOA method takes input data in the form of excel/csv files or single inputs for any of these evaluations. View the [REST Service Instructions](./REST-Service/README.md) and [JudgeIt App Instructions](./JudgeIt-App/README.md) for more detail.
+1. **Python-Framework**: JudgeIt framework contains python modules to run evaluations and supports CLI execution. Just define your options in the config files. The Framework method takes input data in the form of excel or csv files for any of these evaluations. View the [Framework Instructions](./Framework/README.md) for more detail.
+   ![multiturn-framework](https://github.com/user-attachments/assets/b717c2ce-d334-42d3-a6f0-0b83701c3ad8)
+  
+3. **GUI-Application**: JudgeIt SOA based application contains a REST API backend and NextJS frontend to run evaluations via a UI. The SOA method takes input data in the form of excel/csv files or single inputs for any of these evaluations. View the [REST Service Instructions](./REST-Service/README.md) and [JudgeIt App Instructions](./JudgeIt-App/README.md) for more detail.
+   ![Multiturn app batch](/images/multiturn-app-batch.gif)
 
 ### JudgeIt Deployment Options:
 
