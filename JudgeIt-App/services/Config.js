@@ -15,11 +15,11 @@ export const LLM_MODELS = [
         value: "MIXTRAL",
         label: "MIXTRAL"
     },
-    {
-        value: "GPT",
-        label: "GPT"
-    },
     */
+    {
+        value: "meta-llama/llama-3-1-70b-instruct",
+        label: "llama-3-1-70b-instruct"
+    },
     {
         value: "meta-llama/llama-3-70b-instruct",
         label: "llama-3-70b-instruct"
