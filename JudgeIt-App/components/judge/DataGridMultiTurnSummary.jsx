@@ -2,9 +2,8 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import DataGridToolbar from "@/components/globals/DataGridToolbar";
-import { API_TYPE_RATING, grade_map_rating, grade_map_similarity } from "@/services/Config";
 
-const RatingSimilarityDataGrid = ({ serverData }) => {
+const DataGridMultiTurnSummary = ({ serverData }) => {
   const columns = [
     {
       field: "id",
@@ -17,39 +16,50 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
       width: "250",
     },
     {
-      field: "eval_type",
-      headerName: "Eval Type",
-    },
-    {
-      field: "model",
-      headerName: "Model",
+      field: "experiment_name",
+      headerName: "Experiment Name",
       width: "250",
     },
     {
-      field: "golden_text",
-      headerName: "Golden Text",
+      field: "eval_type",
+      headerName: "Eval Type",
+    },
+    
+    {
+      field: "previous_question",
+      headerName: "Previous Question",
       width: "400",
     },
     {
-      field: "generated_text",
-      headerName: "Generated Text",
+      field: "previous_answer",
+      headerName: "Previous Answer",
+      width: "400",
+    },
+    {
+      field: "current_question",
+      headerName: "Current Question",
+      width: "400",
+    },
+    {
+      field: "golden_rewritten_question",
+      headerName: "Golden Rewritten Question",
+      width: "400",
+    },
+    {
+      field: "rewritten_question",
+      headerName: "Rewritten Question",
       width: "400",
     },
     {
       field: "Grade",
       headerName: "JudgeIt Score",
       width: 100,
-    },
-    {
-      field: "Explanation",
-      headerName: "JudgeIt Reasoning",
-      width: "400",
-    },
+    }
   ];
 
   return (
-    <div style={{ width: "100%" }}>
-      {" "} {console.log("serverData 00000000 ", serverData)}
+    <div style={{height: 350}}>
+      {" "}
       <DataGrid
         {...{
           columns: columns,
@@ -58,11 +68,13 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
               id: item._id,
               name: item.name,
               eval_type: item.eval_type,
-              model: item.content.query.model,
-              golden_text: item.content.query.golden_text,
-              generated_text: item.content.query.generated_text,
-              Grade: (item.eval_type === API_TYPE_RATING) ? grade_map_rating[item.content.result.Grade] : grade_map_similarity[item.content.result.Grade],
-              Explanation: item.content.result.Explanation,
+              experiment_name: item.experiment_name,
+              previous_question: item.previous_question,
+              previous_answer: item.previous_answer,
+              current_question: item.current_question,
+              golden_rewritten_question: item.golden_rewritten_question,
+              rewritten_question: item.rewritten_question,
+              Grade: (item?.Grade) ? item?.Grade : item?.judgeit_score
             };
           }),
         }}
@@ -83,4 +95,4 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
   );
 };
 
-export default RatingSimilarityDataGrid;
+export default DataGridMultiTurnSummary;

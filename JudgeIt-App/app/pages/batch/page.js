@@ -33,11 +33,11 @@ import {
   get_result_by_task_id,
   judge_api_batch_call,
   save_request_history,
+  batch_process_status,
 } from "@/services/JudgeBackendAPIBatch";
 import LinearProgressWithLabel from "@/components/globals/LinearProgressWithLabel";
 import { useSession } from "next-auth/react";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import * as XLSX from "xlsx";
 import BarChart from "@/components/globals/BarChart";
 import Footer from "@/components/globals/Footer";
 import EvaluationTypeComponent from "@/components/judge/EvaluationTypeComponent";
@@ -60,47 +60,30 @@ const FileUploadForm = () => {
 
   const create_bar_chart = async (chart_task_id) => {
     try {
-      setErrorStatus(null);
-      const response = await fetch(
-        LLM_JUDGE_DOWNLOAD_EVALUATION_URL + chart_task_id,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            LLM_JUDGE_API_KEY: LLM_JUDGE_API_KEY_SECRET,
-          },
-        }
-      );
+      try {
+        setErrorStatus(null);
+        const status_data = await batch_process_status(chart_task_id);
+        const jsonData = JSON.parse(status_data.result);
 
-      if (!response.ok) {
-        setErrorStatus("Network response was not ok");
-        throw new Error("Network response was not ok");
-      }
-
-      const blob = await response.blob();
-
-      // Parse the Excel file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        console.log("jsonData", jsonData);
 
         // Extract and process the 'Grade' column
-        const grades = jsonData
-          .map((row) => row?.Grade || row?.judgeit_score)
-          .filter((grade) => grade !== undefined);
+        const grades = jsonData.Grade
+          ? Object.values(jsonData.Grade).filter((grade) => grade !== undefined)
+          : Object.values(jsonData.judgeit_score).filter((score) => score !== undefined);
+
         const gradeDistribution = grades.reduce((acc, grade) => {
           acc[grade] = (acc[grade] || 0) + 1;
           return acc;
         }, {});
+
         setGradeData(gradeDistribution);
-      };
-      reader.readAsArrayBuffer(blob);
+      } catch (error) {
+        console.error(error);
+        setErrorStatus("Failed to set grade values");
+      }
     } catch (error) {
-      setErrorStatus("Failed to set grade values");
+      setErrorStatus("Failed to set grade values", error);
     }
   };
 
@@ -258,7 +241,7 @@ const FileUploadForm = () => {
           console.error(error);
           setErrorStatus(
             "Error in processing request, please try again later."
-          );          
+          );
         }
       }
     },
@@ -298,7 +281,7 @@ const FileUploadForm = () => {
     <>
       {session && (
         <Box display={"flex"} flexDirection={"row"}>
-          <Box display={"flex"} height={"100vh"} sx={{overflowY: 'auto'}}>
+          <Box display={"flex"} height={"100vh"} sx={{ overflowY: "auto" }}>
             <EvaluationHistoryLeftBar type={"batch"} result={newData} />
           </Box>
           <Box width={"100%"} height={"93vh"} sx={{ overflowY: "scroll" }}>

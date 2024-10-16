@@ -31,6 +31,10 @@ export const LLM_MODELS = [
     value: "meta-llama/llama-3-70b-instruct",
     label: "llama-3-70b-instruct (Recommended)",
   },
+  {
+    value: "meta-llama/llama-3-1-70b-instruct",
+    label: "llama-3-1-70b-instruct"
+  },
 ];
 
 export const GITHUB_SOURCE_CODE =

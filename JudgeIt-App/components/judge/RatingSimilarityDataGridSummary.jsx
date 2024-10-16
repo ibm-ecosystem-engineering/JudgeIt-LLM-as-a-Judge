@@ -4,7 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import DataGridToolbar from "@/components/globals/DataGridToolbar";
 import { API_TYPE_RATING, grade_map_rating, grade_map_similarity } from "@/services/Config";
 
-const RatingSimilarityDataGrid = ({ serverData }) => {
+const RatingSimilarityDataGridSummary = ({ serverData }) => {
   const columns = [
     {
       field: "id",
@@ -12,18 +12,23 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
       hide: true,
     },
     {
+      field: "Question",
+      headerName: "Question",
+      width: "250",
+    },
+    {
+      field: "experiment_name",
+      headerName: "Experiment Name",
+      width: "100",
+    },
+    {
       field: "name",
       headerName: "Name",
-      width: "250",
+      width: "100",
     },
     {
       field: "eval_type",
       headerName: "Eval Type",
-    },
-    {
-      field: "model",
-      headerName: "Model",
-      width: "250",
     },
     {
       field: "golden_text",
@@ -49,20 +54,20 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
 
   return (
     <div style={{ width: "100%" }}>
-      {" "} {console.log("serverData 00000000 ", serverData)}
       <DataGrid
         {...{
           columns: columns,
           rows: serverData.map((item) => {
             return {
               id: item._id,
+              Question: item.question,
+              experiment_name: item.experiment_name,
               name: item.name,
               eval_type: item.eval_type,
-              model: item.content.query.model,
-              golden_text: item.content.query.golden_text,
-              generated_text: item.content.query.generated_text,
-              Grade: (item.eval_type === API_TYPE_RATING) ? grade_map_rating[item.content.result.Grade] : grade_map_similarity[item.content.result.Grade],
-              Explanation: item.content.result.Explanation,
+              golden_text: item.golden_text,
+              generated_text: item.generated_text,
+              Grade: (item?.Grade) ? item?.Grade : item?.judgeit_score,
+              Explanation: (item?.Explanation) ? item?.Grade : item?.judgeit_reasoning
             };
           }),
         }}
@@ -83,4 +88,4 @@ const RatingSimilarityDataGrid = ({ serverData }) => {
   );
 };
 
-export default RatingSimilarityDataGrid;
+export default RatingSimilarityDataGridSummary;

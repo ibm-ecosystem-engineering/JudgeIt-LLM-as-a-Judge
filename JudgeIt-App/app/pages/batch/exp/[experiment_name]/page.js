@@ -8,18 +8,74 @@ import React, { useState, useEffect, useRef } from "react";
 import { Grid, Typography, Box, CircularProgress, Button } from "@mui/material";
 import BarChart from "@/components/globals/BarChart";
 import Footer from "@/components/globals/Footer";
-import { app_labels_and_config } from "@/services/Config";
-import RatingSimilarityDataGrid from "@/components/judge/RatingSimilarityDataGrid";
+import { API_TYPE_MULTITURN, app_labels_and_config } from "@/services/Config";
+import RatingSimilarityDataGrid from "@/components/judge/RatingSimilarityDataGridSummary";
+import { v4 as uuidv4 } from 'uuid';
+import DataGridMultiTurnSummary from "@/components/judge/DataGridMultiTurnSummary";
 
 const ExperimentPage = () => {
   const params = useParams();
   const { experiment_name } = params; // Get the 'id' from the URL
   const { data: session, status } = useSession();
-  const [serverData, setServerData] = useState(null);
+  const [multiTurnContent, setMultiTurnContent] = useState(null);
+  const [ratingSimilarityContent, setRatingSimilarityContent] = useState(null);
   const [task_object, setTask_object] = useState(null);
   const [gradeData, setGradeData] = useState(null);
   const hasEffectRun = useRef(false);
 
+  const flattenData_similarity_rating = (input) => {
+    const result = [];
+
+    input.forEach(item => {
+        const keys =  item?.Question ? Object.keys(item.Question) : Object.keys(item.question); 
+
+        keys.forEach(key => {
+            const judgeit_score = item?.Grade ? item.Grade[key] : item.judgeit_score[key];
+            const Question = item?.Question ? item.Question[key] : item.question[key];
+            const judgeit_score_explanation = item?.Explanation ? item.Explanation[key] : item.judgeit_reasoning[key];
+            result.push({
+                _id: uuidv4(),
+                question: Question,
+                golden_text: item.golden_text[key],
+                generated_text: item.generated_text[key],
+                judgeit_score: judgeit_score,
+                judgeit_reasoning: judgeit_score_explanation,
+                experiment_name: item.experiment_name,
+                name: item.name,
+                eval_type: item.eval_type
+            });
+        });
+    });
+
+    return result;
+  };
+
+  const flattenData_multi_turn = (input) => {
+    const result = [];
+
+    input.forEach(item => {
+        const keys =  Object.keys(item?.current_question);
+        
+        keys.forEach(key => {
+            const judgeit_score = item?.Grade ? item.Grade[key] : item.judgeit_score[key];
+            result.push({
+                _id: uuidv4(),
+                previous_question: item.previous_question[key],
+                previous_answer: item.previous_answer[key],
+                current_question: item.current_question[key],
+                golden_rewritten_question: item.golden_rewritten_question[key],
+                rewritten_question: item.rewritten_question[key],
+                judgeit_score: judgeit_score,
+                experiment_name: item.experiment_name,
+                name: item.name,
+                eval_type: item.eval_type
+            });
+        });
+    });
+
+    return result;
+  }; 
+  
   useEffect(() => {
     if (hasEffectRun.current) {
       return; // Prevents the effect from running again
@@ -33,13 +89,16 @@ const ExperimentPage = () => {
       );
 
       if (history_data) {
-
-        const contents = []
+        const contents = [];
         const grades_list = await Promise.all(
           history_data.map(async (item) => {
             //const data = await get_result_by_task_id(item.content.task_id);
             const data = await item?.content?.batch_result;
-            contents.push(data)
+            data.experiment_name = item.experiment_name;
+            data.name = item.name;
+            data.eval_type = item.eval_type;
+
+            contents.push(data);
             if (data && data?.status !== "ERROR") {
               const grades = data.Grade
                 ? Object.values(data.Grade).filter(
@@ -65,7 +124,18 @@ const ExperimentPage = () => {
           })
         );
         setGradeData(grades_list);
-        setServerData(contents);
+
+        const multi_turn = contents.filter(
+          (itm) => itm.eval_type === API_TYPE_MULTITURN
+        );
+        const rating_similarity = contents.filter(
+          (itm) => itm.eval_type !== API_TYPE_MULTITURN
+        );
+
+        const flatten_rating_similarity = flattenData_similarity_rating(rating_similarity);
+        const flatten_multi_turn = flattenData_multi_turn(multi_turn)
+        setMultiTurnContent(flatten_multi_turn);
+        setRatingSimilarityContent(flatten_rating_similarity);
       }
     };
 
@@ -139,16 +209,32 @@ const ExperimentPage = () => {
                   sx={{ flexGrow: 1 }}
                   container
                 >
-                  {serverData &&
-                    serverData.map((sdata, index) => (
-                      <Grid
-                        item
-                        xs={12}
-                        key={index}
-                      >
-                        <RatingSimilarityDataGrid serverData={sdata?.content?.batch_result} />
-                      </Grid>
-                    ))}
+
+                  {ratingSimilarityContent && (
+                    <>
+                    <Grid item xs={12} marginBottom={'10px'}>
+                      <Typography fontSize={'20px'} fontWeight={'bold'}>Rating & Similarity data</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <RatingSimilarityDataGrid
+                        serverData={ratingSimilarityContent}
+                      />
+                    </Grid>
+                    </>
+                  )}
+
+                  {multiTurnContent && (
+                    <>
+                    <Grid item xs={12} marginTop={'20px'} marginBottom={'10px'}>
+                      <Typography fontSize={'20px'} fontWeight={'bold'}>Multi-turn data</Typography>
+                    </Grid>
+                    <Grid item xs={12} marginBottom={'40px'}>
+                      <DataGridMultiTurnSummary
+                        serverData={multiTurnContent}
+                      />
+                    </Grid>
+                    </>
+                  )}
                   {gradeData &&
                     gradeData.map((gdata, index) => (
                       <Grid
