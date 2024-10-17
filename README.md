@@ -6,6 +6,11 @@ JudgeIt is an automated evaluation framework built to accurately and efficiently
 
 This results in saving 30 times the time spent on manual testing for each RAG pipeline version, allowing AI engineers to run 10 times more experiments and achieve the desired accuracy much faster.
 
+Cover blog to know more about JudgeIt and how it works
+
+https://medium.com/towards-generative-ai/judgeit-the-most-accurate-framework-to-automate-evaluation-of-gen-ai-34785d3cff6e
+
+
 
 <!-- ![JudgeIt Flow](/images/flow-diagram.png) -->
 ![Multiturn app batch](/images/multiturn-app-batch.gif)
@@ -34,12 +39,15 @@ To ensure reliability, the JudgeIt framework has been rigorously tested against 
 ![RAG Reliability scores](/images/RAG-reliability-testing.png)
 For RAG evaluation, this process involved building a dataset of thousands of real-life Q&A pairs in Enterprise setting, then collected golden answers, RAG answers, and human evaluations of the similarity between the RAG and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to show consistely above 90% F1 scores across different RAG pipeline evaluations compared to human evaluations with 20+ enterprise Q&A tasks. 
 
+This blog gives step by step guide how you can use Judgeit for RAG eval https://medium.com/towards-generative-ai/judgeit-automating-rag-evaluation-using-llm-as-a-judge-d7c10b3f2eeb
+
 #### Query-Rewrite Evaluation Reliability Metrics (2 Turn)
 <img width="709" alt="Screenshot 2024-10-11 at 12 51 04 AM" src="https://github.com/user-attachments/assets/67d5dff9-82e5-45eb-979a-54079511032c">
 
 
 For Multi-turn evaluation, this process involved building a dataset of user queries, conversation memory history including a previous question and previous answer, golden rewritten queries, generated rewritten queries, and human evaluations of the similarity between the generated rewritten queries and golden answers. Using Meta’s Llama-3–70b as an LLM Judge, JudgeIt was able to achieve the near 100% precision.
 
+This blog gives step by step guide how you can use it for query rewrite eval https://medium.com/towards-generative-ai/judgeit-evaluate-query-rewrite-accuracy-in-multi-turn-conversations-using-llm-as-a-judge-2a222abace2b
 
 ## Using JudgIt Framework
 
@@ -59,6 +67,8 @@ Using JudgeIt framework is simple, just pick what is the task you want to evalua
   
 3. **GUI-Application**: JudgeIt SOA based application contains a REST API backend and NextJS frontend to run evaluations via a UI. The SOA method takes input data in the form of excel/csv files or single inputs for any of these evaluations. View the [REST Service Instructions](./REST-Service/README.md) and [JudgeIt App Instructions](./JudgeIt-App/README.md) for more detail.
    ![Multiturn app batch](/images/multiturn-app-batch.gif)
+
+   Check out this blog on how regarding step by step guide on app can be deployed https://medium.com/towards-generative-ai/judgeit-automated-evaluation-of-genai-with-ease-of-gui-b98f4213a8dc
 
 ## JudgeIt Deployment Options:
 
