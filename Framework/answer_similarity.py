@@ -13,9 +13,9 @@ SIMILARITY_PROMPT= """Follow these structured steps to accurately assess the sim
 2. **Initial Setup**: Begin by carefully reviewing the Golden Text to understand the key information, entities, and intents it contains. The Golden Text is considered fully correct and comprehensive. Then, examine the Generated Text that needs evaluation.
 3. **Evaluation Criteria**: Evaluate the Generated Text based on the following criteria:
     - Output {{"Grade": "1"}} if:
-      a) The Generated Text matches the Golden Text closely in terms of key entities and intents. Note that these may be worded differently but convey the same meaning.
+      a) The Generated Text matches the Golden Text closely in terms of key entities and intents. Note that these may be worded differently but convey the same meaning contextually.
       b) The Generated Text contains all the essential information from the Golden Text, even if presented in a different order or with slight variations in phrasing.
-      c) The Generated Text includes the core information from the Golden Text and may contain additional relevant details or expansions that don't contradict the original.
+      c) The Generated Text includes the core information from the Golden Text or  may contain additional relevant, concise details or expansions that don't contradict the contextual meaning of the Golden Text.
     - Output {{"Grade": "0"}} if:
       a) The Generated Text is missing critical entities or intents that are present in the Golden Text.
       b) The Generated Text contains significant factual errors or contradictions when compared to the Golden Text.
