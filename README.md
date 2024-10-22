@@ -108,7 +108,7 @@ Using JudgeIt framework is simple, just pick what is the task you want to evalua
 ### Coming Soon (Product Backlog)
 
 - [x] Llama 3.0 -70B as Judge model
-- [ ] Llama 3.1 -70B as Judge model
+- [x] Llama 3.1 -70B as Judge model
 - [ ] Mixtral-Large as Judge Model
 - [ ] Text2Sql Task support
 - [ ] Liberal vs Conservative Judge Options for verbose vs crisp RAG comparison
