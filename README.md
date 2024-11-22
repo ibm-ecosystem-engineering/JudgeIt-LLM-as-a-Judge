@@ -49,7 +49,7 @@ For Multi-turn evaluation, this process involved building a dataset of user quer
 
 This blog gives step by step guide how you can use it for query rewrite eval https://medium.com/towards-generative-ai/judgeit-evaluate-query-rewrite-accuracy-in-multi-turn-conversations-using-llm-as-a-judge-2a222abace2b
 
-## Using JudgIt Framework
+## Using JudgeIt Framework
 
 Using JudgeIt framework is simple, just pick what is the task you want to evaluate (RAG or multi-turn query rewrite), then LLM which you wish to employ as a judge and you are all set. 
 
@@ -127,16 +127,16 @@ JudgeIt is the latest framework from the SuperKnowa project. Do check out our ot
 
 ### Created & Architected By
 
-  Kunal Sawarkar, Distinguished Engineer- GenAI & Chief Data Scientist
+  Kunal Sawarkar, Distinguished Engineer - GenAI & Chief Data Scientist
 
 ### Builders
 
-  - Shivam Solanki, Senior Advisory Data Scientist
+  - Shivam Solanki - Senior Advisory Data Scientist
   - Himadri Talukder - Senior Software Engineer
-  - Anand Das- AI Engineer
-  -  Kevin Huang, Sr.- ML-Ops Engineer
-  -  Abhilasha Mangal, Senior Data Scientist
-  -  Josefina Casanova- Data Scientist
+  - Anand Das - AI Engineer
+  -  Kevin Huang, Sr. - ML-Ops Engineer
+  -  Abhilasha Mangal - Senior Data Scientist
+  -  Josefina Casanova - Data Scientist
   
 
 

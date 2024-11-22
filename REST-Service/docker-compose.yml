@@ -1,0 +1,58 @@
+services:
+  fastapi_app:
+    container_name: fastapi_app
+    build: .
+    #volumes:
+    #  - ./app:/app
+    ports:
+      - 3001:3001
+    environment:
+      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
+      - WX_PROJECT_ID=
+      - IBM_CLOUD_API_KEY=
+      - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
+      - WX_PLATFORM=
+      - WX_USER=
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - SERVER_URL=http://localhost:3001
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis:7.2.5-alpine
+    restart: always
+
+  celery_worker:
+    container_name: celery_worker
+    build: .
+    #volumes:
+    #  - ./app:/app
+    command: celery -A app.celery.celery_worker.celery worker --loglevel=info
+    environment:
+      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
+      - WX_PROJECT_ID=
+      - WX_PLATFORM=
+      - WX_USER=
+      - IBM_CLOUD_API_KEY=
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - fastapi_app
+      - redis
+    restart: always
+
+  flower:
+    container_name: flower
+    build: .
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    ports:
+      - 5556:5555
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - fastapi_app
+      - redis
+      - celery_worker
+    restart: always
