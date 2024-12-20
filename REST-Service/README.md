@@ -95,6 +95,8 @@ The following prerequisites are required to run the tester:
 
 ### Installation
 
+> **Note** Any keys included in this repository are intended solely for illustrative purposes and are neither valid nor active. These non-functional keys should be replaced with your own secure and valid credentials.
+
 1. Change directory into the JudgeIt REST-Service
 
    ```bash
