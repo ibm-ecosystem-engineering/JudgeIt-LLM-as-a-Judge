@@ -17,7 +17,7 @@
     "chart.js": "^4.4.4",
     "cryptr": "^6.3.0",
     "formik": "^2.4.6",
-    "next": "^14.2.14",
+    "next": "^14.2.21",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
