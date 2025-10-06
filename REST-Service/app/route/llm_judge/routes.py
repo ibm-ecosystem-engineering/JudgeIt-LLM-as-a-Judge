@@ -3,8 +3,10 @@ import io
 from dotenv import load_dotenv
 from fastapi import APIRouter, File, HTTPException, Query, Request, Security, UploadFile, WebSocket, WebSocketDisconnect, requests as request
 from fastapi.security import APIKeyHeader
-from app.celery.celery_worker import multi_turn_batch_task, rating_batch_task, similarity_batch_task
-from app.src.models.QueryRewriteInput import QueryRewriteInput
+from app.celery.celery_worker import single_turn_batch_task, multi_turn_with_conversation_batch_task, rating_batch_task, similarity_batch_task
+from app.celery.celery_worker import wbox_sdrflow_batch_task, bbox_sdrflow_batch_task, agent_sdrflow_batch_task
+from app.src.models.SingleTurnInput import SingleTurnInput
+from app.src.models.MultiTurnInput import MultiTurnInput
 from app.src.services.LLMJudgeService import LLMJudgeService
 from app.src.models.LLMInput import LLMInput
 from starlette.status import HTTP_403_FORBIDDEN, HTTP_500_INTERNAL_SERVER_ERROR
@@ -14,6 +16,7 @@ from app.src.services.WatsonXService import WatsonXService
 from app.src.utils.Helper import Helper
 import pandas as pd
 from celery.result import AsyncResult
+import json
 
 load_dotenv()
 
@@ -28,8 +31,8 @@ WX_URL = os.environ.get("WATSONX_URL")
 WX_PROJECT_ID = os.environ.get("WX_PROJECT_ID")
 wx_platform: str  = os.environ.get("WX_PLATFORM")
 wx_user_onpremise = os.environ.get("WX_USER")
+wx_gov = os.environ.get("WX_GOV_REGION")
 
-print("Platform", wx_platform)
 # RAG APP Security
 API_KEY_NAME = "LLM_JUDGE_API_KEY"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
@@ -44,7 +47,7 @@ async def get_api_key(api_key_header: str = Security(api_key_header)):
         )
 
 ## This routes returns the text to SQL from a given context and a sql query
-@judge_api_route.post(path='/rating', description="### default model name is meta-llama/llama-3-70b-instruct")
+@judge_api_route.post(path='/rating', description="### default model name is meta-llama/llama-3-3-70b-instruct")
 def rating(llm_input :LLMInput, api_key: str = Security(get_api_key)):
     if llm_input.golden_text is None:
         raise HTTPException(status_code=422, detail="Golden text is not found")
@@ -54,16 +57,13 @@ def rating(llm_input :LLMInput, api_key: str = Security(get_api_key)):
     
     llm_model = llm_input.model
     if llm_model is None:
-        llm_model = "meta-llama/llama-3-70b-instruct"
+        llm_model = "meta-llama/llama-3-3-70b-instruct"
     
     ## Create langchain watsonx LLM service
     watsonx_service = WatsonXService(
-            ibm_cloud_url=WX_URL,
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model, 
-            platform=wx_platform,           
-            wx_user_onpremise=wx_user_onpremise
+            llm_model_id=llm_model
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
@@ -82,16 +82,16 @@ rating_batch_file_format = """
 
 ## This is the execl/csv data format. Please make sure, files have these column name with correct case.
 
-| golden_text   | generated_text      | 
-| ------------- | -----------------   | 
-| Golen text 1  | generated text 1    |
+| question      |  golden_text   | generated_text      | 
+| ------------- | -------------  | -----------------   | 
+| question 1    |  Golen text 1  | generated text 1    |
 
 """
 
 ## This routes returns the text to SQL from a given context and a sql query
 @judge_api_route.post(path='/rating/batch', description=rating_batch_file_format)
 async def rating_batch(
-    model_name: str = Query("meta-llama/llama-3-70b-instruct", description="### Default model name is meta-llama/llama-3-70b-instruct"), 
+    model_name: str = Query("meta-llama/llama-3-3-70b-instruct", description="### Default model name is meta-llama/llama-3-3-70b-instruct"), 
     file: UploadFile = File(...),
     api_key: str = Security(get_api_key)):
     
@@ -124,16 +124,13 @@ def similarity(llm_input :LLMInput, api_key: str = Security(get_api_key)):
     
     llm_model = llm_input.model
     if llm_model is None:
-        llm_model = "meta-llama/llama-3-70b-instruct"
+        llm_model = "meta-llama/llama-3-3-70b-instruct"
 
     ## Create langchain watsonx LLM service
     watsonx_service = WatsonXService(
-            ibm_cloud_url=WX_URL,
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model,
-            platform=wx_platform,
-            wx_user_onpremise=wx_user_onpremise
+            llm_model_id=llm_model
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
@@ -151,16 +148,16 @@ similarity_batch_file_format = """
 
 ## This is the execl/csv data format. Please make sure, files have these column name with correct case.
 
-| golden_text   | generated_text      | 
-| ------------- | -----------------   | 
-| Golen text 1  | generated text 1    |
+| question      |  golden_text   | generated_text      | 
+| ------------- | -------------  | -----------------   | 
+| question 1    |  Golen text 1  | generated text 1    |
 
 """
 
 ## This routes returns the text to SQL from a given context and a sql query
 @judge_api_route.post(path='/similarity/batch', description=similarity_batch_file_format)
 async def similarity_batch(
-    model_name: str = Query("meta-llama/llama-3-70b-instruct", description="## Default model name is meta-llama/llama-3-70b-instruct"), 
+    model_name: str = Query("meta-llama/llama-3-3-70b-instruct", description="## Default model name is meta-llama/llama-3-3-70b-instruct"), 
     file: UploadFile = File(...),
     api_key: str = Security(get_api_key)):
 
@@ -184,8 +181,8 @@ async def similarity_batch(
 
 
 ## This routes returns the text to SQL from a given context and a sql query
-@judge_api_route.post('/multiturn')
-def query_multi_turn_solo(llm_input :QueryRewriteInput, api_key: str = Security(get_api_key)):
+@judge_api_route.post('/singleturn')
+def query_single_turn_evaluation(llm_input :SingleTurnInput, api_key: str = Security(get_api_key)):
     
     if llm_input.previous_question is None:
         raise HTTPException(status_code=422, detail="previous_question is not found")
@@ -204,22 +201,19 @@ def query_multi_turn_solo(llm_input :QueryRewriteInput, api_key: str = Security(
     
     llm_model = llm_input.model
     if llm_model is None:
-        llm_model = "meta-llama/llama-3-70b-instruct"
+        llm_model = "meta-llama/llama-3-3-70b-instruct"
 
     ## Create langchain watsonx LLM service
     watsonx_service = WatsonXService(
-            ibm_cloud_url=WX_URL,
             api_key=IBM_CLOUD_API_KEY,
             project_id=WX_PROJECT_ID,
-            llm_model_id=llm_model,
-            platform=wx_platform,
-            wx_user_onpremise=wx_user_onpremise
+            llm_model_id=llm_model
     )
     llm_model_service = watsonx_service.get_wml_llm_services()
     ### LLM Judge service
     llm_judge = LLMJudgeService()
 
-    llm_response = llm_judge.multi_trun_llm_judge(
+    llm_response = llm_judge.single_trun_llm_judge(
         previous_question=llm_input.previous_question,
         previous_answer=llm_input.previous_answer,
         current_question=llm_input.current_question,
@@ -230,15 +224,89 @@ def query_multi_turn_solo(llm_input :QueryRewriteInput, api_key: str = Security(
 
     return JSONResponse(content=llm_response)
 
+## This routes returns the text to SQL from a given context and a sql query
+@judge_api_route.post('/multiturn')
+def query_multi_turn_evaluation(llm_input : MultiTurnInput, api_key: str = Security(get_api_key)):
+    
+    if llm_input.conversation_history is None:
+        raise HTTPException(status_code=422, detail="Conversation history is not found")
+    
+    if llm_input.follow_up_query is None:
+        raise HTTPException(status_code=422, detail="Follow up query is not found")
+    
+    if llm_input.golden_query is None:
+        raise HTTPException(status_code=422, detail="Golden query is not found")
+    
+    if llm_input.rewritten_query is None:
+        raise HTTPException(status_code=422, detail="Rewritten query is not found")
+        
+    llm_model = llm_input.model
+    if llm_model is None:
+        llm_model = "meta-llama/llama-3-3-70b-instruct"
 
-multi_trun_batch_file_format = """
-# Runs a batch job to find LLM rating multi-turn
+    ## Create langchain watsonx LLM service
+    watsonx_service = WatsonXService(
+            api_key=IBM_CLOUD_API_KEY,
+            project_id=WX_PROJECT_ID,
+            llm_model_id=llm_model
+    )
+    llm_model_service = watsonx_service.get_wml_llm_services()
+    ### LLM Judge service
+    llm_judge = LLMJudgeService()
+
+    llm_response = llm_judge.multi_trun_llm_judge(
+        conversation_history=llm_input.conversation_history,
+        follow_up_query=llm_input.follow_up_query,
+        golden_query=llm_input.golden_query,
+        rewritten_query=llm_input.rewritten_query,
+        llm_model=llm_model_service
+    )
+
+    return JSONResponse(content=llm_response)
+
+
+single_trun_batch_file_format = """
+# Runs a batch job to find LLM single_turn
 
 ## This is the execl/csv data format. Please make sure, files have these column name with correct case.
 
 | previous_question    | previous_answer  | current_question   | golden_rewritten_question   | rewritten_question    |
 | -------------------- | ---------------- | ------------------ | --------------------------- | --------------------- |
 | previous question 1  | Previous Answer1 | current question 1 | golden rewritten question 1 | rewritten question 1  |
+
+"""
+
+## This routes returns the text to SQL from a given context and a sql query
+@judge_api_route.post('/singleturn/batch', description=single_trun_batch_file_format)
+async def query_single_turn_batch(file: UploadFile = File(...), api_key: str = Security(get_api_key)):
+    
+    file_content = await file.read()
+    ##print(file_content)
+
+    try:
+        help = Helper()
+        data_df: pd.DataFrame = help.read_data(file.filename, file_content)
+    except Exception as ex:
+        raise HTTPException(status_code=400, detail=str(ex))
+
+    try:
+        help.validate_single_turn_fields(data_df=data_df)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    df_json = data_df.to_json()
+    task = single_turn_batch_task.delay(df_json)
+    return JSONResponse({'task_id': task.id})
+
+
+multi_trun_batch_file_format = """
+# Runs a batch job to find LLM rating multi-turn
+
+## This is the execl/csv data format. Please make sure, files have these column name with correct case.
+
+| conversation_history    | follow_up_query  | golden_query    | rewritten_query             | 
+| -------------------- | ---------------- | ------------------ | --------------------------- | 
+| previous question 1  | Previous Answer1 | current question 1 | golden rewritten question 1 | 
 
 """
 
@@ -256,13 +324,15 @@ async def query_multi_turn_batch(file: UploadFile = File(...), api_key: str = Se
         raise HTTPException(status_code=400, detail=str(ex))
 
     try:
-        help.validate_multi_turn_fields(data_df=data_df)
+        help.validate_multi_turn_with_conversation_fields(data_df=data_df)
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
 
     df_json = data_df.to_json()
-    task = multi_turn_batch_task.delay(df_json)
+    task = multi_turn_with_conversation_batch_task.delay(df_json)
     return JSONResponse({'task_id': task.id})
+
+
 
 @judge_api_route.get(path="/status/{task_id}", description="Checks current status of the task using http request response")
 async def get_status(task_id: str, request: Request, api_key: str = Security(get_api_key)):
@@ -351,3 +421,139 @@ async def download_file(task_id: str, api_key: str = Security(get_api_key)):
         return {"status": "ERROR", "msg": "Task not found."}
     
     return {"status": "ERROR", "msg": "Task not completed or file not found."}
+
+@judge_api_route.get(path="/result/{task_id}", description="Get JSON version of result by task_id")
+async def get_result(task_id: str, api_key: str = Security(get_api_key)):
+    result = AsyncResult(task_id)
+    if result.state == 'SUCCESS':
+        json_object = json.loads(result.result)
+        return JSONResponse(content=json_object)
+    
+    if result.state == 'PENDING' and not result.result:
+        return {"status": "ERROR", "msg": "Task not found."}
+    
+    return {"status": "ERROR", "msg": "Task not completed or file not found."}
+
+wbox_sdrflow_batch_file_format = """
+# Runs a batch job for whitebox evaluation for sdr+ workflow
+
+## This is the execl/csv data format. Please make sure, files have these column name with correct case.
+
+| Query  | Agent Thought Trail    | 
+| ------------- | -----------------   | 
+| user query  | agent thought trail data   |
+
+"""
+
+@judge_api_route.post(path='/wbox/batch', description=wbox_sdrflow_batch_file_format)
+async def wbox_sdrflow_batch(
+    # model_name: str = Query("meta-llama/llama-3-3-70b-instruct", description="### Default model name is meta-llama/llama-3-3-70b-instruct"), 
+    file: UploadFile = File(...),
+    api_key: str = Security(get_api_key)):
+    file_content = await file.read()
+    ##print(file_content)
+
+    model_name = "meta-llama/llama-3-3-70b-instruct"
+
+    try:
+        help = Helper()
+        data_df: pd.DataFrame = help.read_data(file.filename, file_content)
+    except Exception as ex:
+        raise HTTPException(status_code=400, detail=str(ex))
+    
+    try:
+        help.validate_wbox_eval_fields(data_df=data_df)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    df_json = data_df.to_json()
+    task = wbox_sdrflow_batch_task.delay(df_json, model_name)
+    return JSONResponse({'task_id': task.id})
+
+
+bbox_sdrflow_batch_file_format = """
+# Runs a batch job for blackbox evaluation for sdr+ workflow
+
+## This is the execl/csv data format. Please make sure, files have these column name with correct case.
+
+| Chrono Agent Output | Product Agent Output | Research Agent Output | Comms Agent Output| 
+| ------------------- | -------------------- | --------------------- | ------------------|
+| chrono output       | product output       | research output       | comms output      |
+
+"""
+@judge_api_route.post(path='/bbox/batch', description=bbox_sdrflow_batch_file_format)
+async def bbox_sdrflow_batch(
+    # model_name: str = Query("meta-llama/llama-3-3-70b-instruct", description="### Default model name is meta-llama/llama-3-3-70b-instruct"), 
+    file: UploadFile = File(...),
+    api_key: str = Security(get_api_key)):
+    file_content = await file.read()
+    ##print(file_content)
+
+    ###print("file: ", file.filename)
+
+    model_name = "meta-llama/llama-3-3-70b-instruct"
+
+    try:
+        help = Helper()
+        data_df: pd.DataFrame = help.read_data(file.filename, file_content)
+        data_df = data_df.rename(columns=lambda x: x.title())
+        ##print(f"data df cols: {data_df.columns}")
+        data_df = data_df[data_df["Status"] == "completed"]
+    except Exception as ex:
+        raise HTTPException(status_code=400, detail=str(ex))
+    
+    try:
+        #help.validate_wbox_eval_fields(data_df=data_df)
+        help.validate_bbox_eval_fields(data_df=data_df)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    df_json = data_df.to_json()
+    #task = bbox_sdrflow_batch_task.delay(df_json, model_name)
+    # no need to send json of data frame, send the data frame as is
+    # Yes we need to send json or else celery complains for some reason
+    ##print("in routes.py model name: ", model_name)
+    task = bbox_sdrflow_batch_task.delay(df_json, model_name)
+    return JSONResponse({'task_id': task.id})
+
+
+
+agent_sdrflow_batch_file_format = """
+# Runs a batch job for agent evaluation for sdr+ workflow
+
+## This is the execl/csv data format. Please make sure, files have these column name with correct case.
+
+| Chrono Agent Output | Product Agent Output | Research Agent Output | Comms Agent Output| 
+| ------------------- | -------------------- | --------------------- | ------------------|
+| chrono output       | product output       | research output       | comms output      |
+
+"""
+@judge_api_route.post(path='/agent/batch', description=agent_sdrflow_batch_file_format)
+async def agent_sdrflow_batch(
+    # model_name: str = Query("meta-llama/llama-3-3-70b-instruct", description="### Default model name is meta-llama/llama-3-3-70b-instruct"), 
+    file: UploadFile = File(...),
+    api_key: str = Security(get_api_key)):
+    file_content = await file.read()
+    ##print(file_content)
+
+    ###print("file: ", file.filename)
+
+    model_name = "meta-llama/llama-3-3-70b-instruct"
+
+    try:
+        help = Helper()
+        data_df: pd.DataFrame = help.read_data(file.filename, file_content)
+        data_df = data_df.rename(columns=lambda x: x.title())
+        ##print(f"data df cols: {data_df.columns}")
+        data_df = data_df[data_df["Status"] == "completed"]
+    except Exception as ex:
+        raise HTTPException(status_code=400, detail=str(ex))
+    
+    try:
+        help.validate_agent_eval_fields(data_df=data_df)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    df_json = data_df.to_json()
+    task = agent_sdrflow_batch_task.delay(df_json, model_name)
+    return JSONResponse({'task_id': task.id})

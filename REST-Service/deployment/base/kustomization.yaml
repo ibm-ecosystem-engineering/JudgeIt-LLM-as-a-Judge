@@ -10,11 +10,15 @@ secretGenerator:
     - WX_PROJECT_ID=
     - IBM_CLOUD_API_KEY=
     - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
-    - WX_PLATFORM=
+    - WX_PLATFORM=saas
     - WX_USER=
     - CELERY_BROKER_URL=redis://redis:6379/0
     - CELERY_RESULT_BACKEND=redis://redis:6379/0
     - SERVER_URL=
+    - MONGO_URL=
+    - MONGO_USER=
+    - MONGO_PASS=
+    - MONGO_DB="judgeit_app"
 resources:
   - redis/
   - celery-worker/

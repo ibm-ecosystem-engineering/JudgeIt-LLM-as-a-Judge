@@ -2,7 +2,7 @@
 import React from "react";
 import { TextField, Box } from "@mui/material";
 
-const MultiTurnForm = ({
+const SingleTurnForm = ({
   values,
   handleChange,
   handleBlur,
@@ -81,4 +81,4 @@ const MultiTurnForm = ({
   );
 };
 
-export default MultiTurnForm;
+export default SingleTurnForm;

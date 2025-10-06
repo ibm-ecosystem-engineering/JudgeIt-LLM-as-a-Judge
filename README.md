@@ -10,8 +10,6 @@ Cover blog to know more about JudgeIt and how it works
 
 https://medium.com/towards-generative-ai/judgeit-the-most-accurate-framework-to-automate-evaluation-of-gen-ai-34785d3cff6e
 
-
-
 <!-- ![JudgeIt Flow](/images/flow-diagram.png) -->
 ![Multiturn app batch](/images/multiturn-app-batch.gif)
 
@@ -27,6 +25,26 @@ JudgeIt automates evaluation processes so that it can be run in batch mode and o
 - **Portable-UserApp**: SOA architecture based user app can be deployed anywhere in lightweight manner
 - **Run-Anywhere**: Open architecture to deploy anywhere, be it on Cloud, Hybrid Cloud or On-prem in airgap env.
 - **Expandable**: Preset for Llama models and IBM watsonx platform and open source which can be easily extended to any model from HuggingFace.
+- This repository added on to the previous functionality to provide evaluation for the Sales Development Representative (SDR) agentic framework. It updates the UI to self-generate the ground truth of each agent, and then complete blackbox, whitebox, and negative testing. 
+---
+
+## Addendum: Agentic Workflow Evaluation Extension
+
+JudgeIt has been extended with an **Agentic Workflow Evaluation Addendum**, designed specifically for evaluating multi-agent workflows
+
+This addendum introduces three new evaluation methodologies:
+
+| Evaluation Type | Description | Scoring |
+|------------------|-------------|----------|
+| **Blackbox** | Evaluates the *output quality and completeness* of each agent without inspecting internal logic. | 0–1 for RAG agents, 1–3 for multi-faceted agents |
+| **Whitebox** | Evaluates *agent reasoning and tool usage* from the internal thought trail. | Binary: 0 (invalid) / 1 (valid) |
+| **Negative Testing** | Runs *watsonx.governance* and *LLM-as-a-Judge* HAP checks on all agent inputs and outputs. | Binary: 0 (clean) / 1 (harmful) |
+
+**Goal:**  
+Enhance JudgeIt from a GenAI pipeline evaluator (RAG, multi-turn, query rewrite) into a full **agentic workflow evaluator** — measuring not just what the agents produce, but *how* they think, reason, and comply with governance standards.
+
+**Read the full Addendum:**  
+[View the Agentic Workflow Evaluation README for details and build information](./evaluationapp-readme.md)
 
 ## Reliability Testing
 
@@ -122,7 +140,6 @@ Using JudgeIt framework is simple, just pick what is the task you want to evalua
 ## SuperKnowa
 JudgeIt is the latest framework from the SuperKnowa project. Do check out our other repos for building RAG pipelines. text2sql etc. here. 
 
-
 ## Team
 
 ### Created & Architected By
@@ -134,11 +151,10 @@ JudgeIt is the latest framework from the SuperKnowa project. Do check out our ot
   - Shivam Solanki - Senior Advisory Data Scientist
   - Himadri Talukder - Senior Software Engineer
   - Anand Das - AI Engineer
-  -  Kevin Huang, Sr. - ML-Ops Engineer
-  -  Abhilasha Mangal - Senior Data Scientist
-  -  Josefina Casanova - Data Scientist
+  - Kevin Huang, Sr. - ML-Ops Engineer
+  - Abhilasha Mangal - Senior Data Scientist
+  - Josefina Casanova - Data Scientist
   
-
 
 ## License
 

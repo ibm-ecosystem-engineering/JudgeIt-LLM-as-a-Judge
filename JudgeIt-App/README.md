@@ -3,7 +3,7 @@
 <!-- omit in toc -->
 # JudgeIt Application
 
-One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the code for a React-based application that provides a user interface for interacting with the LLM Judge service. It is built on the Next.js framework. There are three types of evaluation currently available:
+One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the code for a React-based application that provides a user interface for interacting with the LLM Judge service. It is built on the Next.js framework and integrates with IBM App ID for authentication. There are three types of evaluation currently available:
 
 1. **RAG Evaluation (Similarity)**: evaluate generated text against golden text
 2. **RAG Evaluation (Rating)**: evaluate generated text against golden text
@@ -11,19 +11,7 @@ One method of using JudgeIt is through a Service-Oriented Architecture (SOA). Th
 
 The JudgeIt framework takes input data in the form of excel or csv files for any of these evaluations.
 
-## Deployment Options:
-
-1. **SaaS**: When you are using SaaS based LLM service (watsonx.ai)
-
-![Ass SaaS](/images/llm-judge-app-saas.png)
-
-2. **On Prem**: When you have an LLM deployed on premise on CP4D
-
-![App OnPremise](/images/LLM-Judge-app-onpremise.png)
-
-<!-- ![LLM-Judges](/images/flow-diagram.png) -->
-
-
+![LLM-Judges](/images/flow-diagram.png)
 
 <!-- omit in toc -->
 ## Table of Contents
@@ -31,7 +19,6 @@ The JudgeIt framework takes input data in the form of excel or csv files for any
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-- [Usage Example](#usage-example)
 - [Configuring your Input File](#configuring-your-input-file)
 - [Understanding the Results](#understanding-the-results)
 
@@ -45,6 +32,7 @@ The following prerequisites are required to run the tester:
 
 1. [JudgeIt Backend REST Service](/REST-Service/README.md) is up and running
 2. [Node.js](https://nodejs.org/en) v18 or higher
+3. [IBM AppID](https://www.ibm.com/products/app-id) for application authentication
 
 ### Installation
 
@@ -75,9 +63,6 @@ The following prerequisites are required to run the tester:
    ```
 
 6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Usage Example
-![Multiturn app batch](/images/multiturn-app-batch.gif)
 
 ## Configuring your Input File
 

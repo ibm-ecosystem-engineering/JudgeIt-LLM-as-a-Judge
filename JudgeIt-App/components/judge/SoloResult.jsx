@@ -10,9 +10,15 @@ import {
 } from "@mui/material";
 import {
   API_TYPE_MULTITURN,
+  API_TYPE_SINGLETURN,
   API_TYPE_RATING,
   API_TYPE_SIMILARITY,
 } from "@/services/Config";
+
+import { grade_map_rating, grade_map_similarity, grade_map_multiturn } from "@/services/Config";
+
+const grade_col_name = "JudgeIt Score"
+const explanation_col_name = "JudgeIt Reasoning"
 
 const SoloResult = ({ data, api_type }) => {
   return (
@@ -24,38 +30,38 @@ const SoloResult = ({ data, api_type }) => {
         <TableHead>
           {api_type === API_TYPE_RATING && (
             <TableRow>
-              <TableCell>Grade</TableCell>
-              <TableCell>Explanation</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{grade_col_name}</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{explanation_col_name}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_SIMILARITY && (
             <TableRow>
-              <TableCell>Grade</TableCell>
-              <TableCell>Explanation</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{grade_col_name}</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{explanation_col_name}</TableCell>
             </TableRow>
           )}
-          {api_type === API_TYPE_MULTITURN && (
+          {(api_type === API_TYPE_MULTITURN || api_type === API_TYPE_SINGLETURN) && (
             <TableRow>
-              <TableCell>Grade</TableCell>
+              <TableCell sx={{fontWeight: "bold"}}>{grade_col_name}</TableCell>
             </TableRow>
           )}
         </TableHead>
         <TableBody>
           {api_type === API_TYPE_RATING && (
             <TableRow>
-              <TableCell>{data.Grade}</TableCell>
+              <TableCell>{grade_map_rating[data.Grade]}</TableCell>
               <TableCell>{data.Explanation}</TableCell>
             </TableRow>
           )}
           {api_type === API_TYPE_SIMILARITY && (
             <TableRow>
-              <TableCell>{data.Grade}</TableCell>
+              <TableCell>{grade_map_similarity[data.Grade]}</TableCell>
               <TableCell>{data.Explanation}</TableCell>
             </TableRow>
           )}
-          {api_type === API_TYPE_MULTITURN && (
+          {(api_type === API_TYPE_MULTITURN || api_type === API_TYPE_SINGLETURN) && (
             <TableRow>
-              <TableCell>{data.Grade}</TableCell>
+              <TableCell>{grade_map_multiturn[data.Grade]}</TableCell>
             </TableRow>
           )}
         </TableBody>

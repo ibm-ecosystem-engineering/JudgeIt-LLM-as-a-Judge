@@ -4,18 +4,25 @@ services:
     build: .
     #volumes:
     #  - ./app:/app
+    volumes:
+      - ./cert:/app/backend/cert
     ports:
       - 3001:3001
     environment:
       - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - IBM_CLOUD_API_KEY=
+      - WX_PROJECT_ID=<Watsonx Project ID>
+      - IBM_CLOUD_API_KEY=<IBM Cloud API Key>
       - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
-      - WX_PLATFORM=
-      - WX_USER=
+      - WX_PLATFORM=saas
+      - WX_USER=''
+      - WX_GOV_REGION=eu-de
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - SERVER_URL=http://localhost:3001
+      - MONGO_URL=<MONGO URL>
+      - MONGO_USER=<MONGO USER>
+      - MONGO_PASS=<MONGO PASS>
+      - MONGO_DB=<MONGO DB>
     restart: always
 
   redis:
@@ -31,10 +38,11 @@ services:
     command: celery -A app.celery.celery_worker.celery worker --loglevel=info
     environment:
       - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - WX_PLATFORM=
-      - WX_USER=
-      - IBM_CLOUD_API_KEY=
+      - WX_PROJECT_ID=<watsonx Project ID>
+      - WX_PLATFORM=saas
+      - WX_USER=''
+      - WX_GOV_REGION=eu-de
+      - IBM_CLOUD_API_KEY=<watsonx cloud api key>
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:

@@ -1,0 +1,30 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  resourceVersion: '108957306'
+  name: llm-judge-frontend
+  labels:
+    app: llm-judge-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm-judge-frontend
+  template:
+    metadata:
+      labels:
+        app: llm-judge-frontend
+        deployment: llm-judge-frontend
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+    spec:
+      containers:
+        - name: llm-judge-frontend
+          image: 'image-registry.openshift-image-registry.svc:5000/llm-judge/llm-judge-frontend@sha256:5ac9b1aa09123b4d09a7e0f297e542c895350f7a700779b36df77b0897f45f46'
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: llmjudge-frontend-secret
+          resources: {}
