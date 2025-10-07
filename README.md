@@ -1,4 +1,4 @@
-# JudgeIt (From SuperKnowa)- Automatic Eval Framework for Gen AI Pipelines
+# JudgeIt - Automatic Eval Framework for Agents, RAG & Text2SQL
 
 The single biggest challenge in scaling any GenAI solution (such as RAG, multi-turn conversations, or query rewriting) from PoC to production is the last-mile problem of evaluation. Statistical metrics (like BLEU, ROUGE, or METEOR) have proven ineffective at accurately judging the quality of AI generated text, leaving human evaluation as the only reliable option for Enterprises. However, human evaluation is slow and expensive, making it impossible to scale quickly. This is where 'JudgeIt' comes in—a framework designed to mimic human judgment with equally high precision and recall.
 
