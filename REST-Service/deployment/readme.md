@@ -13,13 +13,13 @@ Login with the token or user user and password in the command line
 - Create a new project
 
 ```sh
-oc new-project llm-judge-dev
+oc new-project llm-judge
 ```
 
 - Set the project name in a variable
 
 ```sh
-export $NAMESPACE_NAME='llm-judge-dev'
+export $NAMESPACE_NAME='llm-judge'
 ```
 
 - We are using the OpenShift internal registry; however, you can use any container registry.
@@ -38,13 +38,19 @@ docker push $REGISTRY/$NAMESPACE_NAME/backend:v1.0
 
 - We have a deployment directory with kustomization. Before you applying the deployment please edit [base/kustomize.yaml](base/kustomization.yaml) file and update the below variables based on the values you have.
 
-
-        - WATSONX_URL
-        - WX_PROJECT_ID
-        - IBM_CLOUD_API_KEY
-        - WX_PLATFORM
-        - WX_USER
-        - SERVER_URL
+    - WATSONX_URL=
+    - WX_PROJECT_ID=
+    - IBM_CLOUD_API_KEY=
+    - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
+    - WX_PLATFORM=saas
+    - WX_USER=
+    - CELERY_BROKER_URL=redis://redis:6379/0
+    - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    - SERVER_URL=
+    - MONGO_URL=
+    - MONGO_USER=
+    - MONGO_PASS=
+    - MONGO_DB="judgeit_app"
 
 ```yaml
 kind: Kustomization
@@ -59,11 +65,15 @@ secretGenerator:
     - WX_PROJECT_ID=
     - IBM_CLOUD_API_KEY=
     - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
-    - WX_PLATFORM=
+    - WX_PLATFORM=saas
     - WX_USER=
     - CELERY_BROKER_URL=redis://redis:6379/0
     - CELERY_RESULT_BACKEND=redis://redis:6379/0
     - SERVER_URL=
+    - MONGO_URL=
+    - MONGO_USER=
+    - MONGO_PASS=
+    - MONGO_DB="judgeit_app"
 resources:
   - redis/
   - celery-worker/

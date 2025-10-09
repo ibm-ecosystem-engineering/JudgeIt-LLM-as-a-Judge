@@ -29,4 +29,12 @@ spec:
             - secretRef:
                 name: llm-judge-secret
           image: backend-image-name:latest
-
+          volumeMounts:
+            - name: mongodb-cert-volume
+              readOnly: true
+              mountPath: /app/backend/cert
+      volumes:
+        - name: mongodb-cert-volume
+          secret:
+            secretName: mongodb-cert-secret
+            defaultMode: 420

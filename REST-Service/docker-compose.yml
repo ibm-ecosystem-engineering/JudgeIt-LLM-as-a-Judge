@@ -1,28 +1,34 @@
 services:
   fastapi_app:
     container_name: fastapi_app
-    build: .
+    platform: linux/amd64
+    image: fastapi_app_image
     #volumes:
     #  - ./app:/app
     ports:
       - 3001:3001
     environment:
       - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - IBM_CLOUD_API_KEY=
+      - WX_PROJECT_ID=***
+      - IBM_CLOUD_API_KEY=***
       - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
-      - WX_PLATFORM=
-      - WX_USER=
+      - WX_PLATFORM=saas
+      - WX_USER=''
+      - WX_GOV_REGION=eu-de
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - SERVER_URL=http://localhost:3001
+      - MONGO_URL=***
+      - MONGO_USER=***
+      - MONGO_PASS=***
+      - MONGO_DB=judge_it_dev
+      - WX_NEG_TEST_MODEL=mistralai/mistral-medium-2505
+      - WX_GOV_INSTANCE=
     restart: always
-
   redis:
     container_name: redis
     image: redis:7.2.5-alpine
     restart: always
-
   celery_worker:
     container_name: celery_worker
     build: .
@@ -31,17 +37,19 @@ services:
     command: celery -A app.celery.celery_worker.celery worker --loglevel=info
     environment:
       - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - WX_PLATFORM=
-      - WX_USER=
-      - IBM_CLOUD_API_KEY=
+      - WX_PROJECT_ID=***
+      - WX_PLATFORM=saas
+      - WX_USER=''
+      - WX_GOV_REGION=eu-de
+      - IBM_CLOUD_API_KEY=***
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - WX_NEG_TEST_MODEL=mistralai/mistral-medium-2505
+      - WX_GOV_INSTANCE=
     depends_on:
       - fastapi_app
       - redis
     restart: always
-
   flower:
     container_name: flower
     build: .

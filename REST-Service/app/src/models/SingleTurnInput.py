@@ -1,7 +1,7 @@
 from typing import Union
 from pydantic import BaseModel
 
-class QueryRewriteInput(BaseModel):
+class SingleTurnInput(BaseModel):
     previous_question: str
     previous_answer: str
     current_question: str

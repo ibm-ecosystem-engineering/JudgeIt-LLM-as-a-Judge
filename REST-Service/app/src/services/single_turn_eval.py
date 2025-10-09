@@ -1,4 +1,11 @@
+import json
+import requests, sys
+from nltk.translate.bleu_score import sentence_bleu
+from rouge import Rouge
+from sklearn.metrics import accuracy_score
 from langchain_core.prompts import PromptTemplate
+
+from app.src.services.WatsonXService import WatsonXService
 
 LLM_JUDGE_PROMPT = """Follow these below structured steps to accurately assess query transformations and ensure alignment with provided criteria.
 1. **Role and Task**: Assume the role of an impartial assistant and judge. Your task is to evaluate query transformations using provided information. You will receive a Previous Query, Previous Answer, New Query, Golden Rewritten Query, and a Rewritten New Query for evaluation.
@@ -79,7 +86,7 @@ Rewritten New Query: {prompt_parameter_5}
 Output:
 """
 
-def build_query_rewrite_prompt(row):
+def build_single_turn_prompt(row):
     input_variables = [
         'prompt_parameter_1', 
         'prompt_parameter_2', 

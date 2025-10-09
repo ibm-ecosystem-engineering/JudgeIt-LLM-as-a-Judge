@@ -5,15 +5,7 @@
 
 One method of using JudgeIt is through a Service-Oriented Architecture (SOA). This directory contains the RESTful service code that interfaces with the JudgeIt framework. It offers endpoints for initiating evaluations, retrieving results, and configuring evaluation parameters.
 
-## Architecture Diagram:
-
-- **SaaS**: If you are using SaaS based LLM service (watsonx.ai), you can set the value of **WX_PLATFORM** as saas in the environment variable.
-  
-![llm-judge-app-saas](https://github.com/user-attachments/assets/24d8819f-a621-4c41-9a39-119c342ffbc9)
-
-- **On Prem**: If you have an LLM deployed on premise on CP4D, you can set the value of **WX_PLATFORM** as onpremise in the environment variable.
-
-![LLM-Judge-app-onpremise](https://github.com/user-attachments/assets/0589ed54-5a93-4ec2-9ebb-96bfc202b223)
+![Architecture diagram](/images/LLM-Judge-Architecture-Backend.png)
 
 <!-- omit in toc -->
 ## Table of Contents
@@ -70,28 +62,10 @@ It monitors the Celery cluster in real-time, offering a web-based interface to t
 
 The following prerequisites are required to run the tester:
 
-1. podman and podman-compose are installed. If you're using Docker and Docker Compose, you can skip this step. Simply use the `docker` command in place of `podman` and `docker-compose` instead of `podman-compose`.
-    - **macOS:** use the following commands to install Podman and Podman Compose
-
-    ```sh
-        brew install podman podman-compose
-    ```
-
-    - **Ubuntu:** Use the following commands to install Podman and Podman Compose
-
-    ```sh
-        sudo apt update
-        sudo apt install podman podman-compose
-    ```
-
-    - **Windows:**
-
-        - Download Podman for Windows: Visit the Podman for Windows release page (https://github.com/containers/podman-desktop/releases) and download the latest installer for your Windows version.
-
-        - Run the installer: Double-click the downloaded installer file and follow the on-screen instructions to complete the installation process.
-
-2. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
-3. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
+1. Docker desktop is installed: <https://docs.docker.com/desktop/>
+2. docker-compose is installed (for mac: <https://formulae.brew.sh/formula/docker-compose>)
+3. watsonx.ai project id: watsonx.ai project's Manage tab (Project -> Manage -> General -> Details)
+4. IBM Cloud api key: <https://cloud.ibm.com/iam/apikeys> (this must be for the same cloud account that hosts the watsonx.ai instance)
 
 ### Installation
 
@@ -100,107 +74,75 @@ The following prerequisites are required to run the tester:
 1. Change directory into the JudgeIt REST-Service
 
    ```bash
-   git clone git@github.com:ibm-ecosystem-engineering/JudgeIt-LLM-as-a-Judge.git && cd JudgeIt-LLM-as-a-Judge/REST-Service
+   cd JudgeIt-LLM-as-a-Judge/REST-Service
    ```
 
 2. In the `docker-compose.yml` file, update the following variables:
-    1. **WX_PLATFORM**: There are two options available: `saas` or `onpremise`. If you're using the IBM Watsonx platform, choose `saas`, but if you're using the on-premise Watsonx platform on CP4D, select 'onpremise'.
-    2. **WATSONX_URL**: Please provide watsonx url e.g. `https://us-south.ml.cloud.ibm.com`
-    3. **IBM_CLOUD_API_KEY**: IBM Cloud/Watsonx api key
-    4. **WX_PROJECT_ID**: your watsonx.ai project id
-    5. **WX_USER**: watsonx user is required when you choose the platform `onpremise`
-    6. **SERVER_URL:** Server url where the service will be deployed. It helps to navigate swagger ui.
+   1. IBM_CLOUD_API_KEY (your IBM Cloud api key)
+   2. WX_PROJECT_ID (your watsonx.ai project id)
 
-```yaml
-services:
-  fastapi_app:
-    container_name: fastapi_app
-    build: .
-    #volumes:
-    #  - ./app:/app
-    ports:
-      - 3001:3001
-    environment:
-      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - IBM_CLOUD_API_KEY=
-      - LLM_JUDGE_API_KEY=JudgeIt-Secret-Api-Key
-      - WX_PLATFORM=
-      - WX_USER=
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - SERVER_URL='http://localhost:3001'
-    restart: always
-
-  redis:
-    container_name: redis
-    image: redis:7.2.5-alpine
-    restart: always
-
-  celery_worker:
-    container_name: celery_worker
-    build: .
-    #volumes:
-    #  - ./app:/app
-    command: celery -A app.celery.celery_worker.celery worker --loglevel=info
-    environment:
-      - WATSONX_URL=https://us-south.ml.cloud.ibm.com
-      - WX_PROJECT_ID=
-      - WX_PLATFORM=
-      - WX_USER=
-      - IBM_CLOUD_API_KEY=
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - fastapi_app
-      - redis
-    restart: always
-
-  flower:
-    container_name: flower
-    build: .
-    command: celery --broker=redis://redis:6379/0 flower --port=5555
-    ports:
-      - 5556:5555
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - fastapi_app
-      - redis
-      - celery_worker
-    restart: always
+   ```yaml
+    services:
+        fastapi_app:
+        container_name: fastapi_app
+        build: .
+        ports:
+            - 3001:3001
+        environment:
+            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
+            - WX_PROJECT_ID=
+            - IBM_CLOUD_API_KEY=
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+            - LLM_JUDGE_API_KEY=LLM-JUDGE-SECRET-PASS
+        restart: always
+        redis:
+        container_name: redis
+        image: redis:7.2.5-alpine
+        restart: always
+        celery_worker:
+        container_name: celery_worker
+        build: .
+        #volumes:
+        #  - ./app:/app
+        command: celery -A app.celery.celery_worker.celery worker --loglevel=info
+        environment:
+            - WATSONX_URL=<https://us-south.ml.cloud.ibm.com>
+            - WX_PROJECT_ID=
+            - IBM_CLOUD_API_KEY=
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        depends_on:
+            - fastapi_app
+            - redis
+        restart: always
+        flower:
+        container_name: flower
+        build: .
+        command: celery --broker=redis://redis:6379/0 flower --port=5555
+        ports:
+            - 5556:5555
+        environment:
+            - CELERY_BROKER_URL=redis://redis:6379/0
+            - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        depends_on:
+            - fastapi_app
+            - redis
+            - celery_worker
+        restart: always
    ```
 
 3. Build
 
    ```sh
-   podman-compose build
+   docker-compose build
    ```
 
 4. Run
 
    ```sh
-   podman-compose up -d
+   docker-compose up -d
    ```
-
-5. Validate
-
-   Validate if all the services are up and running.
-
-   ```sh
-   podman-compose ps
-   ```
-
-   The output will be like below.
-
-  ```sh
-  CONTAINER ID  IMAGE                                        COMMAND               CREATED        STATUS        PORTS                                       NAMES
-  1a6c7af902fa  localhost/rest-service_fastapi_app:latest    python3 main.py       9 seconds ago  Up 9 seconds  0.0.0.0:3001->3001/tcp, 3001/tcp, 8080/tcp  fastapi_app
-  16117ab1b15e  docker.io/library/redis:7.2.5-alpine         redis-server          6 seconds ago  Up 7 seconds  6379/tcp                                    redis
-  0269de20e376  localhost/rest-service_celery_worker:latest  celery -A app.cel...  5 seconds ago  Up 6 seconds  3001/tcp, 8080/tcp                          celery_worker
-  600c2aa3d650  localhost/rest-service_flower:latest         celery --broker=r...  5 seconds ago  Up 5 seconds  0.0.0.0:5556->5555/tcp, 3001/tcp, 8080/tcp  flower
-  ```
 
 ## Test
 
@@ -210,10 +152,6 @@ services:
 ## JudgeIt App
 
 You can now move on to spinning up the [JudgeIt NextJS App](../JudgeIt-App/README.md)
-
-## Openshift deployment
-
-For openshift deployment please follow [the instruction here](deployment/readme.md)
 
 ## Configuring your Input File
 

@@ -8,8 +8,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { signOut } from "next-auth/react";
 import GavelOutlinedIcon from "@mui/icons-material/GavelOutlined";
 import BatchPredictionOutlinedIcon from "@mui/icons-material/BatchPredictionOutlined";
+import HelpCenterOutlinedIcon from "@mui/icons-material/HelpCenterOutlined";
+import { app_labels_and_config } from "@/services/Config";
 
 const DrawerMenu = ({
   open,
@@ -19,31 +22,29 @@ const DrawerMenu = ({
 }) => {
   const list = () => (
     <Box
-      sx={{ width: 250 }}
+      sx={{ width: 300 }}
       role="presentation"
       onClick={handleDrawwerClose}
       onKeyDown={handleDrawwerClose}
     >
       <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              width="100%"
-              
-              sx={{ textDecoration: "none" }}
-            >
-            
-                <Typography 
-                  style={{ 
-                    fontSize: "24px", 
-                    color: '#3B3B3B', 
-                    margin: '10px', 
-                    fontWeight: 'bold',
-                  }}
-                >
-                  JudgeIt App
-                </Typography>
-            </Box>
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        sx={{ textDecoration: "none" }}
+      >
+        <Typography
+          style={{
+            fontSize: "24px",
+            color: "#3B3B3B",
+            margin: "10px",
+            fontWeight: "bold",
+          }}
+        >
+          {app_labels_and_config.app_title}
+        </Typography>
+      </Box>
       <Divider />
       <List>
         <ListItem disablePadding>
@@ -62,7 +63,9 @@ const DrawerMenu = ({
             <ListItemIcon>
               <GavelOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={"Single Evaluation"} />
+            <ListItemText
+              primary={app_labels_and_config.buttons.single_page_action}
+            />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -70,7 +73,32 @@ const DrawerMenu = ({
             <ListItemIcon>
               <BatchPredictionOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={"Batch Evaluation"} />
+            <ListItemText
+              primary={app_labels_and_config.buttons.batch_page_action}
+            />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton href="/pages/help">
+            <ListItemIcon>
+              <HelpCenterOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Help"} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={(event) => {
+              signOut({ callbackUrl: "/" });
+            }}
+          >
+            <ListItemIcon>
+              <LogoutOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Logout"} />
           </ListItemButton>
         </ListItem>
       </List>

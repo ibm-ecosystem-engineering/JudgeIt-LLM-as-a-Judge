@@ -1,24 +1,20 @@
-from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as GenParams
+from ibm_watson_machine_learning.foundation_models import Model
+from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenParams
+
 from ibm_watsonx_ai.foundation_models import Model
 from langchain_ibm import WatsonxLLM
 from langchain_core.prompts import PromptTemplate
-import os
 
 class WatsonXService:
 
     def __init__(self,
-                 ibm_cloud_url,
                  api_key, 
                  project_id, 
-                 llm_model_id,
-                 platform,
-                 wx_user_onpremise) -> None:
+                 llm_model_id) -> None:
         self.api_key        = api_key  
-        self.ibm_cloud_url  = ibm_cloud_url
+        self.ibm_cloud_url  = 'https://us-south.ml.cloud.ibm.com'
         self.project_id     = project_id
         self.llm_model_id   = llm_model_id
-        self.platform       = platform
-        self.wx_user_onpremise = wx_user_onpremise
 
     def get_wml_llm_services(self,
             decoding_method="greedy",
@@ -37,23 +33,44 @@ class WatsonXService:
         }
 
         # instatiate llm
-        if self.platform == "saas":
-            return WatsonxLLM(apikey=self.api_key,
+        llm_model = WatsonxLLM(apikey=self.api_key,
                             url=self.ibm_cloud_url,
                             project_id=self.project_id,
                             model_id=self.llm_model_id,
                             params=generate_parameters)
-            return llm_model
-        elif self.platform == "onpremise":
-            return WatsonxLLM(apikey=self.api_key,
-                            url=self.ibm_cloud_url,
-                            model_id=self.llm_model_id,
-                            username=self.wx_user_onpremise,
-                            instance_id='openshift',
-                            project_id=self.project_id,
-                            version="5.0",
-                            params=generate_parameters)
-        else:
-            raise Exception("Please set a correct environment variable for WX_PLATFORM, correct values are `onpremise` or `saas` ")
+        return llm_model
 
+    ## using watsonx machine learning api
+    def send_to_watsonxai(
+                        self,
+                        prompts,
+                        model_id="meta-llama/llama-3-70b-instruct",
+                        decoding_method="greedy",
+                        max_new_tokens=500,
+                        min_new_tokens=30,
+                        temperature=1.0,
+                        repetition_penalty=1.0
+                        ):
+        
+        # Instantiate parameters for text generation
+        model_params = {
+            GenParams.DECODING_METHOD: decoding_method,
+            GenParams.MIN_NEW_TOKENS: min_new_tokens,
+            GenParams.MAX_NEW_TOKENS: max_new_tokens,
+            GenParams.RANDOM_SEED: 42,
+            GenParams.TEMPERATURE: temperature,
+            GenParams.REPETITION_PENALTY: repetition_penalty,
+        }
+
+        model = Model(
+            model_id=model_id,
+            params=model_params,
+            credentials={
+            "url" : self.ibm_cloud_url,
+            "apikey" : self.api_key
+                },
+            project_id=self.project_id)
+
+        response=model.generate_text(prompts)
+        return response
     
